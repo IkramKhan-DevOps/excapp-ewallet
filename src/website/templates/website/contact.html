@@ -7,6 +7,117 @@
 
 {% block content %}
 
-
+    <div class="breadcrumb bg-white-lilac ">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-xl-6 col-lg-8 col-xs-10">
+            <div class="page-title-block-two breadcrumb__content text-center">
+              <h1 class="title">Let&#39;s Get in Touch</h1>
+              <p class="text-dark">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="breadcrumb__navigation">
+        <p class="breadcrumb__navigation--text"><a class="d-block heading-dark" href="/">Home</a><span class="dot"></span><span class="page-text">Contact Us</span></p>
+      </div>
+    </div>
+    <div class="contact-content-area">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-6 col-md-8">
+            <div class="contact-info">
+              <div class="contact-info__texts">
+                <div class="section-content-block">
+                  <h2 class="title">Have a Project in Mind?</h2>
+                  <p class=" text-dark">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+                </div>
+                <div class="contact-info__texts--contact-info">
+                  <div class="email">
+                    <h6 class=" text-dark">Email us</h6>
+                    <p class="text-primary">mail@example.com</p>
+                  </div>
+                  <div class="call">
+                    <h6 class=" text-dark">Call anytime</h6>
+                    <p class="text-primary">(555) 389 - 277</p>
+                  </div>
+                </div>
+              </div>
+              <div class="contact-info__client">
+                <h6 class="title">Trusted By</h6>
+                <div class="client-group">
+                  <div class="single-client">
+                    <img src="{% static 'website/image/contact/logo-1.png' %}" alt="logo">
+                  </div>
+                  <div class="single-client">
+                    <img src="{% static 'website/image/contact/logo-3.png' %}" alt="logo">
+                  </div>
+                  <div class="single-client">
+                    <img src="{% static 'website/image/contact/logo-4.png' %}" alt="logo">
+                  </div>
+                  <div class="single-client">
+                    <img src="{% static 'website/image/contact/logo-5.png' %}" alt="logo">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-10">
+            <div class="contact-form">
+              <h6 class="title">General Enquires</h6>
+              <form class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="inputName" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="inputName" placeholder="Full Name">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="inputEmail" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="inputEmail" placeholder="What’s your email?">
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-selector">
+                    <label for="inputState" class="form-label">State</label>
+                    <select id="inputState" class="nice-select">
+                      <option selected>Estimate budget</option>
+                      <option>$100-$200</option>
+                      <option>$200-$300</option>
+                      <option>$300-$400</option>
+                      <option>$400-$400</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-textarea">
+                    <label for="inputTextarea" class="form-label">Email</label>
+                    <textarea id="inputTextarea" cols="30" placeholder="Write your message" rows="10"></textarea>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-services">
+                    <h6 class="list-title">Services</h6>
+                    <ul class="list-group service-category list-unstyled">
+                      <li class="list active">Web Design</li>
+                      <li class="list">Web Development</li>
+                      <li class="list">Logo Design</li>
+                      <li class="list">Graphics Design</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="btn btn-primary">Send Message</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="map-area">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.227879477866!2d90.34898411538501!3d23.774898293755943!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c1e1938cc90b%3A0xbcfacb6b89117685!2sZakirsoft%20-%20Innovative%20Software%20%26%20Web%20Development%20Solutions!5e0!3m2!1sen!2sbd!4v1641634410288!5m2!1sen!2sbd" class="w-100 h-100" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+    </div>
 
 {% endblock %}

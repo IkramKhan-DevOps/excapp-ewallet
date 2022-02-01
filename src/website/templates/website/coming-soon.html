@@ -1,0 +1,78 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block sub_title %}
+    Coming Soon
+{% endblock %}
+
+{% block content %}
+    <div class="comingsoon-area">
+        <div class="container">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-xl-6 col-lg-6 col-md-8">
+                    <div class="comingsoon-area__image-group">
+                        <img src="{% static 'website/image/innerpage/comingsoon.svg' %}" alt="comingsoon" class="w-100">
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-6 col-md-8 col-xs-10 offset-xl-1">
+                    <div class="comingsoon-area__content">
+                        <div class="section-title-block text-center text-lg-start">
+                            <h2 class="title mb-10">We Are Coming Soon</h2>
+                            <p class="text-dark">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi in
+                                gravida sem enim sed. In at euismod tortor et tempor.
+                            </p>
+                        </div>
+                        <div class="timer-block" id="countdown"></div>
+                        <div class="comingsoon-area__content--newsletter">
+                            <div class="hero-newsletter-01">
+                                <form action="#">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control bg-white-lilac" style="height: 55px;"
+                                               placeholder="Enter your mail address">
+                                        <div class="icon">
+                                            <img src="{% static 'website/image/l-2/mail.png' %}" alt="mail">
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary h-100" style="right: 0;">
+                                        Subscribe
+                                        <svg width="8" height="14" viewBox="0 0 8 14" fill="none"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M1 13L7 7L1 1" stroke="" stroke-width="2" stroke-linecap="round"
+                                                  stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- coming Soon Area End -->
+    <!-- Footer Section Start -->
+    <div class="copyright-block  copyright-block--modifi-05">
+        <div class="container">
+            <div class="row">
+                <div class="copyright-block__wrapper">
+                    <ul class="list-unstyled copyright-block__social">
+                        <li class="list-item"><a href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a>
+                        </li>
+                        <li class="list-item"><a href="https://dribbble.com/"><i class="fab fa-dribbble"></i></a></li>
+                        <li class="list-item"><a href="https://github.com/"><i class="fab fa-github"></i></a></li>
+                        <li class="list-item"><a href="https://twitter.com/"><i class="fab fa-twitter"></i></a></li>
+                    </ul>
+                    <div class="copyright-block__content">
+                        <p class="text-dark">© 2021 Zakirsoft. Powered by Bestkit</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer Section End -->
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
+

@@ -1,0 +1,63 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+
+{% block sub_title %}
+    Forget Password
+{% endblock %}
+
+{% block header %}
+
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="forgot-content">
+        <div class="forgot-content__bg">
+            <img src="{% static 'website/image/innerpage/forgot.png' %}" alt="signup">
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-6">
+                    <div class="account-form">
+                        <div class="section-content-block">
+                            <h2 class="mb-10 title">Reset Password</h2>
+                            <p class=" text-dark">Enter your email to get reset link.
+                            </p>
+                        </div>
+                        <form action="#" class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <input type="email" class="form-control" placeholder="E-mail address">
+                                    <div class="icon">
+                                        <img src="{% static 'website/image/svg/mail.svg' %}" alt="mail"
+                                             class="make-it-inline">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-button">
+                                    <button type="submit" class=" btn btn-primary w-100">Reset Password</button>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-texts form-texts-two">
+                                    <p class="heading-dark">Remember the password?
+                                        <a class=" text-primary" href="{% url 'website:login' %}">Sign in</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block footer %}
+
+{% endblock %}

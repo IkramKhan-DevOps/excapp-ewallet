@@ -1,0 +1,63 @@
+{% load static %}
+
+<header class="site-header site-header--menu-center logo-dark mobile-menu-trigger-dark">
+    <div class="container">
+        <nav class="navbar site-navbar">
+            <!-- Brand Logo-->
+            <div class="site-header__brand">
+                <a href="/">
+                    <!-- light version logo (logo must be black)-->
+                    <img src="{% static 'website/image/logo/logo-dark-white.png' %}" alt="logo" class="logo-white-black">
+                    <!-- light version logo (logo must be black)-->
+                    <img src="{% static 'website/image/logo/logo-dark.png' %}" alt="logo" class="logo-white">
+                    <!-- Dark version logo (logo must be White)-->
+                    <img src="{% static 'website/image/logo/logo-white.png' %}" alt="logo" class="logo-black">
+                </a>
+            </div>
+            <div class="menu-block-wrapper ">
+                <div class="menu-overlay"></div>
+                <nav class="menu-block menu-block-inner" id="append-menu-header">
+                    <div class="mobile-menu-head">
+                        <div class="go-back">
+                            <i class="fa fa-angle-left"></i>
+                        </div>
+                        <div class="current-menu-title"></div>
+                        <div class="mobile-menu-close">&times;</div>
+                    </div>
+                    <ul class="site-menu-main">
+                        <li class="nav-item nav-item-has-children">
+                            <a href="{% url 'website:home' %}" class="nav-link-item drop-trigger">Home
+                            </a>
+                        </li>
+                        <li class="nav-item nav-item-has-children">
+                            <a href="{% url 'website:about' %}" class="nav-link-item drop-trigger">About
+                            </a>
+                        </li>
+                        <li class="nav-item nav-item-has-children">
+                            <a href="{% url 'website:contact' %}" class="nav-link-item drop-trigger">Contact
+                            </a>
+                        </li>
+                        <li class="nav-item nav-item-has-children">
+                            <a href="{% url 'website:blog' %}" class="nav-link-item drop-trigger">Blog
+                            </a>
+                        </li>
+                        <li class="nav-item nav-item-has-children">
+                            <a href="{% url 'website:support' %}" class="nav-link-item drop-trigger">Support
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="header-button header-btn site-header__btns--01">
+                    <a class="btn btn-primary" href="{% url 'website:login' %}">
+                        Login <img src='{% static 'website/image/svg/arrow.svg' %}' class='make-it-inline' alt='arrow'>
+                    </a>
+                </div>
+            </div>
+            <!-- mobile menu trigger -->
+            <div class="mobile-menu-trigger">
+                <span></span>
+            </div>
+            <!--/.Mobile Menu Hamburger Ends-->
+        </nav>
+    </div>
+</header>

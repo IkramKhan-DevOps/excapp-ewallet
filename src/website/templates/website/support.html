@@ -1,0 +1,189 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block title %}
+    Support
+{% endblock %}
+
+{% block content %}
+
+    <div class="breadcrumb bg-white-lilac ">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-xl-6 col-lg-8 col-xs-10">
+            <div class="page-title-block-two breadcrumb__content text-center">
+              <h1 class="title">Help Center</h1>
+              <p class="text-dark">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="breadcrumb__navigation">
+        <p class="breadcrumb__navigation--text"><a class="d-block heading-dark" href="/">Home</a><span class="dot"></span><span class="page-text">Support</span></p>
+      </div>
+    </div>
+
+    <div class="search-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-xl-6 col-lg-8 col-md-10">
+            <div class="section-title-block text-center">
+              <h6 class="subtitle mb-10 text-primary">Bye bye bank fees, hello world.</h6>
+              <h2 class="title mb-10">How Can We Help You Today?</h2>
+              <p class="text-dark px-lg-7">Lorem ipsum dolor sit amet consectetur adipisci venenatis venenatis eget tellus diam ante facilisis</p>
+            </div>
+          </div>
+          <div class="col-xl-8">
+            <div class="search-section__newsletter">
+              <div class="search-newsletter-01">
+                <form action="#">
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search for answer...">
+                    <div class="icon">
+                      <img src="{% static 'website/image/support/search.png' %}" alt="mail">
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary">
+                    Search Now
+                    <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M1 13L7 7L1 1" stroke="" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="category-section">
+      <div class="container">
+        <div class="section-title-block text-center">
+          <h2 class="title">Browse Questions by Category</h2>
+        </div>
+        <div class="row justify-content-center card-row">
+          <div class="col-lg-6 col-md-10 col-sm-11 col-xs-10" data-aos="fade-up" data-aos-delay="150" data-aos-duration="800">
+            <div class="card card-service card-service--04">
+              <div class="card-image ">
+                <img src="{% static 'website/image/support/icon-1.png' %}" alt="card" class="mw-100 make-it-inline">
+              </div>
+              <div class="card-body p-0">
+                <h4 class="card-title heading-dark">Getting Started</h4>
+                <p class="text-dark">Lorem ipsum dolor sit amet consectetur adipisci venenatis venenatis eget tellus diam ante facilisis</p>
+                <a href="#">Browse Airticle</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-10 col-sm-11 col-xs-10" data-aos="fade-up" data-aos-delay="300" data-aos-duration="800">
+            <div class="card card-service card-service--04">
+              <div class="card-image ">
+                <img src="{% static 'website/image/support/icon-2.png' %}" alt="card" class="mw-100 make-it-inline">
+              </div>
+              <div class="card-body p-0">
+                <h4 class="card-title heading-dark">My Account</h4>
+                <p class="text-dark">Lorem ipsum dolor sit amet consectetur adipisci venenatis venenatis eget tellus diam ante facilisis</p>
+                <a href="#">Browse Airticle</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-10 col-sm-11 col-xs-10" data-aos="fade-up" data-aos-delay="450" data-aos-duration="800">
+            <div class="card card-service card-service--04">
+              <div class="card-image ">
+                <img src="{% static 'website/image/support/icon-1.png' %}" alt="card" class="mw-100 make-it-inline">
+              </div>
+              <div class="card-body p-0">
+                <h4 class="card-title heading-dark">Sales Questions</h4>
+                <p class="text-dark">Lorem ipsum dolor sit amet consectetur adipisci venenatis venenatis eget tellus diam ante facilisis</p>
+                <a href="#">Browse Airticle</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-10 col-sm-11 col-xs-10" data-aos="fade-up" data-aos-delay="600" data-aos-duration="800">
+            <div class="card card-service card-service--04">
+              <div class="card-image ">
+                <img src="{% static 'website/image/support/icon-2.png' %}" alt="card" class="mw-100 make-it-inline">
+              </div>
+              <div class="card-body p-0">
+                <h4 class="card-title heading-dark">Payment & Billing</h4>
+                <p class="text-dark">Lorem ipsum dolor sit amet consectetur adipisci venenatis venenatis eget tellus diam ante facilisis</p>
+                <a href="#">Browse Airticle</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-10 col-sm-11 col-xs-10" data-aos="fade-up" data-aos-delay="750" data-aos-duration="800">
+            <div class="card card-service card-service--04">
+              <div class="card-image ">
+                <img src="{% static 'website/image/support/icon-3.png' %}" alt="card" class="mw-100 make-it-inline">
+              </div>
+              <div class="card-body p-0">
+                <h4 class="card-title heading-dark">Uses Guides</h4>
+                <p class="text-dark">Lorem ipsum dolor sit amet consectetur adipisci venenatis venenatis eget tellus diam ante facilisis</p>
+                <a href="#">Browse Airticle</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-10 col-sm-11 col-xs-10" data-aos="fade-up" data-aos-delay="900" data-aos-duration="800">
+            <div class="card card-service card-service--04">
+              <div class="card-image ">
+                <img src="{% static 'website/image/support/icon-4.png' %}" alt="card" class="mw-100 make-it-inline">
+              </div>
+              <div class="card-body p-0">
+                <h4 class="card-title heading-dark">Knowledgebase</h4>
+                <p class="text-dark">Lorem ipsum dolor sit amet consectetur adipisci venenatis venenatis eget tellus diam ante facilisis</p>
+                <a href="#">Browse Airticle</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="asistant-section">
+      <div class="container">
+        <div class="asistant-section__wrapeer">
+          <div class="section-title-block text-center">
+            <h6 class="text-primary mb-10 subtitle">Didn’t find an answer?</h6>
+            <h2 class="title">Need an Asistant?</h2>
+          </div>
+          <div class="row justify-content-center card-row">
+            <div class="col-lg-6 col-md-10 col-sm-11 col-xs-10">
+              <div class="support-widget-card">
+                <div class="card-image">
+                  <img src="{% static 'website/image/support/icon-5.png' %}" alt="card" class="w-100">
+                </div>
+                <div class="card-body p-0">
+                  <h4 class="heading-dark">Call Us</h4>
+                  <p class="text-dark px-sm-7 px-lg-0">We are available online from 9:30am to 5:30pm GMT95:45). Chat with us</p>
+                  <a class="btn btn-primary" href="#">
+                    Call Now
+                    <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M1 13L7 7L1 1" stroke="" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-10 col-sm-11 col-xs-10">
+              <div class="support-widget-card">
+                <div class="card-image">
+                  <img src="{% static 'website/image/support/icon-5.png' %}" alt="card" class="w-100">
+                </div>
+                <div class="card-body p-0">
+                  <h4 class="heading-dark">Chat with Us</h4>
+                  <p class="text-dark px-sm-7 px-lg-0">We are available online from 9:30am to 5:30pm GMT95:45). Chat with us</p>
+                  <a class="btn btn-primary" href="#">
+                    Call Now
+                    <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M1 13L7 7L1 1" stroke="" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}

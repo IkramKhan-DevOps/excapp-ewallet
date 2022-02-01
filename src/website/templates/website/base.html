@@ -4,8 +4,9 @@
 <html lang="zxx">
 <head>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
 
     <title>
         {% block title %}
@@ -16,24 +17,68 @@
         {% endblock %}
     </title>
 
+    <link rel="stylesheet" href="{% static 'website/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'website/fonts/typography-font/typo.css' %}"/>
+    <link rel="stylesheet" href="{% static 'website/fonts/fontawesome-5/css/all.css' %}"/>
+
+    <link rel="stylesheet" href="{% static 'website/plugins/aos/aos.min.css' %}">
+    <link rel="stylesheet" href="{% static 'website/plugins/fancybox/jquery.fancybox.min.css' %}">
+    <link rel="stylesheet" href="{% static 'website/plugins/nice-select/nice-select.min.css' %}">
+    <link rel="stylesheet" href="{% static 'website/plugins/slick/slick.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'website/css/main.css' %}"/>
+
     {% block css_links %}
     {% endblock %}
 
 </head>
 <body>
 
-{% block header %}
-    {% include 'website/include/header.html' %}
-{% endblock %}
+<div class="preloader-wrapper" id="loader">
+    <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+        <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+    </svg>
+</div>
+<div class="site-wrapper overflow-hidden">
 
-{% block content %}
+    {% block header %}
+        {% include 'website/include/header.html' %}
+    {% endblock %}
 
-{% endblock %}
+    {% block content %}
 
-{% block footer %}
-    {% include 'website/include/footer.html' %}
-{% endblock %}
+    {% endblock %}
 
+    {% block footer %}
+        {% include 'website/include/footer.html' %}
+    {% endblock %}
+</div>
+
+<script src="{% static 'website/js/vendor.min.js' %}"></script>
+<script src="{% static 'website/plugins/fancybox/jquery.fancybox.min.js' %}"></script>
+<script src="{% static 'website/plugins/nice-select/jquery.nice-select.min.js' %}"></script>
+<script src="{% static 'website/plugins/aos/aos.min.js' %}"></script>
+<script src="{% static 'website/plugins/counter-up/jquery.counterup.min.js' %}"></script>
+<script src="{% static 'website/plugins/counter-up/waypoints.min.js' %}"></script>
+<script src="{% static 'website/plugins/slick/slick.min.js' %}"></script>
+<script src="{% static 'website/plugins/skill-bar/skill.bars.jquery.html' %} "></script>
+<script src="{% static 'website/plugins/isotope/isotope.pkgd.min.js' %}"></script>
+
+<script src="{% static 'website/js/custom.js' %}"></script>
+<script src="{% static 'website/js/slider-activations.js' %}"></script>
+<script src="{% static 'website/js/menu.js' %}"></script>
+<div class="templatecookie-btn">
+    <!-- Purchase Button -->
+    <a href="https://1.envato.market/5bqQG9" class="purchase-btn">
+        Purchase Now
+        <span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+        </span>
+    </a>
+</div>
 {% block internal_js %}
 
 {% endblock %}
