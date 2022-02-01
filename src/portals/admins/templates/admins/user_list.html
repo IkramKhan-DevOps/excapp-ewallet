@@ -1,0 +1,131 @@
+{% extends 'core/base.html' %}
+{% load custom_tags %}
+
+{% block base_title %}
+    Users
+{% endblock %}
+
+{% block page_heading %}
+    Users
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-12">
+            <form method="get">
+                <div class="input-group mb-3">
+                    {{ user_filter_form }}
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fa fa-search"></i> Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+
+            <div class="card">
+                <div class="card-body">
+                    {% if user_list %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-centered table-nowrap mb-0">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>username</th>
+                                    <th>email</th>
+                                    <th>Type</th>
+                                    <th>Joined</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for object in user_list %}
+                                    <tr>
+                                        <td>{{ object.pk }}</td>
+                                        <td><b>{{ object.username }}</b></td>
+                                        <td>{{ object.email }}</td>
+                                        <td>
+                                            {% if object.is_superuser %}
+                                                <b class="text-dark">Admin</b>
+                                            {% elif object.is_staff %}
+                                                <b class="text-secondary">Staff</b>
+                                            {% elif object.is_student %}
+                                                <b class="text-primary">Student</b>
+                                            {% elif object.is_parent %}
+                                                <b class="text-success">Parent</b>
+                                            {% elif object.is_moderator %}
+                                                <b class="text-warning">Moderator</b>
+                                            {% else %}
+                                                <b class="text-danger">Un Defined</b>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ object.date_joined }}</td>
+                                        <td><b><a href="{% url 'admin-portal:user-detail' object.pk %}"><i
+                                                class="fa fa-eye"></i> View</a></b></td>
+                                    </tr>
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <b class="text-danger">! No users found</b>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="mt-4">
+                <ul class="pagination">
+                    {% if user_list.has_previous %}
+                        <li>
+                            <span>
+                                <a href="{% relative_url user_list.previous_page_number 'page' request.GET.urlencode %}">
+                                    Previous
+                                </a>
+                            </span>
+                        </li>
+                    {% endif %}
+                    <li class="">
+                        <span>Page {{ user_list.number }} of {{ user_list.paginator.num_pages }}.</span>
+                    </li>
+                    {% if user_list.has_next %}
+                        <li>
+                            <span>
+                                <a href="{% relative_url user_list.next_page_number 'page' request.GET.urlencode %}">
+                                    Next
+                                </a>
+                            </span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block base_external_scripts %}
+
+    <script>
+        $(document).ready(function () {
+
+            $('label').hide();
+            $('input').addClass('form-control');
+            $('select').addClass('form-control');
+
+        });
+    </script>
+
+{% endblock %}

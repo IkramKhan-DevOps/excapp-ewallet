@@ -1,0 +1,12 @@
+Django
+django-filter
+django-seed
+django-crispy-forms
+django-ckeditor
+pillow
+django-resized
+django-allauth
+django-notifications-hq
+# django-model-utils
+six
+django-preventconcurrentlogins
