@@ -1,4 +1,4 @@
-import notifications.urls
+# import notifications.urls
 from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -22,7 +22,7 @@ urlpatterns = [
     path('m/', include('src.portals.moderator.urls', namespace='moderator-portal')),
 
     # NOTIFICATION SERVER ---------------------------------------------- #
-    url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
+    # url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
 ]
 
 if settings.DEBUG:
