@@ -214,3 +214,7 @@ class UserCustomAdmin(admin.ModelAdmin):
 
 # CUSTOM USER
 admin.site.register(User, UserCustomAdmin)
+
+admin.site.site_header = "EWallet | root access"
+admin.site.site_title = "EWallet"
+admin.site.index_title = "Dashboard"

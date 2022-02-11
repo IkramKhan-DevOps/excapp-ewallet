@@ -1,7 +1,8 @@
 {% extends 'website/base.html' %}
+{% load custom_tags %}
 {% load static %}
 
-{% block title %}
+{% block sub_title %}
     Blog
 {% endblock %}
 
@@ -19,7 +20,7 @@
             </div>
         </div>
         <div class="breadcrumb__navigation">
-            <p class="breadcrumb__navigation--text"><a class="d-block heading-dark" href="/">Blog</a><span
+            <p class="breadcrumb__navigation--text"><a class="d-block heading-dark" href="/">Home</a><span
                     class="dot"></span><span class="page-text">Our Blog</span></p>
         </div>
     </div>
@@ -33,9 +34,10 @@
                             <h6 class="content-title heading-dark">Search Anything</h6>
                             <div class="search-block__form">
                                 <div class="search-newsletter-02">
-                                    <form action="#">
+                                    <form method="get">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" placeholder="Enter keywords...">
+                                            <input type="text" name="title__icontains" id="id_title__icontains"
+                                                   class="form-control" placeholder="Enter keywords...">
                                         </div>
                                         <button type="submit" class="btn btn-primary">
                                             Search
@@ -57,436 +59,168 @@
                         <div class="blog-post-box">
                             <h3 class="content-title">Recent Post</h3>
                             <div class="blog-post-box__single-post overflow-hidden">
-                                <div class="single-post" data-aos="fade-up" data-aos-delay="150"
-                                     data-aos-duration="800">
-                                    <a href="blog-details.html" class="d-block">
-                                        <div class="card-post">
-                                            <div class="post-img">
-                                                <img src="{% static 'website/image/blog/post-1.png' %}" alt="card-img">
-                                            </div>
-                                            <div class="post-content">
-                                                <div class="meta">
-                                                    <span><img src="{% static 'website/image/svg/calendar-2.svg' %}" alt='calendar'/> March 18, 2021</span>
+
+                                {% if article_recents %}
+                                    {% for article_recent in article_recents %}
+                                        <div class="single-post" data-aos="fade-up" data-aos-delay="150"
+                                             data-aos-duration="800">
+                                            <a href="{% url 'website:blog-detail' article_recent.slug %}" class="d-block">
+                                                <div class="card-post">
+                                                    <div class="post-img">
+                                                        {% if article_recent.thumbnail %}
+                                                            <img src="{{ article_recent.thumbnail.url }}"
+                                                                 alt="card-img">
+                                                        {% else %}
+                                                            <img src="{% static 'core/images/no-file.jpg' %}"
+                                                                 alt="card-img">
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="post-content">
+                                                        <div class="meta">
+                                                    <span><img src="{% static 'website/image/svg/calendar-2.svg' %}"
+                                                               alt='calendar'/> {{ article_recent.created_on }}</span>
+                                                        </div>
+                                                        <h6 class="post-title">{{ article_recent.title }}</h6>
+                                                    </div>
                                                 </div>
-                                                <h6 class="post-title">5 Tips to Be Prepared for Digital Marketing
-                                                    Trends</h6>
-                                            </div>
+                                            </a>
                                         </div>
-                                    </a>
-                                </div>
-                                <div class="single-post" data-aos="fade-up" data-aos-delay="300"
-                                     data-aos-duration="800">
-                                    <a href="blog-details.html" class="d-block">
-                                        <div class="card-post">
-                                            <div class="post-img">
-                                                <img src="{% static 'website/image/blog/post-2.png' %}" alt="card-img">
-                                            </div>
-                                            <div class="post-content">
-                                                <div class="meta">
-                                                    <span><img src="{% static 'website/image/svg/calendar-2.svg' %}" alt='calendar'/> March 18, 2021</span>
-                                                </div>
-                                                <h6 class="post-title">How to Start Your Career As a UI/UX Designer</h6>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <p class="text-danger mt-4">
+                                        <b><i class="fa fa-exclamation-circle"></i> Articles not found.</b>
+                                    </p>
+                                {% endif %}
+
                             </div>
                         </div>
                     </div>
                     <div class="blog-content-area__categories">
                         <div class="categories-block">
                             <h6 class="content-title heading-dark">Categories</h6>
-                            <ul>
-                                <li><a href="#"><span class="text">Design</span> <span class="number">(60)</span></a>
-                                </li>
-                                <li><a href="#"><span class="text">Marketing Strategy</span> <span
-                                        class="number">(05)</span></a></li>
-                                <li><a href="#"><span class="text">Web Development</span> <span
-                                        class="number">(08)</span></a></li>
-                                <li><a href="#"><span class="text">Business Startegy</span> <span
-                                        class="number">(04)</span></a></li>
-                                <li><a href="#"><span class="text">Startup</span> <span class="number">(02)</span></a>
-                                </li>
-                            </ul>
+
+                            {% if article_categories %}
+                                <ul>
+                                    {% for article_category in article_categories %}
+
+                                        <li>
+                                            <a href="#"><span class="text">{{ article_category.name }}</span></a>
+                                        </li>
+
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-danger mt-4">
+                                    <b><i class="fa fa-exclamation-circle"></i> Tags are not defined yet.</b>
+                                </p>
+                            {% endif %}
+
+
                         </div>
                     </div>
                     <div class="blog-content-area__tags">
                         <div class="tags-block">
                             <h6 class="content-title heading-dark">Tags</h6>
-                            <ul>
-                                <li><a href="#">Design</a></li>
-                                <li><a href="#">Sass</a></li>
-                                <li><a href="#">Landing Page</a></li>
-                                <li><a href="#">Website</a></li>
-                                <li><a href="#">Agency</a></li>
-                                <li><a href="#">Company</a></li>
-                                <li><a href="#">UI/UX</a></li>
-                                <li><a href="#">Development</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="blog-content-area__shots">
-                        <div class="shots-box">
-                            <h3 class="content-title">Instagram Shots</h3>
-                            <div class="shots-box__single-post overflow-hidden">
-                                <div class="single-post" data-aos="fade-up" data-aos-delay="150"
-                                     data-aos-duration="800">
-                                    <a href="#" class="d-block">
-                                        <div class="card-shots">
-                                            <div class="shots-img">
-                                                <img src="{% static 'website/image/innerpage/shots-1.png' %}" alt="card-img">
-                                                <div class="shots-img__icon">
-                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                         xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M17 2H7C4.23858 2 2 4.23858 2 7V17C2 19.7614 4.23858 22 7 22H17C19.7614 22 22 19.7614 22 17V7C22 4.23858 19.7614 2 17 2Z"
-                                                              stroke="white" stroke-width="2" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                        <path d="M16.0002 11.3703C16.1236 12.2025 15.9815 13.0525 15.594 13.7993C15.2065 14.5461 14.5933 15.1517 13.8418 15.53C13.0903 15.9082 12.2386 16.0399 11.408 15.9062C10.5773 15.7726 9.80996 15.3804 9.21503 14.7855C8.62011 14.1905 8.22793 13.4232 8.09426 12.5925C7.9606 11.7619 8.09226 10.9102 8.47052 10.1587C8.84878 9.40716 9.45438 8.79404 10.2012 8.40654C10.948 8.01904 11.7979 7.87689 12.6302 8.0003C13.4791 8.12619 14.265 8.52176 14.8719 9.12861C15.4787 9.73545 15.8743 10.5214 16.0002 11.3703Z"
-                                                              stroke="white" stroke-width="2" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                        <path d="M17.5 6.5H17.51" stroke="white" stroke-width="2"
-                                                              stroke-linecap="round" stroke-linejoin="round"/>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="single-post" data-aos="fade-up" data-aos-delay="300"
-                                     data-aos-duration="800">
-                                    <a href="#" class="d-block">
-                                        <div class="card-shots">
-                                            <div class="shots-img">
-                                                <img src="{% static 'website/image/innerpage/shots-2.png' %}" alt="card-img">
-                                                <div class="shots-img__icon">
-                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                         xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M17 2H7C4.23858 2 2 4.23858 2 7V17C2 19.7614 4.23858 22 7 22H17C19.7614 22 22 19.7614 22 17V7C22 4.23858 19.7614 2 17 2Z"
-                                                              stroke="white" stroke-width="2" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                        <path d="M16.0002 11.3703C16.1236 12.2025 15.9815 13.0525 15.594 13.7993C15.2065 14.5461 14.5933 15.1517 13.8418 15.53C13.0903 15.9082 12.2386 16.0399 11.408 15.9062C10.5773 15.7726 9.80996 15.3804 9.21503 14.7855C8.62011 14.1905 8.22793 13.4232 8.09426 12.5925C7.9606 11.7619 8.09226 10.9102 8.47052 10.1587C8.84878 9.40716 9.45438 8.79404 10.2012 8.40654C10.948 8.01904 11.7979 7.87689 12.6302 8.0003C13.4791 8.12619 14.265 8.52176 14.8719 9.12861C15.4787 9.73545 15.8743 10.5214 16.0002 11.3703Z"
-                                                              stroke="white" stroke-width="2" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                        <path d="M17.5 6.5H17.51" stroke="white" stroke-width="2"
-                                                              stroke-linecap="round" stroke-linejoin="round"/>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="single-post" data-aos="fade-up" data-aos-delay="450"
-                                     data-aos-duration="800">
-                                    <a href="#" class="d-block">
-                                        <div class="card-shots">
-                                            <div class="shots-img">
-                                                <img src="{% static 'website/image/innerpage/shots-3.png' %}" alt="card-img">
-                                                <div class="shots-img__icon">
-                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                         xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M17 2H7C4.23858 2 2 4.23858 2 7V17C2 19.7614 4.23858 22 7 22H17C19.7614 22 22 19.7614 22 17V7C22 4.23858 19.7614 2 17 2Z"
-                                                              stroke="white" stroke-width="2" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                        <path d="M16.0002 11.3703C16.1236 12.2025 15.9815 13.0525 15.594 13.7993C15.2065 14.5461 14.5933 15.1517 13.8418 15.53C13.0903 15.9082 12.2386 16.0399 11.408 15.9062C10.5773 15.7726 9.80996 15.3804 9.21503 14.7855C8.62011 14.1905 8.22793 13.4232 8.09426 12.5925C7.9606 11.7619 8.09226 10.9102 8.47052 10.1587C8.84878 9.40716 9.45438 8.79404 10.2012 8.40654C10.948 8.01904 11.7979 7.87689 12.6302 8.0003C13.4791 8.12619 14.265 8.52176 14.8719 9.12861C15.4787 9.73545 15.8743 10.5214 16.0002 11.3703Z"
-                                                              stroke="white" stroke-width="2" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                        <path d="M17.5 6.5H17.51" stroke="white" stroke-width="2"
-                                                              stroke-linecap="round" stroke-linejoin="round"/>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="single-post" data-aos="fade-up" data-aos-delay="600"
-                                     data-aos-duration="800">
-                                    <a href="#" class="d-block">
-                                        <div class="card-shots">
-                                            <div class="shots-img">
-                                                <img src="{% static 'website/image/innerpage/shots-4.png' %}" alt="card-img">
-                                                <div class="shots-img__icon">
-                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                         xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M17 2H7C4.23858 2 2 4.23858 2 7V17C2 19.7614 4.23858 22 7 22H17C19.7614 22 22 19.7614 22 17V7C22 4.23858 19.7614 2 17 2Z"
-                                                              stroke="white" stroke-width="2" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                        <path d="M16.0002 11.3703C16.1236 12.2025 15.9815 13.0525 15.594 13.7993C15.2065 14.5461 14.5933 15.1517 13.8418 15.53C13.0903 15.9082 12.2386 16.0399 11.408 15.9062C10.5773 15.7726 9.80996 15.3804 9.21503 14.7855C8.62011 14.1905 8.22793 13.4232 8.09426 12.5925C7.9606 11.7619 8.09226 10.9102 8.47052 10.1587C8.84878 9.40716 9.45438 8.79404 10.2012 8.40654C10.948 8.01904 11.7979 7.87689 12.6302 8.0003C13.4791 8.12619 14.265 8.52176 14.8719 9.12861C15.4787 9.73545 15.8743 10.5214 16.0002 11.3703Z"
-                                                              stroke="white" stroke-width="2" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                        <path d="M17.5 6.5H17.51" stroke="white" stroke-width="2"
-                                                              stroke-linecap="round" stroke-linejoin="round"/>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="single-post" data-aos="fade-up" data-aos-delay="750"
-                                     data-aos-duration="800">
-                                    <a href="#" class="d-block">
-                                        <div class="card-shots">
-                                            <div class="shots-img">
-                                                <img src="{% static 'website/image/innerpage/shots-5.png' %}" alt="card-img">
-                                                <div class="shots-img__icon">
-                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                         xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M17 2H7C4.23858 2 2 4.23858 2 7V17C2 19.7614 4.23858 22 7 22H17C19.7614 22 22 19.7614 22 17V7C22 4.23858 19.7614 2 17 2Z"
-                                                              stroke="white" stroke-width="2" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                        <path d="M16.0002 11.3703C16.1236 12.2025 15.9815 13.0525 15.594 13.7993C15.2065 14.5461 14.5933 15.1517 13.8418 15.53C13.0903 15.9082 12.2386 16.0399 11.408 15.9062C10.5773 15.7726 9.80996 15.3804 9.21503 14.7855C8.62011 14.1905 8.22793 13.4232 8.09426 12.5925C7.9606 11.7619 8.09226 10.9102 8.47052 10.1587C8.84878 9.40716 9.45438 8.79404 10.2012 8.40654C10.948 8.01904 11.7979 7.87689 12.6302 8.0003C13.4791 8.12619 14.265 8.52176 14.8719 9.12861C15.4787 9.73545 15.8743 10.5214 16.0002 11.3703Z"
-                                                              stroke="white" stroke-width="2" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                        <path d="M17.5 6.5H17.51" stroke="white" stroke-width="2"
-                                                              stroke-linecap="round" stroke-linejoin="round"/>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="single-post" data-aos="fade-up" data-aos-delay="900"
-                                     data-aos-duration="800">
-                                    <a href="#" class="d-block">
-                                        <div class="card-shots">
-                                            <div class="shots-img">
-                                                <img src="{% static 'website/image/innerpage/shots-6.png' %}" alt="card-img">
-                                                <div class="shots-img__icon">
-                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                         xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M17 2H7C4.23858 2 2 4.23858 2 7V17C2 19.7614 4.23858 22 7 22H17C19.7614 22 22 19.7614 22 17V7C22 4.23858 19.7614 2 17 2Z"
-                                                              stroke="white" stroke-width="2" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                        <path d="M16.0002 11.3703C16.1236 12.2025 15.9815 13.0525 15.594 13.7993C15.2065 14.5461 14.5933 15.1517 13.8418 15.53C13.0903 15.9082 12.2386 16.0399 11.408 15.9062C10.5773 15.7726 9.80996 15.3804 9.21503 14.7855C8.62011 14.1905 8.22793 13.4232 8.09426 12.5925C7.9606 11.7619 8.09226 10.9102 8.47052 10.1587C8.84878 9.40716 9.45438 8.79404 10.2012 8.40654C10.948 8.01904 11.7979 7.87689 12.6302 8.0003C13.4791 8.12619 14.265 8.52176 14.8719 9.12861C15.4787 9.73545 15.8743 10.5214 16.0002 11.3703Z"
-                                                              stroke="white" stroke-width="2" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                        <path d="M17.5 6.5H17.51" stroke="white" stroke-width="2"
-                                                              stroke-linecap="round" stroke-linejoin="round"/>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="single-post" data-aos="fade-up" data-aos-delay="1050"
-                                     data-aos-duration="800">
-                                    <a href="#" class="d-block">
-                                        <div class="card-shots">
-                                            <div class="shots-img">
-                                                <img src="{% static 'website/image/innerpage/shots-7.png' %}" alt="card-img">
-                                                <div class="shots-img__icon">
-                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                         xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M17 2H7C4.23858 2 2 4.23858 2 7V17C2 19.7614 4.23858 22 7 22H17C19.7614 22 22 19.7614 22 17V7C22 4.23858 19.7614 2 17 2Z"
-                                                              stroke="white" stroke-width="2" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                        <path d="M16.0002 11.3703C16.1236 12.2025 15.9815 13.0525 15.594 13.7993C15.2065 14.5461 14.5933 15.1517 13.8418 15.53C13.0903 15.9082 12.2386 16.0399 11.408 15.9062C10.5773 15.7726 9.80996 15.3804 9.21503 14.7855C8.62011 14.1905 8.22793 13.4232 8.09426 12.5925C7.9606 11.7619 8.09226 10.9102 8.47052 10.1587C8.84878 9.40716 9.45438 8.79404 10.2012 8.40654C10.948 8.01904 11.7979 7.87689 12.6302 8.0003C13.4791 8.12619 14.265 8.52176 14.8719 9.12861C15.4787 9.73545 15.8743 10.5214 16.0002 11.3703Z"
-                                                              stroke="white" stroke-width="2" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                        <path d="M17.5 6.5H17.51" stroke="white" stroke-width="2"
-                                                              stroke-linecap="round" stroke-linejoin="round"/>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="single-post" data-aos="fade-up" data-aos-delay="1200"
-                                     data-aos-duration="800">
-                                    <a href="#" class="d-block">
-                                        <div class="card-shots">
-                                            <div class="shots-img">
-                                                <img src="{% static 'website/image/innerpage/shots-8.png' %}" alt="card-img">
-                                                <div class="shots-img__icon">
-                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                         xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M17 2H7C4.23858 2 2 4.23858 2 7V17C2 19.7614 4.23858 22 7 22H17C19.7614 22 22 19.7614 22 17V7C22 4.23858 19.7614 2 17 2Z"
-                                                              stroke="white" stroke-width="2" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                        <path d="M16.0002 11.3703C16.1236 12.2025 15.9815 13.0525 15.594 13.7993C15.2065 14.5461 14.5933 15.1517 13.8418 15.53C13.0903 15.9082 12.2386 16.0399 11.408 15.9062C10.5773 15.7726 9.80996 15.3804 9.21503 14.7855C8.62011 14.1905 8.22793 13.4232 8.09426 12.5925C7.9606 11.7619 8.09226 10.9102 8.47052 10.1587C8.84878 9.40716 9.45438 8.79404 10.2012 8.40654C10.948 8.01904 11.7979 7.87689 12.6302 8.0003C13.4791 8.12619 14.265 8.52176 14.8719 9.12861C15.4787 9.73545 15.8743 10.5214 16.0002 11.3703Z"
-                                                              stroke="white" stroke-width="2" stroke-linecap="round"
-                                                              stroke-linejoin="round"/>
-                                                        <path d="M17.5 6.5H17.51" stroke="white" stroke-width="2"
-                                                              stroke-linecap="round" stroke-linejoin="round"/>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
+
+                            {% if article_tags %}
+                                <ul>
+                                    {% for article_tag in article_tags %}
+
+                                        <li>
+                                            <a href="#">
+                                                {{ article_tag.name }}
+                                            </a>
+                                        </li>
+
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-danger mt-2">
+                                    <b><i class="fa fa-exclamation-circle"></i> Categories are not defined yet.</b>
+                                </p>
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-8 order-lg-1">
                     <div class="blog-content-area__card overflow-hidden">
                         <div class="row card-row">
-                            <div class="col-12" data-aos="fade-up" data-aos-delay="150" data-aos-duration="800">
-                                <a href="blog-details.html" class="d-block">
-                                    <div class="card-blog card-blog--03">
-                                        <div class="card-image">
-                                            <img src="{% static 'website/image/blog/blog-1.png' %}" alt="card">
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="meta">
-                                                <div class="meta__date">
-                                                    <span class="date text-dark"><img alt='calendar'
-                                                                                      src="{% static 'website/image/svg/calendar.svg' %}"/> March 18, 2021 </span>
+                            {% if article_list %}
+                                {% for article in article_list %}
+
+                                    <div class="col-12" data-aos="fade-up" data-aos-delay="150" data-aos-duration="800">
+                                        <a href="{% url 'website:blog-detail' article.slug %}" class="d-block">
+                                            <div class="card-blog card-blog--03">
+                                                <div class="card-image">
+                                                    {% if article_recent.thumbnail %}
+                                                        <img src="{{ article_recent.thumbnail.url }}"
+                                                             alt="card">
+                                                    {% else %}
+                                                        <img src="{% static 'core/images/no-file.jpg' %}"
+                                                             alt="card">
+                                                    {% endif %}
                                                 </div>
-                                                <div class="meta__time">
-                                                    <span class="time text-dark"><img alt='clock'
-                                                                                      src="{% static 'website/image/svg/clock.svg' %}"/> 3 min read </span>
-                                                </div>
-                                            </div>
-                                            <h6 class="titel">3 Interviewing Tips That Can Help You Find Right
-                                                Candidate</h6>
-                                            <p class="text text-dark">Lorem ipsum dolor sit amet, consectetur adipiscing
-                                                elit. Morbi amet, lorem tristique In laoreet morbi morbi lorem
-                                                maecenas.</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-12" data-aos="fade-up" data-aos-delay="300" data-aos-duration="800">
-                                <a href="blog-details.html" class="d-block">
-                                    <div class="card-blog card-blog--03">
-                                        <div class="card-image">
-                                            <img src="{% static 'website/image/blog/blog-2.png' %}" alt="card">
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="meta">
-                                                <div class="meta__date">
-                                                    <span class="date text-dark"><img alt='calendar'
-                                                                                      src="{% static 'website/image/svg/calendar.svg' %}"/> March 18, 2021 </span>
-                                                </div>
-                                                <div class="meta__time">
-                                                    <span class="time text-dark"><img alt='clock'
-                                                                                      src="{% static 'website/image/svg/clock.svg' %}"/> 3 min read </span>
+                                                <div class="card-body">
+                                                    <div class="meta">
+                                                        <div class="meta__date">
+                                                    <span class="date text-dark">
+                                                        <img alt='calendar'
+                                                             src="{% static 'website/image/svg/calendar.svg' %}"/>
+                                                        {{ article.created_on }}
+                                                    </span>
+                                                        </div>
+                                                        <div class="meta__time">
+                                                    <span class="time text-dark">
+                                                        <img alt='clock'
+                                                             src="{% static 'website/image/svg/clock.svg' %}"/>
+                                                        {{ article.read_time }} min read
+                                                    </span>
+                                                        </div>
+                                                    </div>
+                                                    <h6 class="titel">{{ article.title }}</h6>
+                                                    <p class="text text-dark">{{ article.description }}</p>
                                                 </div>
                                             </div>
-                                            <h6 class="titel">How to Easily Manage with Designer as a Web Based
-                                                Developer</h6>
-                                            <p class="text text-dark">Lorem ipsum dolor sit amet, consectetur adipiscing
-                                                elit. Morbi amet, lorem tristique In laoreet morbi morbi lorem
-                                                maecenas.</p>
-                                        </div>
+                                        </a>
                                     </div>
-                                </a>
-                            </div>
-                            <div class="col-12" data-aos="fade-up" data-aos-delay="450" data-aos-duration="800">
-                                <a href="blog-details.html" class="d-block">
-                                    <div class="card-blog card-blog--03">
-                                        <div class="card-image">
-                                            <img src="{% static 'website/image/blog/blog-3.png' %}" alt="card">
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="meta">
-                                                <div class="meta__date">
-                                                    <span class="date text-dark"><img alt='calendar'
-                                                                                      src="{% static 'website/image/svg/calendar.svg' %}"/> March 18, 2021 </span>
-                                                </div>
-                                                <div class="meta__time">
-                                                    <span class="time text-dark"><img alt='clock'
-                                                                                      src="{% static 'website/image/svg/clock.svg' %}"/> 3 min read </span>
-                                                </div>
-                                            </div>
-                                            <h6 class="titel">Top 5 Fastest Growing Digital Agency Marketing Jobs
-                                                Today</h6>
-                                            <p class="text text-dark">Lorem ipsum dolor sit amet, consectetur adipiscing
-                                                elit. Morbi amet, lorem tristique In laoreet morbi morbi lorem
-                                                maecenas.</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-12" data-aos="fade-up" data-aos-delay="600" data-aos-duration="800">
-                                <a href="blog-details.html" class="d-block">
-                                    <div class="card-blog card-blog--03">
-                                        <div class="card-image">
-                                            <img src="{% static 'website/image/blog/blog-4.png' %}" alt="card">
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="meta">
-                                                <div class="meta__date">
-                                                    <span class="date text-dark"><img alt='calendar'
-                                                                                      src="{% static 'website/image/svg/calendar.svg' %}"/> March 18, 2021 </span>
-                                                </div>
-                                                <div class="meta__time">
-                                                    <span class="time text-dark"><img alt='clock'
-                                                                                      src="{% static 'website/image/svg/clock.svg' %}"/> 3 min read </span>
-                                                </div>
-                                            </div>
-                                            <h6 class="titel">8 Innovative Design Ideas to Make Your Design Superb</h6>
-                                            <p class="text text-dark">Lorem ipsum dolor sit amet, consectetur adipiscing
-                                                elit. Morbi amet, lorem tristique In laoreet morbi morbi lorem
-                                                maecenas.</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-12" data-aos="fade-up" data-aos-delay="750" data-aos-duration="800">
-                                <a href="blog-details.html" class="d-block">
-                                    <div class="card-blog card-blog--03">
-                                        <div class="card-image">
-                                            <img src="{% static 'website/image/blog/blog-5.png' %}" alt="card">
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="meta">
-                                                <div class="meta__date">
-                                                    <span class="date text-dark"><img alt='calendar'
-                                                                                      src="{% static 'website/image/svg/calendar.svg' %}"/> March 18, 2021 </span>
-                                                </div>
-                                                <div class="meta__time">
-                                                    <span class="time text-dark"><img alt='calendar'
-                                                                                      src="{% static 'website/image/svg/clock.svg' %}"/> 3 min read </span>
-                                                </div>
-                                            </div>
-                                            <h6 class="titel">How to Buy Stocks: Step-by-Step Guide for Beginner
-                                                Investors</h6>
-                                            <p class="text text-dark">Lorem ipsum dolor sit amet, consectetur adipiscing
-                                                elit. Morbi amet, lorem tristique In laoreet morbi morbi lorem
-                                                maecenas.</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-12" data-aos="fade-up" data-aos-delay="900" data-aos-duration="800">
-                                <a href="blog-details.html" class="d-block">
-                                    <div class="card-blog card-blog--03">
-                                        <div class="card-image">
-                                            <img src="{% static 'website/image/blog/blog-6.png' %}" alt="card">
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="meta">
-                                                <div class="meta__date">
-                                                    <span class="date text-dark"><img src="{% static 'website/image/svg/calendar.svg' %}"
-                                                                                      alt='calendar'/> March 18, 2021 </span>
-                                                </div>
-                                                <div class="meta__time">
-                                                    <span class="time text-dark"><img src="{% static 'website/image/svg/clock.svg' %}"
-                                                                                      alt='calendar'/> 3 min read </span>
-                                                </div>
-                                            </div>
-                                            <h6 class="titel">6 Great Productivity Apps You Can Download for Free This
-                                                Week</h6>
-                                            <p class="text text-dark">Lorem ipsum dolor sit amet, consectetur adipiscing
-                                                elit. Morbi amet, lorem tristique In laoreet morbi morbi lorem
-                                                maecenas.</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
+
+                                {% endfor %}
+                            {% else %}
+                                <div class="col-12" data-aos="fade-up" data-aos-delay="150" data-aos-duration="800">
+                                    <p class="text-danger mt-4">
+                                        <b><i class="fa fa-exclamation-circle"></i> Articles not found.</b>
+                                    </p>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
             <div class="blog-content-area__button">
-                <a class="btn btn-1 btn-primary" href="#">
-                    Next Page
-                    <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 13L7 7L1 1" stroke="" stroke-width="2" stroke-linecap="round"
-                              stroke-linejoin="round"/>
-                    </svg>
-                </a>
+                <ul class="pagination">
+                    {% if article_list.has_previous %}
+                        <li>
+                            <span>
+                                <a href="{% relative_url article_list.previous_page_number 'page' request.GET.urlencode %}">
+                                    Previous
+                                </a>
+                            </span>
+                        </li>
+                    {% endif %}
+                    <li class="">
+                        <span>Page {{ article_list.number }} of {{ article_list.paginator.num_pages }}.</span>
+                    </li>
+                    {% if article_list.has_next %}
+                        <li>
+                            <span>
+                                <a href="{% relative_url article_list.next_page_number 'page' request.GET.urlencode %}">
+                                    Next
+                                </a>
+                            </span>
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </div>
