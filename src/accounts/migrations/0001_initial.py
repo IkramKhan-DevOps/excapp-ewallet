@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
                 ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
-                ('is_student', models.BooleanField(default=False, help_text='This account belongs to student')),
+                ('is_student', models.BooleanField(default=False, help_text='This account belongs to customer')),
                 ('is_moderator', models.BooleanField(default=False, help_text='This account belongs to Moderator/Teacher')),
                 ('is_completed', models.BooleanField(default=False, help_text='Shows weather the account is associated with any type')),
                 ('profile_image', django_resized.forms.ResizedImageField(blank=True, crop=['middle', 'center'], force_format='PNG', help_text='size of logo must be 100*100 and format must be png image file', keep_meta=True, null=True, quality=75, size=[200, 200], upload_to='accounts/images/profiles/')),

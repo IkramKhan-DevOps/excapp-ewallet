@@ -44,21 +44,20 @@ class UserCustomAdmin(admin.ModelAdmin):
         (None, {'fields': ('username', 'password')}),
         ('Personal info', {'fields': ('profile_image', 'first_name', 'last_name', 'email', 'phone_number')}),
         ('Access Level', {
-            'fields': ('is_active', 'is_staff', 'is_superuser', 'is_student', 'is_moderator', 'is_completed'),
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'is_customer'),
         }),
         ('Permissions', {'fields': ('groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
     filter_horizontal = ('groups', 'user_permissions',)
     list_display = [
-        'username', 'email', 'is_active', 'is_staff', 'is_superuser',
-        'is_student', 'is_moderator'
+        'username', 'email', 'is_active', 'is_staff', 'is_superuser', 'is_customer'
     ]
     search_fields = [
         'username', 'first_name', 'last_name',
     ]
     list_filter = [
-        'is_active', 'is_superuser', 'is_staff', 'is_student', 'is_moderator'
+        'is_active', 'is_superuser', 'is_staff', 'is_customer'
     ]
     add_fieldsets = (
         (None, {

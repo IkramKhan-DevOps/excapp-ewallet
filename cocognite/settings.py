@@ -15,7 +15,13 @@ DEBUG = True
 SERVER = False
 ALLOWED_HOSTS = ['*']
 
-SITE_ID = 1
+if SERVER:
+    GOOGLE_CALLBACK_ADDRESS = "https://exarthdev4.pythonanywhere.com/accounts/google/login/callback/"
+    SITE_ID = 2
+else:
+    GOOGLE_CALLBACK_ADDRESS = "http://127.0.0.1:8000/accounts/google/login/callback/"
+    SITE_ID = 1
+
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = '/accounts/cross-auth/'
@@ -36,6 +42,13 @@ INSTALLED_APPS = [
 
     # TEMP
     'django_seed',
+    'django_filters',
+
+    'rest_framework',
+    'rest_framework.authtoken',
+
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
 
     # AUTH_API
     'django.contrib.sites',
@@ -51,8 +64,7 @@ INSTALLED_APPS = [
     'src.accounts',
     'src.website',
 
-    'src.portals.moderator',
-    'src.portals.student',
+    'src.portals.customer',
     'src.portals.admins',
 
     # MUST BE AT THE END
@@ -71,6 +83,25 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'preventconcurrentlogins.middleware.PreventConcurrentLoginsMiddleware'
 ]
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+}
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'src.accounts.serializers.RegisterSerializerRestAPI',
+}
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -102,11 +133,11 @@ TEMPLATES = [
 ]
 
 DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+}
 
 """ INTERNATIONALIZATION ----------------------------------------------------------------------------------------- """
 
@@ -142,13 +173,15 @@ SOCIALACCOUNT_PROVIDERS = {
                'AUTH_PARAMS': {'access_type': 'online', }}
 }
 
+ACCOUNT_LOGOUT_ON_GET = True
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 OLD_PASSWORD_FIELD_ENABLED = True
 LOGOUT_ON_PASSWORD_CHANGE = False
 ACCOUNT_EMAIL_VERIFICATION = 'none'
-
 
 """ RESIZER IMAGE --------------------------------------------------------------------------------"""
 DJANGORESIZED_DEFAULT_SIZE = [1920, 1080]

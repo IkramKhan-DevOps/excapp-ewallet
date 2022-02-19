@@ -10,9 +10,7 @@ class User(AbstractUser):
         ('o', 'Other'),
     )
 
-    is_student = models.BooleanField(default=False, help_text="This account belongs to student")
-    is_moderator = models.BooleanField(default=False, help_text="This account belongs to Moderator/Teacher")
-    is_completed = models.BooleanField(default=False, help_text="Shows weather the account is associated with any type")
+    is_customer = models.BooleanField(default=False, help_text="This account belongs to customer")
 
     profile_image = ResizedImageField(
         upload_to='accounts/images/profiles/', null=True, blank=True, size=[200, 200], quality=75, force_format='PNG',

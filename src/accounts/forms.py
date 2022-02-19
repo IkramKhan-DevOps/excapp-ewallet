@@ -9,3 +9,5 @@ class UserProfileForm(ModelForm):
         fields = [
             'profile_image', 'first_name', 'last_name', 'gender', 'phone_number', 'about', 'address'
         ]
+
+
