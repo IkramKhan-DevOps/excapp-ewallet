@@ -1,0 +1,172 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block base_title %} {{ request.user }} {% endblock %}
+
+{% block base_links %}{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-8">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="media">
+                        <div class="mr-4">
+                            <i class="mdi mdi-account-circle text-primary h1"></i>
+                        </div>
+
+                        <div class="media-body">
+                            <div class="text-muted">
+                                <h5>Henry Wells</h5>
+                                <p class="mb-1">henrywells@abc.com</p>
+                                <p class="mb-0">Id no: #SK0234</p>
+                            </div>
+
+                        </div>
+
+                        <div class="dropdown ml-2">
+                            <a class="text-muted dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">
+                                <i class="mdi mdi-dots-horizontal font-size-18"></i>
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-right" style="">
+                                <a class="dropdown-item" href="#">View</a>
+                                <a class="dropdown-item" href="#">Edit</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body border-top">
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div>
+                                <p class="text-muted mb-2">Available Balance</p>
+                                <h5>$ 9148.23</h5>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="text-sm-right mt-4 mt-sm-0">
+                                <p class="text-muted mb-2">Since last month</p>
+                                <h5>+ $ 248.35 <span class="badge badge-success ml-1 align-bottom">+ 1.3 %</span></h5>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body border-top">
+                    <p class="text-muted mb-4">In this month</p>
+                    <div class="text-center">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div>
+                                    <div class="font-size-24 text-primary mb-2">
+                                        <i class="bx bx-send"></i>
+                                    </div>
+
+                                    <p class="text-muted mb-2">Send</p>
+                                    <h5>$ 654.42</h5>
+
+                                    <div class="mt-3">
+                                        <a href="#" class="btn btn-primary btn-sm w-md">Send</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="mt-4 mt-sm-0">
+                                    <div class="font-size-24 text-primary mb-2">
+                                        <i class="bx bx-import"></i>
+                                    </div>
+
+                                    <p class="text-muted mb-2">receive</p>
+                                    <h5>$ 1054.32</h5>
+
+                                    <div class="mt-3">
+                                        <a href="#" class="btn btn-primary btn-sm w-md">Receive</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="mt-4 mt-sm-0">
+                                    <div class="font-size-24 text-primary mb-2">
+                                        <i class="bx bx-wallet"></i>
+                                    </div>
+
+                                    <p class="text-muted mb-2">Withdraw</p>
+                                    <h5>$ 824.34</h5>
+
+                                    <div class="mt-3">
+                                        <a href="#" class="btn btn-primary btn-sm w-md">Withdraw</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-4">
+
+            {# QR #}
+            <div class="card">
+                <div class="card-header bg-white p-0 border-bottom">
+                    <img src="{% static 'core/images/qr-code-image.png' %}" class="img-fluid">
+                </div>
+                <div class="card-body">
+                    <div class="">
+                        <p class="small mb-0">Your QR Code</p>
+                        <h3 class="text-secondary">
+                            35678912379
+                            <button class="btn btn-light"><i class="fa fa-copy"></i></button>
+                            <button class="btn btn-light"><i class="fa fa-plus"></i> Generate New</button>
+                        </h3>
+                    </div>
+
+                </div>
+            </div>
+
+            {# FEATURES #}
+            <div class="card">
+                <div class="card-header border-bottom bg-white">
+                    <p class="card-title">
+                        <i class="fa fa-exclamation-circle"></i> Permissions
+                    </p>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">
+                        Here are certain permissions to control your wallet, by checking yes these features will be
+                        useable otherwise you can block these features
+                    </p>
+                    <div class="square-switch">
+                        <b>App allowed! </b><br>
+                        <input type="checkbox" id="square-a" switch="bool" checked="">
+                        <label for="square-a" data-on-label="Yes" data-off-label="No"></label>
+                    </div>
+                    <div class="square-switch">
+                        <b>TopUp allowed! </b><br>
+                        <input type="checkbox" id="square-tu" switch="bool" checked="">
+                        <label for="square-tu" data-on-label="Yes" data-off-label="No"></label>
+                    </div>
+                    <div class="square-switch">
+                        <b>Withdrawals allowed! </b><br>
+                        <input type="checkbox" id="square-w" switch="bool" checked="">
+                        <label for="square-w" data-on-label="Yes" data-off-label="No"></label>
+                    </div>
+                    <div class="square-switch">
+                        <b>Transactions allowed! </b><br>
+                        <input type="checkbox" id="square-t" switch="bool" checked="">
+                        <label for="square-t" data-on-label="Yes" data-off-label="No"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

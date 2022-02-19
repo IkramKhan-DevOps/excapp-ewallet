@@ -13,6 +13,11 @@ customer_nocache_decorators = [login_required, customer_required, never_cache]
 """  VIEWS ================================================================================= """
 
 
-# @method_decorator(customer_required, name='dispatch')
+@method_decorator(customer_required, name='dispatch')
 class DashboardView(TemplateView):
     template_name = 'customer/dashboard.html'
+
+
+@method_decorator(customer_required, name='dispatch')
+class WalletDetailView(TemplateView):
+    template_name = 'customer/wallet_detail.html'
