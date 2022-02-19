@@ -3,7 +3,16 @@ django-filter
 django-seed
 django-crispy-forms
 django-ckeditor
+django-filter
+djangorestframework
+djangorestframework_simplejwt
+
+django-allauth~=0.45.0
+dj-rest-auth
+python-dateutil~=2.8.2
+
 pillow
+markdown
 django-resized
 django-allauth
 django-notifications-hq
