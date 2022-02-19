@@ -164,9 +164,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'donald.duck0762@gmail.com'
-EMAIL_HOST_PASSWORD = 'ybwchppsknpddabc'
+EMAIL_HOST_PASSWORD = 'jivcvsjgjgkadtnk'
 EMAIL_PORT = 587
-DEFAULT_FROM_EMAIL = 'EXARTH-Team <noreply@application.com>'
+DEFAULT_FROM_EMAIL = 'SkiSipWallet <support@skisipwallet.com>'
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {'SCOPE': ['profile', 'email', ],
@@ -181,7 +181,7 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 OLD_PASSWORD_FIELD_ENABLED = True
 LOGOUT_ON_PASSWORD_CHANGE = False
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 """ RESIZER IMAGE --------------------------------------------------------------------------------"""
 DJANGORESIZED_DEFAULT_SIZE = [1920, 1080]

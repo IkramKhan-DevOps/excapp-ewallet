@@ -1,0 +1,32 @@
+{% extends 'admins/base.html' %}
+{% load static %}
+
+{% block base_title %}{% trans "Password Reset" %}{% endblock %}
+
+{% block base_top_nav %}{% endblock %}
+{% block dont_include_details %}
+
+{% include 'core/include/message.html' %}
+
+<div class="my-4 row justify-content-center">
+    <div class="col-11 col-sm-8">
+
+        {% include 'account/include/head.html' %}
+
+        <div class="card border">
+            <div class="card-header bg-white text-center border-bottom">
+                <p class="card-title m-0">{% trans "Registration Successful" %}</p>
+
+            </div>
+            <div class="card-body">
+
+                <p class="mt-2">
+                    Your account has been activated successfully, please login from your mobile
+                    application to continue.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

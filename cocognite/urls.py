@@ -24,8 +24,8 @@ urlpatterns = [
     # REST API -------------------------------------------------------------------------------------------
     path('auth/', include('dj_rest_auth.urls')),
     path('auth/registration/', CustomRegisterAccountView.as_view(), name='account_create_new_user'),
-    re_path(r'^account-confirm-email/', VerifyEmailView.as_view(), name='account_email_verification_sent'),
-    re_path(r'^account-confirm-email/(?P<key>[-:\w]+)/$', VerifyEmailView.as_view(), name='account_confirm_email'),
+    # re_path(r'^account-confirm-email/', VerifyEmailView.as_view(), name='account_email_verification_sent'),
+    # re_path(r'^account-confirm-email/(?P<key>[-:\w]+)/$', VerifyEmailView.as_view(), name='account_confirm_email'),
     path('auth/google/', GoogleLoginView.as_view(), name='google-login-view'),
 
     # path('api/', include('src.api.urls', namespace='api')),
