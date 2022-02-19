@@ -14,7 +14,7 @@
 {% block base_top_nav %} {% endblock %}
 {% block dont_include_details %}
 
-    {% include 'application/message.html' %}
+    {% include 'core/include/message.html' %}
 
     <div class="container my-4">
         <div class="row justify-content-center">
@@ -26,7 +26,7 @@
 
                 <hr class="border border-danger">
 
-                <div class="card">
+                <div class="card border">
                     <div class="card-body">
                         <h1>{% trans "Confirm E-mail Address" %}</h1>
 

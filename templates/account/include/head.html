@@ -1,0 +1,10 @@
+{% load static %}
+
+<div class="text-center mb-4">
+    <img src="{% static 'core/images/logo_100.png' %}" class="rounded-circle">
+    <div>
+        {% if user.is_authenticated %}
+            <p class="m-0 card-text">{% include "account/snippets/already_logged_in.html" %}</p>
+        {% endif %}
+    </div>
+</div>
