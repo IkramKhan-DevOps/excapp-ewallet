@@ -15,24 +15,20 @@
 {% block base_top_nav %} {% endblock %}
 {% block dont_include_details %}
 
-    {% include 'application/message.html' %}
+    {% include 'core/include/message.html' %}
 
     <div class="container my-4">
         <div class="row justify-content-center">
             <div class="col-sm-8 col-12">
-                <div class="text-center">
-                    <img src="{% static 'images/logo_100.png' %}">
-                    <p class="text-danger mt-1"><b>Cocognito Account Security</b></p>
-                </div>
+                {% include 'account/include/head.html' %}
 
-                <hr class="border border-danger">
+                <div class="card border">
+                    <div class="card-header bg-white text-center border-bottom">
+                        <p class="card-title m-0">{% trans "Google Sign Up" %}</p>
 
-                <div class="card">
-                    <div class="card-header">
-                        <p class="card-title">{% trans "Confirm E-mail Address" %}</p>
                     </div>
-                    <div class="card-body">
 
+                    <div class="card-body">
                         <p>{% blocktrans with provider_name=account.get_provider.name site_name=site.name %}You are
                             about to use your {{ provider_name }} account to login to
                             {{ site_name }}. As a final step, please complete the following form:{% endblocktrans %}</p>
@@ -46,8 +42,8 @@
                             {% endif %}
                             <button type="submit" class="btn btn-primary">{% trans "Sign Up" %} &raquo;</button>
                         </form>
-
                     </div>
+
                 </div>
             </div>
         </div>
