@@ -48,9 +48,17 @@
                     </ul>
                 </nav>
                 <div class="header-button header-btn site-header__btns--01">
-                    <a class="btn btn-primary" href="{% url 'account_login' %}">
-                        Login <img src='{% static 'website/image/svg/arrow.svg' %}' class='make-it-inline' alt='arrow'>
-                    </a>
+                    {% if request.user.is_authenticated %}
+                        <a class="btn btn-primary" href="{% url 'accounts:cross-auth-view' %}">
+                            Dashboard <img src='{% static 'website/image/svg/arrow.svg' %}' class='make-it-inline'
+                                       alt='arrow'>
+                        </a>
+                    {% else %}
+                        <a class="btn btn-primary" href="{% url 'account_login' %}">
+                            Login <img src='{% static 'website/image/svg/arrow.svg' %}' class='make-it-inline'
+                                       alt='arrow'>
+                        </a>
+                    {% endif %}
                 </div>
             </div>
             <!-- mobile menu trigger -->
