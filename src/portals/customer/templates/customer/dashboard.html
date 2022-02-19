@@ -19,8 +19,8 @@
 
                         <div class="media-body">
                             <div class="text-muted">
-                                <h5>Henry Wells</h5>
-                                <p class="mb-1">henrywells@abc.com</p>
+                                <h5>{{ reqeust.user.first_name }} {{ reqeust.user.last_name }}</h5>
+                                <p class="mb-1">{{ reqeust.user.email }}</p>
                                 <p class="mb-0">Id no: #SK0234</p>
                             </div>
 
