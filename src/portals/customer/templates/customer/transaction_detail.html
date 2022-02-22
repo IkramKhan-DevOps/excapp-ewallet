@@ -1,0 +1,77 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block base_title %} Transaction {% endblock %}
+
+{% block page_heading %}
+    <b class="p-2 bg-success text-white"><i class="fa fa-check-circle"></i> Completed</b>
+    <b class="p-2 bg-dark text-white"><i class="bx bx-transfer"></i> P2P</b>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-8">
+
+            <div class="card-body border-bottom">
+                <p class="my-0 card-title">Transaction Information</p>
+            </div>
+            <div class="card-body">
+
+                <div class="row mt-4">
+                    <div class="col">
+                        <div class="avatar-sm mb-4">
+                            <span class="avatar-title rounded-circle bg-soft-dark font-size-18">
+                                <i class="fa fa-money-bill text-dark"></i>
+                            </span>
+                        </div>
+                        <p class="mb-0 small">Total Amount</p>
+                        <p class="h1 mb-0">$0.0</p>
+                    </div>
+                    <div class="col">
+                        <div class="avatar-sm mb-4">
+                            <span class="avatar-title rounded-circle bg-soft-danger font-size-18">
+                                <i class="fa fa-coins text-danger"></i>
+                            </span>
+                        </div>
+                        <p class="mb-0 small text-danger">Tax Charges</p>
+                        <p class="h1 mb-0 text-danger">$0.0</p>
+                    </div>
+                    <div class="col">
+                        <div class="avatar-sm mb-4">
+                            <span class="avatar-title rounded-circle bg-soft-dark font-size-18">
+                                <i class="fa fa-hands-helping text-dark"></i>
+                            </span>
+                        </div>
+                        <p class="mb-0 small">Received Amount</p>
+                        <p class="h1 mb-0">$0.0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body border-top">
+                <p class="mb-0"><i class="fa fa-calendar"></i> 25th, January, 2022</p>
+            </div>
+
+        </div>
+        <div class="col-4">
+
+            <div class="card">
+                <div class="card-body border-bottom">
+                    <p class="my-0 card-title">Receiver</p>
+                </div>
+                <div class="card-body">
+
+                    <div class="text-center">
+                        <img class="rounded-circle avatar-xl" alt="200x200" src="{% static 'core/images/no-user.png' %}" data-holder-rendered="true">
+                        <p class="h3 mb-0 mt-2">User Full Name</p>
+                        <p class="mb-0">email@email.com</p>
+                        <p class="mb-0"><a href="#"><b><i class="fa fa-wallet"></i> PK09181U*****</b></a></p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

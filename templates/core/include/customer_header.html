@@ -14,21 +14,20 @@
 </li>
 
 <li class="nav-item">
-    <a class="nav-link dropdown-toggle arrow-none" href="#">
+    <a class="nav-link dropdown-toggle arrow-none" href="{% url 'customer-portal:topup-list' %}">
         <i class="fa fa-coins mr-2"></i>Top Up
     </a>
 </li>
 
 
 <li class="nav-item">
-    <a class="nav-link dropdown-toggle arrow-none" href="#">
+    <a class="nav-link dropdown-toggle arrow-none" href="{% url 'customer-portal:transaction-list' %}">
         <i class="fa fa-credit-card mr-2"></i>Transactions
     </a>
 </li>
 
-{#DASHBOARD#}
 <li class="nav-item">
-    <a class="nav-link dropdown-toggle arrow-none" href="#">
+    <a class="nav-link dropdown-toggle arrow-none" href="{% url 'customer-portal:withdrawal-list' %}">
         <i class="fa fa-hands-helping mr-2"></i>Withdrawals
     </a>
 </li>

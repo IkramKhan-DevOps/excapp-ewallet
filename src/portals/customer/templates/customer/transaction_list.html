@@ -1,0 +1,105 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block base_title %} Transactions {% endblock %}
+
+{% block page_heading %}Transactions{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-12">
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-centered table-nowrap table-hover">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Transaction ID</th>
+                                <th scope="col">Receiver</th>
+                                <th scope="col">Wallet</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Payment Method</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for foo in '1234'|make_list %}
+                                <tr>
+                                    <td>
+                                        <h5 class="text-truncate font-size-14"><a href="#" class="text-dark">#10273903892</a>
+                                        </h5>
+                                        <p class="text-muted mb-0"></p>
+                                    </td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="cols pr-4">
+                                                <img class="rounded-circle avatar-xs"
+                                                     src="{% static 'core/images/no-user.png' %}" alt="">
+                                            </div>
+                                            <div class="cols">
+                                                <a href="#">
+                                                    <h5 class="text-truncate font-size-14 mb-0">Full
+                                                        Name
+                                                    </h5>
+                                                    <p class="text-muted mb-0">email@email.com</p>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><b><i cdlass="fa fa-wallet"></i> 789*****</b></td>
+                                    <td><b><i class="fa fa-dollar-sign"></i> 654</b></td>
+                                    <td>25th Jan, 2022</td>
+                                    <td class="text-warning">
+                                        <b>p2p</b>
+                                    </td>
+                                    <td class="text-success"><b class=""><i class="fa fa-check-circle"></i>
+                                        Completed</b></td>
+                                    <td>
+                                        <a href="{% url 'customer-portal:transaction-detail' %}"><b><i class="fa fa-eye"></i> view</b></a> |
+                                        <a href="{% url 'customer-portal:transaction-invoice' %}"><b><i class="fa fa-print"></i> invoice</b></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <ul class="pagination pagination-rounded justify-content-center mt-4">
+                <li class="page-item disabled">
+                    <a href="#" class="page-link"><i class="mdi mdi-chevron-left"></i></a>
+                </li>
+                <li class="page-item">
+                    <a href="#" class="page-link">1</a>
+                </li>
+                <li class="page-item active">
+                    <a href="#" class="page-link">2</a>
+                </li>
+                <li class="page-item">
+                    <a href="#" class="page-link">3</a>
+                </li>
+                <li class="page-item">
+                    <a href="#" class="page-link">4</a>
+                </li>
+                <li class="page-item">
+                    <a href="#" class="page-link">5</a>
+                </li>
+                <li class="page-item">
+                    <a href="#" class="page-link"><i class="mdi mdi-chevron-right"></i></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+{% endblock %}

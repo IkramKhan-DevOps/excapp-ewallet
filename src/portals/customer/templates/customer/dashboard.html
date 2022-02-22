@@ -191,57 +191,55 @@
 
                     <div class="mt-4">
                         <div class="table-responsive">
-                            <div class="col-sm-12">
-                                <table class="table">
-                                    <thead>
+                            <table class="table table-centered table-nowrap table-hover">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Transaction ID</th>
+                                    <th scope="col">Bank</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Tax</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Payment Method</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for foo in '1234'|make_list %}
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Account</th>
-                                        <th>Amount</th>
-                                        <th>Tax</th>
-                                        <th>Date</th>
-                                        <th>Status</th>
-                                    </tr>
-                                    </thead>
-
-                                    <tbody>
-
-                                    <tr>
-                                        <td>#1236871992</td>
-                                        <td><b><a href="#"><i class="fa fa-building"></i> POI78******</a></b>
+                                        <td>
+                                            <h5 class="text-truncate font-size-14"><a href="#" class="text-dark">#10273903892</a>
+                                            </h5>
+                                            <p class="text-muted mb-0"></p>
                                         </td>
-                                        <td>$ 102</td>
-                                        <td class="text-danger">$ 2</td>
-                                        <td>2nd Feb, 2022</td>
-                                        <td><span class="badge-danger badge mr-2">Cancelled</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>#1236871992</td>
-                                        <td><b><a href="#"><i class="fa fa-building"></i> POI78******</a></b>
+                                        <td>
+                                            <h5 class="text-truncate font-size-14 mb-0">
+                                                <i class="bx bxs-bank"></i> United Bank Ltd
+                                            </h5>
+                                            <p class="text-muted mb-0">UN12788PK2********</p>
                                         </td>
-                                        <td>$ 102</td>
-                                        <td class="text-danger">$ 2</td>
-                                        <td>2nd Feb, 2022</td>
-                                        <td><span class="badge-warning badge mr-2">Pending</span></td>
+                                        <td><b>$654</b></td>
+                                        <td><b><i class="fa fa-coins text-danger"></i> $2</b></td>
+                                        <td>25th Jan, 2022</td>
+                                        <td class="text-warning">
+                                            <b><i class="bx bx-transfer"></i> Bank Transfer</b>
+                                        </td>
+                                        <td class="text-success"><b class=""><i class="fa fa-check-circle"></i>
+                                            Completed</b></td>
+                                        <td>
+                                            <a href="#"><b><i class="fa fa-eye"></i> View</b></a> |
+                                            <a href="#"><b><i class="fa fa-print"></i> Download</b></a>
+                                        </td>
                                     </tr>
-                                    {% for withdrawal in '12345'|make_list %}
-                                        <tr>
-                                            <td>#1236871992</td>
-                                            <td><b><a href="#"><i class="fa fa-building"></i>
-                                                POI78******</a></b></td>
-                                            <td>$ 102</td>
-                                            <td class="text-danger">$ 2</td>
-                                            <td>2nd Feb, 2022</td>
-                                            <td><span class="badge-success badge mr-2">Successful</span></td>
-                                        </tr>
-                                    {% endfor %}
+                                {% endfor %}
 
-
-                                    </tbody>
-                                </table>
-                            </div>
+                                </tbody>
+                            </table>
                         </div>
+                    </div>
 
+                    <div class="">
+                        <a href="#"><b><i class="fa fa-link"></i> View More</b></a>
                     </div>
                 </div>
             </div>
@@ -256,57 +254,65 @@
 
                     <div class="mt-4">
                         <div class="table-responsive">
-                            <div class="col-sm-12">
-                                <table class="table">
-                                    <thead>
+                            <table class="table table-centered table-nowrap table-hover">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Transaction ID</th>
+                                    <th scope="col">Receiver</th>
+                                    <th scope="col">Wallet</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Payment Method</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for foo in '1234'|make_list %}
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Account</th>
-                                        <th>Amount</th>
-                                        <th>Tax</th>
-                                        <th>Date</th>
-                                        <th>Status</th>
-                                    </tr>
-                                    </thead>
-
-                                    <tbody>
-
-                                    <tr>
-                                        <td>#1236871992</td>
-                                        <td><b><a href="#"><i class="fa fa-building"></i> POI78******</a></b>
+                                        <td>
+                                            <h5 class="text-truncate font-size-14"><a href="#" class="text-dark">#10273903892</a>
+                                            </h5>
+                                            <p class="text-muted mb-0"></p>
                                         </td>
-                                        <td>$ 102</td>
-                                        <td class="text-danger">$ 2</td>
-                                        <td>2nd Feb, 2022</td>
-                                        <td><span class="badge-danger badge mr-2">Cancelled</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>#1236871992</td>
-                                        <td><b><a href="#"><i class="fa fa-building"></i> POI78******</a></b>
+                                        <td>
+                                            <div class="row">
+                                                <div class="cols pr-4">
+                                                    <img class="rounded-circle avatar-xs"
+                                                         src="{% static 'core/images/no-user.png' %}" alt="">
+                                                </div>
+                                                <div class="cols">
+                                                    <a href="#">
+                                                        <h5 class="text-truncate font-size-14 mb-0">Full
+                                                            Name
+                                                        </h5>
+                                                        <p class="text-muted mb-0">email@email.com</p>
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </td>
-                                        <td>$ 102</td>
-                                        <td class="text-danger">$ 2</td>
-                                        <td>2nd Feb, 2022</td>
-                                        <td><span class="badge-warning badge mr-2">Pending</span></td>
+                                        <td><b><i class="fa fa-wallet"></i> 789*****</b></td>
+                                        <td><b><i class="fa fa-dollar-sign"></i> 654</b></td>
+                                        <td>25th Jan, 2022</td>
+                                        <td class="text-warning">
+                                            <b>p2p</b>
+                                        </td>
+                                        <td class="text-success"><b class=""><i class="fa fa-check-circle"></i>
+                                            Completed</b></td>
+                                        <td>
+                                            <a href="#"><b><i class="fa fa-eye"></i> View</b></a> |
+                                            <a href="#"><b><i class="fa fa-print"></i> Download</b></a>
+                                        </td>
                                     </tr>
-                                    {% for withdrawal in '12345'|make_list %}
-                                        <tr>
-                                            <td>#1236871992</td>
-                                            <td><b><a href="#"><i class="fa fa-building"></i>
-                                                POI78******</a></b></td>
-                                            <td>$ 102</td>
-                                            <td class="text-danger">$ 2</td>
-                                            <td>2nd Feb, 2022</td>
-                                            <td><span class="badge-success badge mr-2">Successful</span></td>
-                                        </tr>
-                                    {% endfor %}
+                                {% endfor %}
 
-
-                                    </tbody>
-                                </table>
-                            </div>
+                                </tbody>
+                            </table>
                         </div>
+                    </div>
 
+                    <div class="">
+                        <a href="#"><b><i class="fa fa-link"></i> View More</b></a>
                     </div>
                 </div>
             </div>

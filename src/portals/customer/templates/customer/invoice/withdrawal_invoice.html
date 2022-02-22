@@ -1,0 +1,109 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block base_title %} #12729829 {% endblock %}
+
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="invoice-title">
+                        <h4 class="float-right font-size-16 mb-0">Order # 313123</h4>
+                        <div class="mb-2">
+                            <img src="{% static 'core/images/logo-100.png' %}" alt="logo" height="40">
+                            <b class="font-weight-bolder font-size-20"> SKISIP Wallet</b>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <address>
+                                <strong class="h5">
+                                    <b>User Information</b>
+                                </strong><br>
+                                <div class="mt-2">
+                                    Client Name<br>
+                                email@email.com<br>
+                                +92 00 00 000 000<br>
+                                street, city, state and country
+                                </div>
+                            </address>
+                        </div>
+                        <div class="col-sm-6 text-right">
+                            <address class="mt-2 mt-sm-0">
+                                <strong class="h5">
+                                    <b>Receiver Account</b>
+                                </strong><br>
+                                <div class="mt-2">
+                                    Bank Name<br>
+                                    37789******<br>
+                                Holder Name<br>
+                                +92 00 00 000 000<br>
+                                street, city, state and<br>
+                                    COUNTRY
+                                </div>
+                            </address>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-6">
+
+                        </div>
+                        <div class="col-sm-6 text-right">
+                            <address class="mt-2 mt-sm-0">
+                                <strong class="h5"><b>Payment Method</b></strong><br>
+                                <b>Stripe</b> **** 4242<br>
+                                jsmith@email.com
+                            </address>
+                        </div>
+                    </div>
+                    <div class="py-2 mt-3">
+                        <h3 class="font-size-15 font-weight-bold">Order summary</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-nowrap">
+                            <thead>
+                            <tr>
+                                <th style="width: 70px;">No.</th>
+                                <th>Item</th>
+                                <th class="text-right">Price</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>01</td>
+                                <td>Bank Withdrawal (wallet - 896***)</td>
+                                <td class="text-right">$499.00</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-right">Sub Total</td>
+                                <td class="text-right">$1397.00</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="border-0 text-right">
+                                    <strong>Tax</strong></td>
+                                <td class="border-0 text-right">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="border-0 text-right">
+                                    <strong>Total</strong></td>
+                                <td class="border-0 text-right"><h4 class="m-0">$1397.00</h4></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-print-none">
+                        <div class="float-right">
+                            <a href="javascript:window.print()" class="btn btn-primary waves-effect waves-light mr-1"><i
+                                    class="fa fa-print"></i> Download Invoice</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
