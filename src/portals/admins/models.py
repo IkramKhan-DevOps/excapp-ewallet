@@ -23,7 +23,7 @@ class TopUp(models.Model):
 
     amount = models.PositiveIntegerField()
     wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, blank=True)
-    status = models.CharField(choices=STATUS_CHOICE, max_length=3)
+    status = models.CharField(choices=STATUS_CHOICE, max_length=3, default='pen')
 
     is_active = models.BooleanField(default=True)
     created_on = models.DateTimeField(auto_now_add=True)

@@ -36,7 +36,10 @@ class User(AbstractUser):
         super(User, self).delete(*args, **kwargs)
 
     def get_user_wallet(self):
-        return Wallet.objects.get(user=self)
+        try:
+            return Wallet.objects.get(user__pk=self.pk)
+        except Wallet.DoesNotExist:
+            return Wallet.objects.create(user=self)
 
 
 class Wallet(models.Model):

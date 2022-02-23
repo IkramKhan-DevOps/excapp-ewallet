@@ -1,11 +1,12 @@
 import stripe
 from django.http import JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
 from cocognite import settings
+from src.portals.admins.models import TopUp
 
 """ STRIPE REQUESTS"""
 
@@ -18,53 +19,16 @@ def stripe_config(request):
 
 
 @csrf_exempt
-def create_checkout_session(request):
+def create_checkout_session(request, pk):
+    top_up = get_object_or_404(TopUp.objects.filter(wallet__user=request.user, status='pen'), pk=pk)
     domain_url = settings.DOMAIN_URL
     stripe.api_key = settings.STRIPE_SECRET_KEY
     session = stripe.checkout.Session.create(
         line_items=[{
-            'name': 'Sole Traders',
+            'name': 'Balance Top Up',
             'quantity': 1,
-            'currency': 'gbp',
-            'amount': 9000,
-        }],
-        mode='payment',
-        success_url=domain_url + 'success/',
-        cancel_url=domain_url + 'cancelled/',
-    )
-
-    return redirect(session.url, code=303)
-
-
-@csrf_exempt
-def create_checkout_session_280(request):
-    domain_url = settings.DOMAIN_URL
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-    session = stripe.checkout.Session.create(
-        line_items=[{
-            'name': 'Limited Companies',
-            'quantity': 1,
-            'currency': 'gbp',
-            'amount': 28000,
-        }],
-        mode='payment',
-        success_url=domain_url + 'success/',
-        cancel_url=domain_url + 'cancelled/',
-    )
-
-    return redirect(session.url, code=303)
-
-
-@csrf_exempt
-def create_checkout_session_40(request):
-    domain_url = settings.DOMAIN_URL
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-    session = stripe.checkout.Session.create(
-        line_items=[{
-            'name': 'Dormant Accounts',
-            'quantity': 1,
-            'currency': 'gbp',
-            'amount': 3500,
+            'currency': 'usd',
+            'amount': int(str(top_up.amount)+"00"),
         }],
         mode='payment',
         success_url=domain_url + 'success/',

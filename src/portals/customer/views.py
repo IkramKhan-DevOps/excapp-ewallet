@@ -1,9 +1,17 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
+from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, CreateView
 from src.accounts.decorators import customer_required
+from src.portals.admins.models import (
+    Withdrawal, Transactions, TopUp, PaymentMethod
+)
+from src.accounts.models import (
+    Wallet
+)
+
 User = get_user_model()
 
 customer_decorators = [login_required, customer_required]
@@ -34,8 +42,17 @@ class TopUpListView(TemplateView):
 
 
 @method_decorator(customer_required, name='dispatch')
-class TopUpCreateView(TemplateView):
+class TopUpCreateView(CreateView):
+    model = TopUp
+    fields = ['amount']
     template_name = 'customer/topup_create.html'
+
+    def form_valid(self, form):
+        form.instance.wallet = self.request.user.get_user_wallet()
+        return super(TopUpCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('payment-stripe:stripe-balance-load', args=(self.object.pk, ))
 
 
 @method_decorator(customer_required, name='dispatch')
