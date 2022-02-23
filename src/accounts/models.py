@@ -48,11 +48,13 @@ class Wallet(models.Model):
     code = models.UUIDField(max_length=1000, default=uuid.uuid4, unique=True, editable=False)
 
     total_top_up_amount = models.FloatField(default=0)
-    total_transactions_amount = models.FloatField(default=0)
+    total_transactions_amount_sent = models.FloatField(default=0)
+    total_transactions_amount_received = models.FloatField(default=0)
     total_withdrawal_amount = models.FloatField(default=0)
 
     total_top_up = models.PositiveIntegerField(default=0)
-    total_transactions = models.PositiveIntegerField(default=0)
+    total_transactions_sent = models.PositiveIntegerField(default=0)
+    total_transactions_received = models.PositiveIntegerField(default=0)
     total_withdrawal = models.PositiveIntegerField(default=0)
 
     top_up_limit = models.IntegerField(default=0)

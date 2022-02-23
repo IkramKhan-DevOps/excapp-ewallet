@@ -1,22 +1,25 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block base_title %}
     Success
 {% endblock %}
+c
+{% block content %}
 
-{% block dont_include_details %}
     <div class="row justify-content-center">
         <div class="col-6">
 
             <div class="card">
-                <div class="card-body border-bottom">
-                    <h2>Thank you for Purchasing</h2>
+                <div class="card-body border-bottom text-center">
+                    <img src="{% static 'core/images/SKISIP WALLET.png' %}" height="200">
                 </div>
                 <div class="card-body">
+                    <p class="card-title">Thanks for Purchasing</p>
                     <p>
                         Your purchase is successful, We are working on it, please wait for 24 hours<br>
                         within 24 hours we will contact you, for more information please contact the mail below<br>
-                        <a href="mailto:"><b>support@rsonlineaccounting.com</b></a>
+                        <a href="mailto:"><b>support@skisip-wallet.com</b></a>
                     </p>
                 </div>
             </div>

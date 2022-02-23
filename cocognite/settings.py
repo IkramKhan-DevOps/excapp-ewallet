@@ -12,7 +12,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 SECRET_KEY = 's(l5vi&5nq3619gdskadhgjaksd981234hlaskhjdlasd'
 
 DEBUG = True
-SERVER = True
+SERVER = False
 ALLOWED_HOSTS = ['*']
 
 if SERVER:

@@ -1,18 +1,20 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block base_title %}
     Success
 {% endblock %}
 
-{% block dont_include_details %}
+{% block content %}
     <div class="row justify-content-center">
         <div class="col-6">
 
             <div class="card">
-                <div class="card-body border-bottom">
-                    <h2>Payment Failed</h2>
+                <div class="card-body border-bottom text-center">
+                    <img src="{% static 'core/images/SKISIP WALLET.png' %}" height="200">
                 </div>
                 <div class="card-body">
+                    <p class="card-title">Payment Failed</p>
                     <p>
                         Payment failed, retry again please - For more help contact with us<br>
                         <a href="mailto:"><b>support@rsonlineaccounting.com</b></a>
