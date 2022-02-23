@@ -21,6 +21,8 @@ urlpatterns = [
     path('a/', include('src.portals.admins.urls', namespace='admin-portal')),
     path('c/', include('src.portals.customer.urls', namespace='moderator-portal')),
 
+    path('', include('src.payments.urls', namespace='payment-stripe')),
+
     # REST API -------------------------------------------------------------------------------------------
     path('auth/', include('dj_rest_auth.urls')),
     path('auth/registration/', CustomRegisterAccountView.as_view(), name='account_create_new_user'),

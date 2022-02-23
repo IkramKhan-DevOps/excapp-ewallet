@@ -1,0 +1,25 @@
+{% extends 'core/base.html' %}
+
+{% block base_title %}
+    Success
+{% endblock %}
+
+{% block dont_include_details %}
+    <div class="row justify-content-center">
+        <div class="col-6">
+
+            <div class="card">
+                <div class="card-body border-bottom">
+                    <h2>Thank you for Purchasing</h2>
+                </div>
+                <div class="card-body">
+                    <p>
+                        Your purchase is successful, We are working on it, please wait for 24 hours<br>
+                        within 24 hours we will contact you, for more information please contact the mail below<br>
+                        <a href="mailto:"><b>support@rsonlineaccounting.com</b></a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
