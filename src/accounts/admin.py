@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User
+from .models import User, Wallet
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
@@ -213,6 +213,7 @@ class UserCustomAdmin(admin.ModelAdmin):
 
 # CUSTOM USER
 admin.site.register(User, UserCustomAdmin)
+admin.site.register(Wallet)
 
 admin.site.site_header = "SKISIP | root access"
 admin.site.site_title = "SkiSip"

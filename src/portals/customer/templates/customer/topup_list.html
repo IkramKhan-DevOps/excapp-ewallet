@@ -7,6 +7,16 @@
 
 {% block content %}
 
+    <div class="row mb-2">
+        <div class="col-12">
+
+            <a class="btn btn-sm btn-primary" href="{% url 'customer-portal:topup-create' %}">
+                <i class="fa fa-arrow-up"></i> Load Balance
+            </a>
+
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-12">
 
@@ -42,8 +52,10 @@
                                     <td class="text-success"><b class=""><i class="fa fa-check-circle"></i>
                                         Completed</b></td>
                                     <td>
-                                        <a href="{% url 'customer-portal:topup-detail' %}"><b><i class="fa fa-eye"></i> view</b></a> |
-                                        <a href="{% url 'customer-portal:topup-invoice' %}"><b><i class="fa fa-print"></i> invoice</b></a>
+                                        <a href="{% url 'customer-portal:topup-detail' %}"><b><i class="fa fa-eye"></i>
+                                            view</b></a> |
+                                        <a href="{% url 'customer-portal:topup-invoice' %}"><b><i
+                                                class="fa fa-print"></i> invoice</b></a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -63,8 +75,10 @@
                                     <td class="text-success"><b class=""><i class="fa fa-check-circle"></i>
                                         Completed</b></td>
                                     <td>
-                                        <a href="{% url 'customer-portal:topup-detail' %}"><b><i class="fa fa-eye"></i> view</b></a> |
-                                        <a href="{% url 'customer-portal:topup-invoice' %}"><b><i class="fa fa-print"></i> invoice</b></a>
+                                        <a href="{% url 'customer-portal:topup-detail' %}"><b><i class="fa fa-eye"></i>
+                                            view</b></a> |
+                                        <a href="{% url 'customer-portal:topup-invoice' %}"><b><i
+                                                class="fa fa-print"></i> invoice</b></a>
                                     </td>
                                 </tr>
                             {% endfor %}

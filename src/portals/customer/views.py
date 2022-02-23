@@ -1,4 +1,3 @@
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.utils.decorators import method_decorator
@@ -32,6 +31,11 @@ class WalletDetailView(TemplateView):
 @method_decorator(customer_required, name='dispatch')
 class TopUpListView(TemplateView):
     template_name = 'customer/topup_list.html'
+
+
+@method_decorator(customer_required, name='dispatch')
+class TopUpCreateView(TemplateView):
+    template_name = 'customer/topup_create.html'
 
 
 @method_decorator(customer_required, name='dispatch')

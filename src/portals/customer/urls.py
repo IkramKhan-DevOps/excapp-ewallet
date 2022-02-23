@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     DashboardView, WalletDetailView,
-    TopUpListView, TopUpInvoiceView, TopUpDetailView,
+    TopUpListView, TopUpInvoiceView, TopUpDetailView, TopUpCreateView,
     TransactionListView, TransactionDetailView, TransactionInvoiceView,
     WithdrawalListView, WithdrawalInvoiceView, WithdrawalDetailView
 )
@@ -13,6 +13,7 @@ urlpatterns = [
     path('wallet/', WalletDetailView.as_view(), name='wallet-detail'),
 
     path('topup/', TopUpListView.as_view(), name='topup-list'),
+    path('topup/add/', TopUpCreateView.as_view(), name='topup-create'),
     path('topup/1/', TopUpDetailView.as_view(), name='topup-detail'),
     path('topup/invoice/', TopUpInvoiceView.as_view(), name='topup-invoice'),
 
