@@ -21,7 +21,9 @@ class TopUp(models.Model):
         ('can', 'Cancelled'),
     )
 
-    amount = models.PositiveIntegerField()
+    total = models.PositiveIntegerField()
+    tax = models.PositiveIntegerField()
+    received = models.PositiveIntegerField()
     wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, blank=True)
     status = models.CharField(choices=STATUS_CHOICE, max_length=3, default='pen')
 
@@ -69,7 +71,9 @@ class Transaction(models.Model):
         ('p2p', 'Peer To Peer'),
     )
 
-    amount = models.PositiveIntegerField()
+    total = models.PositiveIntegerField(default=0)
+    tax = models.PositiveIntegerField(default=0)
+    received = models.PositiveIntegerField(default=0)
     sender_wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, blank=True, related_name='sender+')
     receiver_wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, blank=True, related_name='receiver+')
     type = models.CharField(choices=TYPE_CHOICE, max_length=3, default='p2p')

@@ -1,12 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-from django.shortcuts import redirect, render
+from django.db.models import Q
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.cache import never_cache
-from django.views.generic import TemplateView, ListView, CreateView
+from django.views.generic import TemplateView, ListView, CreateView, DetailView
 from src.accounts.decorators import customer_required
 from src.portals.admins.models import (
     Withdrawal, Transaction, TopUp, PaymentMethod
@@ -72,8 +73,13 @@ class TopUpInvoiceView(TemplateView):
 
 
 @method_decorator(customer_required, name='dispatch')
-class TransactionListView(TemplateView):
+class TransactionListView(ListView):
     template_name = 'customer/transaction_list.html'
+
+    def get_queryset(self):
+        return Transaction.objects.filter(
+            Q(sender_wallet__user=self.request.user) | Q(receiver_wallet__user=self.request.user)
+        )
 
 
 @method_decorator(customer_required, name='dispatch')
@@ -112,11 +118,13 @@ class TransactionCreateView(View):
                     receiver_wallet.save()
 
                     transaction = Transaction.objects.create(
-                        sender_wallet=sender_wallet, receiver_wallet=receiver_wallet, amount=amount, status='com'
+                        sender_wallet=sender_wallet, receiver_wallet=receiver_wallet, total=amount, status='com',
+                        received=0, tax=0
                     )
+                    # TODO: calculate_charges + bll
 
                     messages.success(request, f"Amount {amount} successfully transferred to receiver {receiver_wallet.pk}")
-                    return redirect("customer-portal:transaction-detail")
+                    return redirect("customer-portal:transaction-detail", transaction.pk)
 
                 except Wallet.DoesNotExist:
                     error_message = "Requested Wallet Address doesn't exists."
@@ -130,13 +138,28 @@ class TransactionCreateView(View):
 
 
 @method_decorator(customer_required, name='dispatch')
-class TransactionDetailView(TemplateView):
+class TransactionDetailView(DetailView):
+    model = Transaction
     template_name = 'customer/transaction_detail.html'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(
+            Transaction.objects.filter(
+                Q(sender_wallet__user=self.request.user) | Q(receiver_wallet__user=self.request.user)
+            ), pk=self.kwargs['pk']
+        )
 
 
 @method_decorator(customer_required, name='dispatch')
-class TransactionInvoiceView(TemplateView):
+class TransactionInvoiceView(DetailView):
     template_name = 'customer/invoice/transaction_invoice.html'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(
+            Transaction.objects.filter(
+                Q(sender_wallet__user=self.request.user) | Q(receiver_wallet__user=self.request.user)
+            ).filter(status='com'), pk=self.kwargs['pk']
+        )
 
 
 """ ---------------------------------------------------------------------------------------------------------------- """
