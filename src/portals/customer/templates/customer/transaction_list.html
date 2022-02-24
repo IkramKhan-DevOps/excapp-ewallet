@@ -166,7 +166,7 @@
                         </div>
                     {% else %}
                         <p class="text-danger">
-                            <b><i class="fa fa-exclamation-triangle"></i> No transactions placed yet.</b>
+                            <b><i class="fa fa-exclamation-circle"></i> No transactions placed yet.</b>
                         </p>
                     {% endif %}
                 </div>
@@ -175,32 +175,35 @@
         </div>
     </div>
 
-    <div class="row">
+    {% if object_list %}
+        <div class="row">
         <div class="col-lg-12">
             <ul class="pagination pagination-rounded justify-content-center mt-4">
-                <li class="page-item disabled">
-                    <a href="#" class="page-link"><i class="mdi mdi-chevron-left"></i></a>
-                </li>
-                <li class="page-item">
-                    <a href="#" class="page-link">1</a>
-                </li>
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1"><<</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                            <i class="mdi mdi-chevron-left"></i>
+                        </a>
+                    </li>
+                {% endif %}
                 <li class="page-item active">
-                    <a href="#" class="page-link">2</a>
+                    <a class="page-link">{{ page_obj.number }}</a>
                 </li>
-                <li class="page-item">
-                    <a href="#" class="page-link">3</a>
-                </li>
-                <li class="page-item">
-                    <a href="#" class="page-link">4</a>
-                </li>
-                <li class="page-item">
-                    <a href="#" class="page-link">5</a>
-                </li>
-                <li class="page-item">
-                    <a href="#" class="page-link"><i class="mdi mdi-chevron-right"></i></a>
-                </li>
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}"><i
+                                class="mdi mdi-chevron-right"></i></a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">>></a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>
+    {% endif %}
 
 {% endblock %}

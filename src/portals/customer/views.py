@@ -57,6 +57,7 @@ class WalletDetailView(DetailView):
 @method_decorator(customer_required, name='dispatch')
 class TopUpListView(ListView):
     template_name = 'customer/topup_list.html'
+    paginate_by = 25
 
     def get_queryset(self):
         return TopUp.objects.filter(wallet__user=self.request.user)
@@ -105,6 +106,7 @@ class TopUpInvoiceView(DetailView):
 @method_decorator(customer_required, name='dispatch')
 class TransactionListView(ListView):
     template_name = 'customer/transaction_list.html'
+    paginate_by = 25
 
     def get_queryset(self):
         return Transaction.objects.filter(
@@ -196,8 +198,12 @@ class TransactionInvoiceView(DetailView):
 
 
 @method_decorator(customer_required, name='dispatch')
-class WithdrawalListView(TemplateView):
+class WithdrawalListView(ListView):
     template_name = 'customer/withdrawal_list.html'
+    paginate_by = 25
+
+    def get_queryset(self):
+        return Withdrawal.objects.filter(wallet__user=self.request.user)
 
 
 @method_decorator(customer_required, name='dispatch')
