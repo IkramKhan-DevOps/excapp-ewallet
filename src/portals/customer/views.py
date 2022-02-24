@@ -41,8 +41,11 @@ class WalletDetailView(TemplateView):
 
 
 @method_decorator(customer_required, name='dispatch')
-class TopUpListView(TemplateView):
+class TopUpListView(ListView):
     template_name = 'customer/topup_list.html'
+
+    def get_queryset(self):
+        return TopUp.objects.filter(wallet__user=self.request.user)
 
 
 @method_decorator(customer_required, name='dispatch')
@@ -60,13 +63,24 @@ class TopUpCreateView(CreateView):
 
 
 @method_decorator(customer_required, name='dispatch')
-class TopUpDetailView(TemplateView):
+class TopUpDetailView(DetailView):
+    model = TopUp
     template_name = 'customer/topup_detail.html'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(
+            TopUp.objects.filter(wallet__user=self.request.user), pk=self.kwargs['pk']
+        )
 
 
 @method_decorator(customer_required, name='dispatch')
-class TopUpInvoiceView(TemplateView):
+class TopUpInvoiceView(DetailView):
     template_name = 'customer/invoice/topup_invoice.html'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(
+            TopUp.objects.filter(wallet__user=self.request.user, status='com'), pk=self.kwargs['pk']
+        )
 
 
 """ ---------------------------------------------------------------------------------------------------------------- """

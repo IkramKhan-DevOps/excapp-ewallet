@@ -13,9 +13,9 @@ urlpatterns = [
     path('wallet/', WalletDetailView.as_view(), name='wallet-detail'),
 
     path('topup/', TopUpListView.as_view(), name='topup-list'),
-    path('topup/1/', TopUpDetailView.as_view(), name='topup-detail'),
     path('topup/add/', TopUpCreateView.as_view(), name='topup-create'),
-    path('topup/invoice/', TopUpInvoiceView.as_view(), name='topup-invoice'),
+    path('topup/<int:pk>/', TopUpDetailView.as_view(), name='topup-detail'),
+    path('topup/<int:pk>/invoice/', TopUpInvoiceView.as_view(), name='topup-invoice'),
 
     path('transaction/', TransactionListView.as_view(), name='transaction-list'),
     path('transaction/add/', TransactionCreateView.as_view(), name='transaction-create'),

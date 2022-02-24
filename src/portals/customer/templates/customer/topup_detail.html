@@ -4,8 +4,14 @@
 {% block base_title %} Top up {% endblock %}
 
 {% block page_heading %}
-    <b class="p-2 bg-success text-white"><i class="fa fa-check-circle"></i> Completed</b>
-    <b class="p-2 bg-dark text-white"><i class="bx bx-transfer"></i> Stripe</b>
+    {% if object.status == 'com' %}
+        <b class="p-2 bg-success text-white"><i class="fa fa-check-circle"></i> {{ object.get_status_display }}</b>
+    {% elif object.status == 'pen' %}
+        <b class="p-2 bg-warning text-white"><i class="fa fa-exclamation-triangle"></i> {{ object.get_status_display }}</b>
+    {% else %}
+        <b class="p-2 bg-danger text-white"><i class="fa fa-times-circle"></i> {{ object.get_status_display }}</b>
+    {% endif %}
+    <b class="p-2 bg-dark text-white"><i class="bx bx-transfer"></i> {{ object.get_payment_method_display }}</b>
 {% endblock %}
 
 {% block content %}
@@ -26,7 +32,7 @@
                             </span>
                         </div>
                         <p class="mb-0 small">Total Amount</p>
-                        <p class="h1 mb-0">$0.0</p>
+                        <p class="h1 mb-0">${{ object.total }}</p>
                     </div>
                     <div class="col">
                         <div class="avatar-sm mb-4">
@@ -35,7 +41,7 @@
                             </span>
                         </div>
                         <p class="mb-0 small text-danger">Tax Charges</p>
-                        <p class="h1 mb-0 text-danger">$0.0</p>
+                        <p class="h1 mb-0 text-danger">${{ object.tax }}</p>
                     </div>
                     <div class="col">
                         <div class="avatar-sm mb-4">
@@ -44,12 +50,12 @@
                             </span>
                         </div>
                         <p class="mb-0 small">Load Received</p>
-                        <p class="h1 mb-0">$0.0</p>
+                        <p class="h1 mb-0">${{ object.received }}</p>
                     </div>
                 </div>
             </div>
             <div class="card-body border-top">
-                <p class="mb-0"><i class="fa fa-calendar"></i> 25th, January, 2022</p>
+                <p class="mb-0"><i class="fa fa-calendar"></i> {{ object.created_on }}</p>
             </div>
 
         </div>
@@ -62,12 +68,11 @@
                 <div class="card-body">
 
                     <div class="text-center">
-                        <p class="h1 mb-0">
-                            <img alt="bank-pic" src="{% static 'core/portals/images/icons8-visa-100.png' %}">
-                        </p>
-                        <p class="h3 mb-0">United Bank Ltd</p>
-                        <p class="mb-0">Account Holder Name</p>
-                        <p class="mb-0"><a href="#"><b>PK09181U*****</b></a></p>
+                        <h1 class="h1 mb-0">
+                            <i class="bx bxl-stripe"></i>
+                        </h1>
+                        <p class="h3 mb-0">Stripe</p>
+
                     </div>
 
                 </div>

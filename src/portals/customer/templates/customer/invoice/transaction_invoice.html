@@ -17,7 +17,7 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <div class="card paid-image">
+            <div class="card">
                 <div class="card-body">
                     <div class="invoice-title">
                         <h4 class="float-right font-size-16 mb-0">Order # {{ object.pk }}</h4>
@@ -87,25 +87,29 @@
                         <table class="table table-nowrap">
                             <thead>
                             <tr>
-                                <th style="width: 70px;">No.</th>
                                 <th>Item</th>
+                                <th></th>
                                 <th class="text-right">Price</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr>
-                                <td>01</td>
-                                <td>P2P Transfer ({{ object.sender_wallet.user }} - {{ object.receiver_wallet.user }})
+                                <td>
+                                    P2P Transfer ({{ object.sender_wallet.user }} - {{ object.receiver_wallet.user }})
                                 </td>
+                                <td></td>
                                 <td class="text-right">${{ object.total }}</td>
                             </tr>
                             <tr>
-                                <td colspan="2" class="border-0 text-right">
+                                <td colspan="" rowspan="2" class="border-0 text-right">
+                                    <img src="{% static 'core/images/paid_water_mark.png' %}" height="100">
+                                </td>
+                                <td colspan="" class="border-0 text-right">
                                     <strong>Tax</strong></td>
                                 <td class="border-0 text-right">${{ object.tax }}</td>
                             </tr>
                             <tr>
-                                <td colspan="2" class="border-0 text-right">
+                                <td colspan="" class="border-0 text-right">
                                     <strong>Total</strong></td>
                                 <td class="border-0 text-right"><h4 class="m-0">${{ object.received }}</h4></td>
                             </tr>

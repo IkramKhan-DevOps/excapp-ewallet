@@ -20,12 +20,16 @@ class TopUp(models.Model):
         ('pen', 'Pending'),
         ('can', 'Cancelled'),
     )
+    PAYMENT_METHOD_CHOICE = (
+        ('str', 'Stripe'),
+    )
 
     total = models.PositiveIntegerField()
     tax = models.PositiveIntegerField()
     received = models.PositiveIntegerField()
     wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, blank=True)
     status = models.CharField(choices=STATUS_CHOICE, max_length=3, default='pen')
+    payment_method = models.CharField(choices=PAYMENT_METHOD_CHOICE, max_length=3, default='str')
 
     is_active = models.BooleanField(default=True)
     created_on = models.DateTimeField(auto_now_add=True)

@@ -22,13 +22,13 @@
 
             <div class="card">
                 <div class="card-body">
-                    <div class="table-responsive">
+                    {% if object_list %}
+                        <div class="table-responsive">
                         <table class="table table-centered table-nowrap table-hover">
                             <thead class="thead-light">
                             <tr>
                                 <th scope="col">Transaction ID</th>
                                 <th scope="col">Amount</th>
-                                <th scope="col">Currency</th>
                                 <th scope="col">Date</th>
                                 <th scope="col">Payment Method</th>
                                 <th scope="col">Status</th>
@@ -36,49 +36,49 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for foo in '1234'|make_list %}
+                            {% for object in object_list %}
                                 <tr>
                                     <td>
-                                        <h5 class="text-truncate font-size-14"><a href="#" class="text-dark">#10273903892</a>
+                                        <h5 class="text-truncate font-size-14">
+                                            <a href="#" class="text-dark">#{{ object.pk }}</a>
                                         </h5>
                                         <p class="text-muted mb-0"></p>
                                     </td>
-                                    <td><b>1001.1</b></td>
-                                    <td><b><i class="fa fa-dollar-sign"></i></b></td>
-                                    <td>25th Jan, 2022</td>
                                     <td>
-                                        <i class="fab fa-cc-mastercard font-size-24 text-danger align-middle mr-2"></i>
+                                        <b class=""><i class="fa fa-arrow-up text-success"></i> ${{ object.total }}
+                                        </b><br>
                                     </td>
-                                    <td class="text-success"><b class=""><i class="fa fa-check-circle"></i>
-                                        Completed</b></td>
+                                    <td>{{ object.created_on }}</td>
                                     <td>
-                                        <a href="{% url 'customer-portal:topup-detail' %}"><b><i class="fa fa-eye"></i>
-                                            view</b></a> |
-                                        <a href="{% url 'customer-portal:topup-invoice' %}"><b><i
-                                                class="fa fa-print"></i> invoice</b></a>
+                                    <span class="badge badge-dark">
+                                        {{ object.get_payment_method_display }}
+                                    </span>
                                     </td>
-                                </tr>
-                            {% endfor %}
-                            {% for foo in '1234'|make_list %}
-                                <tr>
                                     <td>
-                                        <h5 class="text-truncate font-size-14"><a href="#" class="text-dark">#10273903892</a>
-                                        </h5>
-                                        <p class="text-muted mb-0"></p>
-                                    </td>
-                                    <td><b>1001.1</b></td>
-                                    <td><b><i class="fa fa-dollar-sign"></i></b></td>
-                                    <td>25th Jan, 2022</td>
+                                        {% if object.status == 'com' %}
+                                            <b class="text-success"><i
+                                                    class="fa fa-check-circle"></i> {{ object.get_status_display }}
+                                            </b>
+                                        {% elif object.status == 'pen' %}
+                                            <b class="text-warning"><i
+                                                    class="fa fa-exclamation-triangle"></i>
+                                                {{ object.get_status_display }}
+                                            </b>
+                                        {% else %}
+
+                                            <b class="text-danger"><i class="fa fa-times-circle"></i>
+                                                {{ object.get_status_display }}
+                                            </b>
+                                        {% endif %}
                                     <td>
-                                        <i class="fab fa-cc-visa font-size-24 text-primary align-middle mr-2"></i>
-                                    </td>
-                                    <td class="text-success"><b class=""><i class="fa fa-check-circle"></i>
-                                        Completed</b></td>
-                                    <td>
-                                        <a href="{% url 'customer-portal:topup-detail' %}"><b><i class="fa fa-eye"></i>
-                                            view</b></a> |
-                                        <a href="{% url 'customer-portal:topup-invoice' %}"><b><i
-                                                class="fa fa-print"></i> invoice</b></a>
+                                        <a href="{% url 'customer-portal:topup-detail' object.pk %}"><b><i
+                                                class="fa fa-eye"></i>
+                                            view</b></a>
+                                        {% if object.status == 'com' %}
+                                            |
+                                            <a href="{% url 'customer-portal:topup-invoice' object.pk %}"><b><i
+                                                    class="fa fa-print"></i> invoice</b></a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -86,6 +86,11 @@
                             </tbody>
                         </table>
                     </div>
+                    {% else %}
+                        <p class="text-danger">
+                            <b><i class="fa fa-exclamation-triangle"></i> No Top Ups placed yet.</b>
+                        </p>
+                    {% endif %}
                 </div>
             </div>
 
