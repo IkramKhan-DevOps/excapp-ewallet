@@ -239,7 +239,7 @@ class WithdrawalCreateView(View):
         if form.is_valid():
             message_error = None
             amount = float(form.cleaned_data['total'])
-            account_number = float(form.cleaned_data['account_number'])
+            account_number = form.cleaned_data['account_number']
             wallet = self.request.user.get_user_wallet()
 
             # TODO: logic here
