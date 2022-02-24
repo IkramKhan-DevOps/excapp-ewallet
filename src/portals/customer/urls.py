@@ -3,7 +3,7 @@ from .views import (
     DashboardView, WalletDetailView,
     TopUpListView, TopUpInvoiceView, TopUpDetailView, TopUpCreateView,
     TransactionListView, TransactionDetailView, TransactionInvoiceView, TransactionCreateView,
-    WithdrawalListView, WithdrawalInvoiceView, WithdrawalDetailView
+    WithdrawalListView, WithdrawalInvoiceView, WithdrawalDetailView, WithdrawalCreateView
 )
 
 app_name = "customer-portal"
@@ -23,7 +23,8 @@ urlpatterns = [
     path('transaction/<int:pk>/invoice/', TransactionInvoiceView.as_view(), name='transaction-invoice'),
 
     path('withdrawal/', WithdrawalListView.as_view(), name='withdrawal-list'),
-    path('withdrawal/1/', WithdrawalDetailView.as_view(), name='withdrawal-detail'),
-    path('withdrawal/invoice/', WithdrawalInvoiceView.as_view(), name='withdrawal-invoice'),
+    path('withdrawal/add/', WithdrawalCreateView.as_view(), name='withdrawal-create'),
+    path('withdrawal/<int:pk>/', WithdrawalDetailView.as_view(), name='withdrawal-detail'),
+    path('withdrawal/<int:pk>/invoice/', WithdrawalInvoiceView.as_view(), name='withdrawal-invoice'),
 
 ]

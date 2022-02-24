@@ -15,6 +15,7 @@ from src.portals.admins.models import (
 from src.accounts.models import (
     Wallet
 )
+from src.portals.customer.forms import WithdrawalForm
 
 User = get_user_model()
 
@@ -210,10 +211,60 @@ class WithdrawalListView(ListView):
 
 
 @method_decorator(customer_required, name='dispatch')
-class WithdrawalDetailView(TemplateView):
+class WithdrawalDetailView(DetailView):
+    model = Withdrawal
     template_name = 'customer/withdrawal_detail.html'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Withdrawal.objects.filter(wallet__user=self.request.user), pk=self.kwargs['pk'])
 
 
 @method_decorator(customer_required, name='dispatch')
-class WithdrawalInvoiceView(TemplateView):
+class WithdrawalInvoiceView(DetailView):
+    model = Withdrawal
     template_name = 'customer/invoice/withdrawal_invoice.html'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Withdrawal.objects.filter(wallet__user=self.request.user), pk=self.kwargs['pk'])
+
+
+@method_decorator(customer_required, name='dispatch')
+class WithdrawalCreateView(View):
+    template_name = 'customer/withdrawal_create.html'
+    form_class = WithdrawalForm
+    context = {}
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            message_error = None
+            amount = float(form.cleaned_data['total'])
+            account_number = float(form.cleaned_data['account_number'])
+            wallet = self.request.user.get_user_wallet()
+
+            # TODO: logic here
+            if wallet.amount > amount:
+
+                wallet.amount -= amount
+                wallet.total_withdrawal_amount += amount
+                wallet.total_withdrawal += 1
+                wallet.save()
+
+                form.instance.status = 'com'
+                form.instance.wallet = wallet
+                form.instance.tax = 0
+                form.instance.received = amount
+                withdrawal = form.save()
+                messages.success(request, f"Amount {amount} successfully withdrawed to {account_number}")
+                return redirect("customer-portal:withdrawal-detail", withdrawal.pk)
+            else:
+                message_error = "You don't have sufficient amount to withdraw"
+            messages.error(request, message_error)
+
+        self.context['form'] = form
+        return render(request, self.template_name, self.context)
+
+    def get(self, request, *args, **kwargs):
+        self.context['form'] = self.form_class
+        return render(request, self.template_name, self.context)
+

@@ -73,7 +73,7 @@
                                                         {% endif %}
 
                                                         <p class="text-muted mb-0">
-                                                            <i class="fa fa-wallet"></i> {{ object.sender_wallet.user.email }}
+                                                            <i class="fa fa-wallet"></i> {{ object.sender_wallet.user.get_user_wallet.pk }}
                                                         </p>
                                                     </a>
                                                 </div>
@@ -105,7 +105,7 @@
                                                         {% endif %}
 
                                                         <p class="text-muted mb-0">
-                                                            <i class="fa fa-wallet"></i> {{ object.receiver_wallet.user.email }}
+                                                            <i class="fa fa-wallet"></i> {{ object.receiver_wallet.user.get_user_wallet.pk }}
                                                         </p>
                                                     </a>
                                                 </div>

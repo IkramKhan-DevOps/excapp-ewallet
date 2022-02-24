@@ -1,8 +1,9 @@
 from django.forms import ModelForm
-from src.application.models import Team
+
+from src.portals.admins.models import Withdrawal
 
 
-class TeamForm(ModelForm):
+class WithdrawalForm(ModelForm):
     class Meta:
-        model = Team
-        fields = ['name', 'participants', 'is_active']
+        model = Withdrawal
+        fields = ['total', 'bank_name', 'account_number', 'account_holder_name']

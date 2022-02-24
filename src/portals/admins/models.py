@@ -49,11 +49,20 @@ class Withdrawal(models.Model):
         ('can', 'Cancelled'),
     )
 
-    amount = models.PositiveIntegerField()
+    total = models.FloatField(verbose_name='Amount')
+    tax = models.FloatField(default=0)
+    received = models.FloatField(default=0)
     wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, blank=True)
     bank_name = models.CharField(max_length=1000)
-    bank_branch = models.CharField(max_length=1000)
-    bank_account_number = models.CharField(max_length=1000)
+    bank_branch = models.CharField(
+        max_length=1000, null=True, blank=True
+    )
+    account_holder_name = models.CharField(
+        max_length=1000, null=True, blank=True,
+        help_text="If current user is not account holder then please place bank account holder's name "
+                  "to avoid payment block."
+    )
+    account_number = models.CharField(max_length=1000, help_text="Account Number or IBAN Number")
     status = models.CharField(choices=STATUS_CHOICE, max_length=3)
 
     is_active = models.BooleanField(default=True)
@@ -92,4 +101,3 @@ class Transaction(models.Model):
 
     def __str__(self):
         return str(self.pk)
-

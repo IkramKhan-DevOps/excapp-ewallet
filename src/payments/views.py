@@ -45,6 +45,7 @@ def create_checkout_session(request, pk):
 
     return redirect(session.url, code=303)
 
+
 @csrf_exempt
 def create_checkout_session2(request):
     if request.method == 'GET':
@@ -100,10 +101,8 @@ def stripe_webhook(request):
             payload, sig_header, endpoint_secret
         )
     except ValueError as e:
-        # Invalid payload
         return HttpResponse(status=400)
     except stripe.error.SignatureVerificationError as e:
-        # Invalid signature
         return HttpResponse(status=400)
 
     # Handle the checkout.session.completed event

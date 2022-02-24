@@ -16,7 +16,7 @@
                         <div class="card-body">
                             <div class="media">
                                 <div class="mr-3 align-self-center">
-                                    <i class="mdi mdi-arrow-up h2 text-success mb-0"></i>
+                                    <i class="mdi mdi-arrow-down h2 text-success mb-0"></i>
                                 </div>
                                 <div class="media-body">
                                     <p class="text-muted mb-2">Received</p>
@@ -34,7 +34,7 @@
                         <div class="card-body">
                             <div class="media">
                                 <div class="mr-3 align-self-center">
-                                    <i class="mdi mdi-arrow-down h2 text-danger mb-0"></i>
+                                    <i class="mdi mdi-arrow-up h2 text-danger mb-0"></i>
                                 </div>
                                 <div class="media-body">
                                     <p class="text-muted mb-2">Sent</p>
@@ -154,7 +154,7 @@
                                                             {% endif %}
 
                                                             <p class="text-muted mb-0">
-                                                                <i class="fa fa-wallet"></i> {{ object.sender_wallet.user.email }}
+                                                                <i class="fa fa-wallet"></i> {{ object.sender_wallet.user.get_user_wallet.pk }}
                                                             </p>
                                                         </a>
                                                     </div>
@@ -186,7 +186,7 @@
                                                             {% endif %}
 
                                                             <p class="text-muted mb-0">
-                                                                <i class="fa fa-wallet"></i> {{ object.receiver_wallet.user.email }}
+                                                                <i class="fa fa-wallet"></i> {{ object.receiver_wallet.user.get_user_wallet.pk }}
                                                             </p>
                                                         </a>
                                                     </div>
@@ -362,33 +362,33 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for foo in '1234'|make_list %}
-                                <tr>
-                                    <td>
-                                        <h5 class="text-truncate font-size-14"><a href="#" class="text-dark">#10273903892</a>
-                                        </h5>
-                                        <p class="text-muted mb-0"></p>
-                                    </td>
-                                    <td>
-                                        <h5 class="text-truncate font-size-14 mb-0">
-                                            <i class="bx bxs-bank"></i> United Bank Ltd
-                                        </h5>
-                                        <p class="text-muted mb-0">UN12788PK2********</p>
-                                    </td>
-                                    <td><b>$654</b></td>
-                                    <td><b><i class="fa fa-coins text-danger"></i> $2</b></td>
-                                    <td>25th Jan, 2022</td>
-                                    <td class="text-warning">
-                                        <b><i class="bx bx-transfer"></i> Bank Transfer</b>
-                                    </td>
-                                    <td class="text-success"><b class=""><i class="fa fa-check-circle"></i>
-                                        Completed</b></td>
-                                    <td>
-                                        <a href="{% url 'customer-portal:withdrawal-detail' %}"><b><i class="fa fa-eye"></i> view</b></a> |
-                                        <a href="{% url 'customer-portal:withdrawal-invoice' %}"><b><i class="fa fa-print"></i> invoice</b></a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
+                            {% for object in withdrawal_list %}
+                                    <tr>
+                                        <td>
+                                            <h5 class="text-truncate font-size-14"><a href="#" class="text-dark">#{{ object.pk }}</a>
+                                            </h5>
+                                            <p class="text-muted mb-0"></p>
+                                        </td>
+                                        <td>
+                                            <h5 class="text-truncate font-size-14 mb-0">
+                                                <i class="bx bxs-bank"></i> {{ object.bank_name }}
+                                            </h5>
+                                            <p class="text-muted mb-0"># {{ object.account_number }}</p>
+                                        </td>
+                                        <td><b>${{ object.total }}</b></td>
+                                        <td><b><i class="fa fa-coins text-danger"></i> ${{ object.tax }}</b></td>
+                                        <td>{{ object.created_on }}</td>
+                                        <td class="text-warning">
+                                            <b><i class="bx bx-transfer"></i> Bank Transfer</b>
+                                        </td>
+                                        <td class="text-success"><b class=""><i class="fa fa-check-circle"></i>
+                                            Completed</b></td>
+                                        <td>
+                                            <a href="{% url 'customer-portal:withdrawal-detail' object.pk %}"><b><i
+                                                    class="fa fa-eye"></i> view</b></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
 
                             </tbody>
                         </table>
@@ -396,7 +396,7 @@
                         </div>
 
                         <div class="">
-                            <a href="{% url 'customer-portal:topup-list' %}"><b><i class="fa fa-link"></i> View More</b></a>
+                            <a href="{% url 'customer-portal:withdrawal-list' %}"><b><i class="fa fa-link"></i> View More</b></a>
                         </div>
                     {% else %}
                         <p class="mb-0 text-danger">

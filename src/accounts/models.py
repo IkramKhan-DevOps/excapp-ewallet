@@ -69,8 +69,3 @@ class Wallet(models.Model):
     def __str__(self):
         return self.user.username
 
-
-# @receiver(post_save, sender=User, dispatch_uid="user_wallet_add")
-# def create_wallet_for_user(sender, instance, **kwargs):
-#     print(instance)
-#     Wallet.objects.create(user=instance)

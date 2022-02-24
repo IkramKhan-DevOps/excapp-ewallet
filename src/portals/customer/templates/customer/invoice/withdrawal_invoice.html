@@ -11,7 +11,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="invoice-title">
-                        <h4 class="float-right font-size-16 mb-0">Order # 313123</h4>
+                        <h4 class="float-right font-size-16 mb-0">Order # {{ object.pk }}</h4>
                         <div class="mb-2">
                             <img src="{% static 'core/images/logo-100.png' %}" alt="logo" height="40">
                             <b class="font-weight-bolder font-size-20"> SKISIP Wallet</b>
@@ -25,38 +25,29 @@
                                     <b>User Information</b>
                                 </strong><br>
                                 <div class="mt-2">
-                                    Client Name<br>
-                                email@email.com<br>
-                                +92 00 00 000 000<br>
-                                street, city, state and country
+                                    <i class="fa fa-user"></i>
+                                    {% if object.wallet.user.first_name %}
+                                        {{ object.wallet.user.first_name }}
+                                        {{ object.wallet.user.last_name }}
+                                    {% else %}
+                                        {{ object.wallet.user.username }}
+                                    {% endif %}
+                                    <br>
+                                    <i class="mdi mdi-mail"></i> {{ object.wallet.user.email }}<br>
+                                    <i class="mdi mdi-phone"></i> {{ object.wallet.user.phone_number }}<br>
+                                    <i class="mdi mdi-map"></i> {{ object.wallet.user.address }}
                                 </div>
                             </address>
                         </div>
                         <div class="col-sm-6 text-right">
                             <address class="mt-2 mt-sm-0">
-                                <strong class="h5">
-                                    <b>Receiver Account</b>
-                                </strong><br>
+                                <strong class="h5"><b>Bank Details</b></strong><br>
                                 <div class="mt-2">
-                                    Bank Name<br>
-                                    37789******<br>
-                                Holder Name<br>
-                                +92 00 00 000 000<br>
-                                street, city, state and<br>
-                                    COUNTRY
+                                    <b>Bank Transfer</b><br>
+                                    {{ object.bank_name }}<br>
+                                    {{ object.account_number }}<br>
+                                    {{ object.account_holder_name }}
                                 </div>
-                            </address>
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-sm-6">
-
-                        </div>
-                        <div class="col-sm-6 text-right">
-                            <address class="mt-2 mt-sm-0">
-                                <strong class="h5"><b>Payment Method</b></strong><br>
-                                <b>Stripe</b> **** 4242<br>
-                                jsmith@email.com
                             </address>
                         </div>
                     </div>
@@ -67,30 +58,31 @@
                         <table class="table table-nowrap">
                             <thead>
                             <tr>
-                                <th style="width: 70px;">No.</th>
                                 <th>Item</th>
+                                <th></th>
                                 <th class="text-right">Price</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr>
-                                <td>01</td>
-                                <td>Bank Withdrawal (wallet - 896***)</td>
-                                <td class="text-right">$499.00</td>
+                                <td>
+                                    Bank Transfer to ({{ object.bank_name }} - {{ object.account_holder_name }})
+                                </td>
+                                <td></td>
+                                <td class="text-right">${{ object.total }}</td>
                             </tr>
                             <tr>
-                                <td colspan="2" class="text-right">Sub Total</td>
-                                <td class="text-right">$1397.00</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" class="border-0 text-right">
+                                <td colspan="" rowspan="2" class="border-0 text-right">
+                                    <img src="{% static 'core/images/paid_water_mark.png' %}" height="100">
+                                </td>
+                                <td colspan="" class="border-0 text-right">
                                     <strong>Tax</strong></td>
-                                <td class="border-0 text-right">$0.00</td>
+                                <td class="border-0 text-right">${{ object.tax }}</td>
                             </tr>
                             <tr>
-                                <td colspan="2" class="border-0 text-right">
+                                <td colspan="" class="border-0 text-right">
                                     <strong>Total</strong></td>
-                                <td class="border-0 text-right"><h4 class="m-0">$1397.00</h4></td>
+                                <td class="border-0 text-right"><h4 class="m-0">${{ object.received }}</h4></td>
                             </tr>
                             </tbody>
                         </table>
