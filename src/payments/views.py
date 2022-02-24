@@ -129,6 +129,7 @@ class SuccessView(TemplateView):
 
         top_up = get_object_or_404(TopUp, stripe_payment_intent=session_id)
         top_up.status = 'com'
+        top_up.received = top_up.total - top_up.tax
         top_up.save()
 
         wallet = Wallet.objects.get(pk=top_up.wallet.pk)

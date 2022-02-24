@@ -76,7 +76,7 @@ class TopUpCreateView(CreateView):
         return super(TopUpCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('payment-stripe:stripe-balance-load', args=(self.object.pk, ))
+        return reverse_lazy('payment-stripe:stripe-balance-load', args=(self.object.pk,))
 
 
 @method_decorator(customer_required, name='dispatch')
@@ -137,27 +137,30 @@ class TransactionCreateView(View):
             if sender_wallet.amount > amount:
                 # CHECK1:: receiver wallet exists
                 try:
-
                     receiver_wallet = Wallet.objects.get(pk=receiver_wallet)
-                    sender_wallet.amount -= amount
-                    sender_wallet.total_transactions_amount_sent += amount
-                    sender_wallet.total_transactions_sent += 1
-                    sender_wallet.save()
+                    if sender_wallet.user != receiver_wallet.user:
+                        sender_wallet.amount -= amount
+                        sender_wallet.total_transactions_amount_sent += amount
+                        sender_wallet.total_transactions_sent += 1
+                        sender_wallet.save()
 
-                    receiver_wallet.amount += amount
-                    receiver_wallet.total_transactions_amount_received += amount
-                    receiver_wallet.total_transactions_received += 1
-                    receiver_wallet.save()
+                        receiver_wallet.amount += amount
+                        receiver_wallet.total_transactions_amount_received += amount
+                        receiver_wallet.total_transactions_received += 1
+                        receiver_wallet.save()
 
-                    transaction = Transaction.objects.create(
-                        sender_wallet=sender_wallet, receiver_wallet=receiver_wallet, total=amount, status='com',
-                        received=0, tax=0
-                    )
-                    # TODO: calculate_charges + bll
+                        transaction = Transaction.objects.create(
+                            sender_wallet=sender_wallet, receiver_wallet=receiver_wallet, total=amount,
+                            status='com',
+                            received=amount, tax=0
+                        )
+                        # TODO: calculate_charges + bll
+                        messages.success(request,
+                                         f"Amount {amount} successfully transferred to receiver {receiver_wallet.pk}")
+                        return redirect("customer-portal:transaction-detail", transaction.pk)
 
-                    messages.success(request, f"Amount {amount} successfully transferred to receiver {receiver_wallet.pk}")
-                    return redirect("customer-portal:transaction-detail", transaction.pk)
-
+                    else:
+                        error_message = "Looks like that's your wallet"
                 except Wallet.DoesNotExist:
                     error_message = "Requested Wallet Address doesn't exists."
             else:
@@ -214,4 +217,3 @@ class WithdrawalDetailView(TemplateView):
 @method_decorator(customer_required, name='dispatch')
 class WithdrawalInvoiceView(TemplateView):
     template_name = 'customer/invoice/withdrawal_invoice.html'
-
