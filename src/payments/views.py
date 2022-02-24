@@ -1,11 +1,15 @@
+import json
+
 import stripe
-from django.http import JsonResponse
-from django.shortcuts import redirect, get_object_or_404
+from django.http import JsonResponse, HttpResponse, HttpResponseNotFound
+from django.shortcuts import redirect, get_object_or_404, render
+from django.urls import reverse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
 from cocognite import settings
+from src.accounts.models import Wallet
 from src.portals.admins.models import TopUp
 
 """ STRIPE REQUESTS"""
@@ -28,15 +32,18 @@ def create_checkout_session(request, pk):
             'name': 'Balance Top Up',
             'quantity': 1,
             'currency': 'usd',
-            'amount': int(str(top_up.amount)+"00"),
+            'amount': int(str(top_up.total) + "00"),
         }],
         mode='payment',
-        success_url=domain_url + 'success/',
-        cancel_url=domain_url + 'cancelled/',
+        success_url=request.build_absolute_uri(
+            reverse('payment-stripe:success')
+        ) + "?session_id={CHECKOUT_SESSION_ID}",
+        cancel_url=request.build_absolute_uri(reverse('payment-stripe:cancel')),
     )
+    top_up.stripe_payment_intent = session.id
+    top_up.save()
 
     return redirect(session.url, code=303)
-
 
 @csrf_exempt
 def create_checkout_session2(request):
@@ -80,8 +87,57 @@ def create_checkout_session2(request):
             return JsonResponse({'error': str(e)})
 
 
+@csrf_exempt
+def stripe_webhook(request):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
+    except ValueError as e:
+        # Invalid payload
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return HttpResponse(status=400)
+
+    # Handle the checkout.session.completed event
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+
+        customer_email = session["customer_details"]["email"]
+        # product = Product.objects.get(id=product_id)
+
+    return HttpResponse(status=200)
+
+
 class SuccessView(TemplateView):
     template_name = 'payments/success.html'
+
+    def get(self, request, *args, **kwargs):
+        session_id = request.GET.get('session_id')
+        if session_id is None:
+            return HttpResponseNotFound()
+
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        session = stripe.checkout.Session.retrieve(session_id)
+
+        top_up = get_object_or_404(TopUp, stripe_payment_intent=session_id)
+        top_up.status = 'com'
+        top_up.save()
+
+        wallet = Wallet.objects.get(pk=top_up.wallet.pk)
+        wallet.amount += top_up.total
+        wallet.total_top_up += 1
+        wallet.total_top_up_amount += top_up.total
+        wallet.save()
+
+        return render(request, self.template_name)
 
 
 class CancelledView(TemplateView):

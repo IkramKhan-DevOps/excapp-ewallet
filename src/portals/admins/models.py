@@ -28,6 +28,7 @@ class TopUp(models.Model):
     tax = models.PositiveIntegerField()
     received = models.PositiveIntegerField()
     wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, blank=True)
+    stripe_payment_intent = models.CharField(max_length=20000)
     status = models.CharField(choices=STATUS_CHOICE, max_length=3, default='pen')
     payment_method = models.CharField(choices=PAYMENT_METHOD_CHOICE, max_length=3, default='str')
 

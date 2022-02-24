@@ -28,13 +28,27 @@ customer_nocache_decorators = [login_required, customer_required, never_cache]
 class DashboardView(TemplateView):
     template_name = 'customer/dashboard.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(DashboardView, self).get_context_data(**kwargs)
+        context['wallet'] = self.request.user.get_user_wallet()
+        context['transactions_list'] = Transaction.objects.filter(
+            Q(sender_wallet__user=self.request.user) | Q(receiver_wallet__user=self.request.user)
+        )[:10]
+        context['top_up_list'] = TopUp.objects.filter(wallet__user=self.request.user)[:10]
+        context['withdrawal_list'] = Withdrawal.objects.filter(wallet__user=self.request.user)[:10]
+        return context
+
 
 """ ---------------------------------------------------------------------------------------------------------------- """
 
 
 @method_decorator(customer_required, name='dispatch')
-class WalletDetailView(TemplateView):
+class WalletDetailView(DetailView):
+    model = Wallet
     template_name = 'customer/wallet_detail.html'
+
+    def get_object(self, queryset=None):
+        return self.request.user.get_user_wallet()
 
 
 """ ---------------------------------------------------------------------------------------------------------------- """
@@ -51,11 +65,13 @@ class TopUpListView(ListView):
 @method_decorator(customer_required, name='dispatch')
 class TopUpCreateView(CreateView):
     model = TopUp
-    fields = ['amount']
+    fields = ['total']
     template_name = 'customer/topup_create.html'
 
     def form_valid(self, form):
         form.instance.wallet = self.request.user.get_user_wallet()
+        form.instance.received = 0
+        form.instance.tax = 0
         return super(TopUpCreateView, self).form_valid(form)
 
     def get_success_url(self):

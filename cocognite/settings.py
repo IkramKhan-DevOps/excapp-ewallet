@@ -18,6 +18,7 @@ ALLOWED_HOSTS = ['*']
 if SERVER:
     STRIPE_PUBLISHABLE_KEY = 'pk_test_51KOk8vBXdgScJTxkzqhOkxuFkEQMmPEovaPOPkasrJSfFQytvh0gXHcZop8eB7KZzr0YWpWK2pr3vHAZMDoMpRsc00czwWEk29'
     STRIPE_SECRET_KEY = 'sk_test_51KOk8vBXdgScJTxk22T3bOcTpYhOu508E6udhxCMrezc7AM3DCqtGfvMESsPuQ0pHokZj4zmZx45esCbDdxpUaS3005oAq8vyq'
+    STRIPE_ENDPOINT_SECRET = 'https://exarthdev4.pythonanywhere.com/webhook/'
     GOOGLE_CALLBACK_ADDRESS = "https://exarthdev4.pythonanywhere.com/accounts/google/login/callback/"
     SITE_ID = 2
     DOMAIN_URL = 'https://exarthdev4.pythonanywhere.com/'
@@ -25,6 +26,7 @@ else:
     STRIPE_PUBLISHABLE_KEY = 'pk_test_51KOk8vBXdgScJTxkzqhOkxuFkEQMmPEovaPOPkasrJSfFQytvh0gXHcZop8eB7KZzr0YWpWK2pr3vHAZMDoMpRsc00czwWEk29'
     STRIPE_SECRET_KEY = 'sk_test_51KOk8vBXdgScJTxk22T3bOcTpYhOu508E6udhxCMrezc7AM3DCqtGfvMESsPuQ0pHokZj4zmZx45esCbDdxpUaS3005oAq8vyq'
     GOOGLE_CALLBACK_ADDRESS = "http://127.0.0.1:8000/accounts/google/login/callback/"
+    STRIPE_ENDPOINT_SECRET = 'whsec_1d8d3fe0a2aa5e4636cd1343c86fdc72d962593725e8d3a4ab8ad122b8522893'
     SITE_ID = 1
     DOMAIN_URL = 'http://127.0.0.1:8000/'
 
