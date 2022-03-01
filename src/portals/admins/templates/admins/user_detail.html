@@ -83,8 +83,10 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card">
+                        <div class="card-body border-bottom">
+                            <p class="card-title mb-0">User Statistics</p>
+                        </div>
                         <div class="card-body">
-                            <p class="card-title">Wallet</p>
 
                             <div class="row">
 
@@ -98,7 +100,7 @@
                                 </div>
 
                                 <div class="col">
-                                    <p class="mb-0 text-center h3 text-danger"><i class="mdi mdi-arrow-down"></i>
+                                    <p class="mb-0 text-center h3 text-danger"><i class="mdi mdi-arrow-up"></i>
                                     </p>
                                     <p class="mb-0 text-center small">Sent</p>
                                     <p class="mb-0 text-center h4">
@@ -108,7 +110,7 @@
                                 </div>
 
                                 <div class="col">
-                                    <p class="mb-0 text-center h3 text-success"><i class="mdi mdi-arrow-up"></i></p>
+                                    <p class="mb-0 text-center h3 text-success"><i class="mdi mdi-arrow-down"></i></p>
                                     <p class="mb-0 text-center small">Received</p>
                                     <p class="mb-0 text-center h4">
                                     $ {{ object.get_user_wallet.total_transactions_amount_received }} <span
@@ -138,7 +140,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body border-bottom">
-                    <p class="card-title mb-0">Top Up Requests</p>
+                    <p class="card-title mb-0">Top Up's</p>
                 </div>
                 <div class="card-body">
 
@@ -226,7 +228,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body border-bottom">
-                    <p class="card-title mb-0">Top Up Requests</p>
+                    <p class="card-title mb-0">Transactions</p>
                 </div>
                 <div class="card-body">
 
@@ -256,16 +258,6 @@
                                         </td>
                                         <td>
                                             <div class="row">
-                                                <div class="cols pr-4">
-                                                    {% if object.sender_wallet.user.profile_image %}
-                                                        <img class="rounded-circle avatar-xs"
-                                                             src="{{ object.sender_wallet.user.profile_image.url }}"
-                                                             alt="">
-                                                    {% else %}
-                                                        <img class="rounded-circle avatar-xs"
-                                                             src="{% static 'core/images/no-user.png' %}" alt="">
-                                                    {% endif %}
-                                                </div>
                                                 <div class="cols">
                                                     <a href="{% url 'admin-portal:user-detail' object.sender_wallet.user.pk %}">
                                                         {% if object.sender_wallet.user.profile_image %}
@@ -278,26 +270,12 @@
                                                                 {{ object.sender_wallet.user.username }}
                                                             </h5>
                                                         {% endif %}
-
-                                                        <p class="text-muted mb-0">
-                                                            <i class="fa fa-wallet"></i> {{ object.sender_wallet.user.get_user_wallet.pk }}
-                                                        </p>
                                                     </a>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="row">
-                                                <div class="cols pr-4">
-                                                    {% if object.receiver_wallet.user.profile_image %}
-                                                        <img class="rounded-circle avatar-xs"
-                                                             src="{{ object.receiver_wallet.user.profile_image.url }}"
-                                                             alt="">
-                                                    {% else %}
-                                                        <img class="rounded-circle avatar-xs"
-                                                             src="{% static 'core/images/no-user.png' %}" alt="">
-                                                    {% endif %}
-                                                </div>
                                                 <div class="cols">
                                                     <a href="{% url 'admin-portal:user-detail' object.receiver_wallet.user.pk %}">
                                                         {% if object.receiver_wallet.user.first_name %}
@@ -310,10 +288,6 @@
                                                                 {{ object.receiver_wallet.user.username }}
                                                             </h5>
                                                         {% endif %}
-
-                                                        <p class="text-muted mb-0">
-                                                            <i class="fa fa-wallet"></i> {{ object.receiver_wallet.user.get_user_wallet.pk }}
-                                                        </p>
                                                     </a>
                                                 </div>
                                             </div>
@@ -362,7 +336,7 @@
                         <tr>
                             <td colspan="7">
                                 <p class="mb-0 text-danger">
-                                    <b><i class="fa fa-exclamation-circle"></i> No top up's requests available
+                                    <b><i class="fa fa-exclamation-circle"></i> No transactions requests available
                                         for this user</b>
                                 </p>
                             </td>
@@ -377,7 +351,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body border-bottom">
-                    <p class="card-title mb-0">Withdrawal Requests</p>
+                    <p class="card-title mb-0">Withdrawals</p>
                 </div>
                 <div class="card-body">
 
@@ -388,6 +362,7 @@
                                 <tr>
                                     <th scope="col">Transaction ID</th>
                                     <th scope="col">Bank</th>
+                                    <th scope="col">Account</th>
                                     <th scope="col">Amount</th>
                                     <th scope="col">Tax</th>
                                     <th scope="col">Date</th>
@@ -409,8 +384,8 @@
                                             <h5 class="text-truncate font-size-14 mb-0">
                                                 <i class="bx bxs-bank"></i> {{ object.bank_name }}
                                             </h5>
-                                            <p class="text-muted mb-0"># {{ object.account_number }}</p>
                                         </td>
+                                        <td><p class="text-muted mb-0"># {{ object.account_number }}</p></td>
                                         <td><b>${{ object.total }}</b></td>
                                         <td><b><i class="fa fa-coins text-danger"></i> ${{ object.tax }}</b>
                                         </td>

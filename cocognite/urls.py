@@ -1,10 +1,14 @@
-from . import settings
+from django.conf.urls import url
+
+from cocognite import settings
 from dj_rest_auth.registration.views import VerifyEmailView
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, include, re_path
 from src.accounts.views import GoogleLoginView, CustomRegisterAccountView
+from django.views.static import serve
+
 # from src.website.views import handler404
 
 urlpatterns = [
@@ -36,5 +40,7 @@ urlpatterns = [
     # url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += [
+    url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    url(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
+]

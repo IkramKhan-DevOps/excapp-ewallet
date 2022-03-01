@@ -1,6 +1,8 @@
 import os
+from pathlib import Path
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR_NEW = Path(__file__).resolve().parent.parent
 
 """ CONFIGURATIONS -----------------------------------------------------------------------------------------------"""
 
@@ -13,7 +15,7 @@ SECRET_KEY = 's(l5vi&5nq3619gdskadhgjaksd981234hlaskhjdlasd'
 
 DEBUG = True
 SERVER = True
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 if SERVER:
     STRIPE_PUBLISHABLE_KEY = 'pk_test_51KOk8vBXdgScJTxkzqhOkxuFkEQMmPEovaPOPkasrJSfFQytvh0gXHcZop8eB7KZzr0YWpWK2pr3vHAZMDoMpRsc00czwWEk29'
