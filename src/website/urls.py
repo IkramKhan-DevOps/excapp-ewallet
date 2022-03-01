@@ -1,4 +1,6 @@
 from django.urls import path
+from django.views.generic import TemplateView
+
 from .views import (
     HomeView, Error404View, PrivacyPolicyView, TermsAndConditionsView,
     BlogDetailView, BlogView, ContactView, ComingSoonView, LoginView, SignUpView, ForgetPasswordView,
@@ -11,7 +13,6 @@ urlpatterns = [
     path('', HomeView.as_view(), name='home'),
     path('privacy-policy/', PrivacyPolicyView.as_view(), name='privacy-policy'),
     path('terms-and-conditions/', TermsAndConditionsView.as_view(), name='terms-and-conditions'),
-    path('404/', Error404View.as_view(), name='404'),
     path('signup/', SignUpView.as_view(), name='signup'),
     path('login/', LoginView.as_view(), name='login'),
     path('forget/', ForgetPasswordView.as_view(), name='forget-password'),
