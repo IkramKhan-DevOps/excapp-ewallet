@@ -47,21 +47,13 @@
                         </div>
                         <div class="col text-center">
                             <p class="mb-0 text-center h3"><i class="mdi mdi-package"></i></p>
-                            <p class="mb-0 text-center h5">Package</p>
-                            <p class="mb-0 text-center text-danger">Not subscribed</p>
+                            <p class="mb-0 text-center h5">Wallet</p>
+                            <p class="mb-0 text-center">#{{ user.get_user_wallet.pk }}</p>
                         </div>
                         <div class="col">
-                            <p class="mb-0 text-center h3"><i class="mdi mdi-link"></i></p>
-                            <p class="mb-0 text-center h5">Referral</p>
-                            {% if user.referred_by %}
-                                <p class="mb-0 text-center">
-                                    <a href="{% url 'admin-portal:user-detail' user.referred_by.pk %}">
-                                        {{ user.referred_by.username }}
-                                    </a>
-                                </p>
-                            {% else %}
-                                <p class="mb-0 text-center text-danger">Not Linked</p>
-                            {% endif %}
+                            <p class="mb-0 text-center h3"><i class="fa fa-coins"></i></p>
+                            <p class="mb-0 text-center h5">Amount</p>
+                            <p class="mb-0 text-center text-danger">{{ user.get_user_wallet.amount }}</p>
                         </div>
 
                         <div class="col">
@@ -97,41 +89,40 @@
                             <div class="row">
 
                                 <div class="col">
-                                    <p class="mb-0 text-center h3 text-success"><i class="mdi mdi-arrow-up"></i></p>
+                                    <p class="mb-0 text-center h3 text-primary"><i class="bx bx-import"></i></p>
                                     <p class="mb-0 text-center small">TopUp</p>
-                                    <p class="mb-0 text-center h4">{{ statistic.current_amount|floatformat:2 }}</p>
+                                    <p class="mb-0 text-center h4">
+                                        $ {{ object.get_user_wallet.total_top_up_amount }} <span
+                                            class="font-size-14 text-muted">({{ object.get_user_wallet.total_top_up }})</span>
+                                    </p>
                                 </div>
 
                                 <div class="col">
                                     <p class="mb-0 text-center h3 text-danger"><i class="mdi mdi-arrow-down"></i>
                                     </p>
-                                    <p class="mb-0 text-center small">Withdrawal Amount</p>
-                                    <p class="mb-0 text-center h4">{{ statistic.withdrawn_amount|floatformat:2 }}</p>
-                                </div>
-
-                                <div class="col">
-                                    <p class="mb-0 text-center h3"><i class="mdi mdi-counter"></i></p>
-                                    <p class="mb-0 text-center small">Task Amount</p>
-                                    <p class="mb-0 text-center h4">{{ statistic.tasks_amount_total|floatformat:2 }}</p>
-                                </div>
-
-                                <div class="col">
-                                    <p class="mb-0 text-center h3"><i class="mdi mdi-share"></i></p>
-                                    <p class="mb-0 text-center small">Referral Amount</p>
-                                    <p class="mb-0 text-center h4">{{ statistic.referrals_amount_total }}</p>
-                                </div>
-
-                                <div class="col">
-                                    <p class="mb-0 text-center h3"><i class="mdi mdi-format-list-checks"></i></p>
-                                    <p class="mb-0 text-center small">Total Tasks</p>
-                                    <p class="mb-0 text-center h4">{{ statistic.tasks_completed }}</p>
-                                </div>
-
-                                <div class="col">
-                                    <p class="mb-0 text-center h3"><i class="mdi mdi-format-list-bulleted-type"></i>
+                                    <p class="mb-0 text-center small">Sent</p>
+                                    <p class="mb-0 text-center h4">
+                                    $ {{ object.get_user_wallet.total_transactions_amount_sent }} <span
+                                            class="font-size-14 text-muted">({{ object.get_user_wallet.total_transactions_sent }})</span>
                                     </p>
-                                    <p class="mb-0 text-center small">Total Referrals</p>
-                                    <p class="mb-0 text-center h4">{{ statistic.referrals_completed }}</p>
+                                </div>
+
+                                <div class="col">
+                                    <p class="mb-0 text-center h3 text-success"><i class="mdi mdi-arrow-up"></i></p>
+                                    <p class="mb-0 text-center small">Received</p>
+                                    <p class="mb-0 text-center h4">
+                                    $ {{ object.get_user_wallet.total_transactions_amount_received }} <span
+                                            class="font-size-14 text-muted">({{ object.get_user_wallet.total_transactions_received }})</span>
+                                    </p>
+                                </div>
+
+                                <div class="col">
+                                    <p class="mb-0 text-center h3 text-primary"><i class="bx bx-export"></i></p>
+                                    <p class="mb-0 text-center small">Withdrawal</p>
+                                    <p class="mb-0 text-center h4">
+                                    $ {{ object.get_user_wallet.total_withdrawal_amount }} <span
+                                            class="font-size-14 text-muted">({{ object.get_user_wallet.total_withdrawal }})</span>
+                                    </p>
                                 </div>
 
                             </div>
@@ -266,14 +257,14 @@
                                         <td>
                                             <div class="row">
                                                 <div class="cols pr-4">
-                                                        {% if object.sender_wallet.user.profile_image %}
-                                                            <img class="rounded-circle avatar-xs"
-                                                                 src="{{ object.sender_wallet.user.profile_image.url }}"
-                                                                 alt="">
-                                                        {% else %}
-                                                            <img class="rounded-circle avatar-xs"
-                                                                 src="{% static 'core/images/no-user.png' %}" alt="">
-                                                        {% endif %}
+                                                    {% if object.sender_wallet.user.profile_image %}
+                                                        <img class="rounded-circle avatar-xs"
+                                                             src="{{ object.sender_wallet.user.profile_image.url }}"
+                                                             alt="">
+                                                    {% else %}
+                                                        <img class="rounded-circle avatar-xs"
+                                                             src="{% static 'core/images/no-user.png' %}" alt="">
+                                                    {% endif %}
                                                 </div>
                                                 <div class="cols">
                                                     <a href="{% url 'admin-portal:user-detail' object.sender_wallet.user.pk %}">

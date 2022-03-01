@@ -32,11 +32,10 @@
             <div class="card">
                 <div class="card-body">
 
-
-                    <div class="table-responsive">
-                        <table class="table table-borderless">
-                            {% if object_list %}
-                                <thead class="border-bottom">
+                    {% if object_list %}
+                        <div class="table-responsive">
+                            <table class="table table-centered table-nowrap table-hover">
+                                <thead class="thead-light">
                                 <tr>
                                     <th>ID</th>
                                     <th>Name</th>
@@ -68,21 +67,24 @@
                                         </td>
 
                                         <td>
-                                            <a href="{% url 'admin-portal:user-detail' user.pk %}"
-                                               class="text-decoration-none"><i
-                                                    class="mdi mdi-eye icon-sm"></i> View
-                                            </a>
+                                            <b>
+                                                <a href="{% url 'admin-portal:user-detail' user.pk %}"
+                                                   class="text-decoration-none"><i
+                                                        class="mdi mdi-eye icon-sm"></i> View
+                                                </a>
+                                            </b>
                                         </td>
                                     </tr>
                                 {% endfor %}
 
                                 </tbody>
-                            {% else %}
-                                <th class="text-danger">No users data available.</th>
-                            {% endif %}
-                        </table>
-                    </div>
-
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-danger mb-0">
+                            <b><i class="fa fa-exclamation-circle"></i> No users found.</b>
+                        </p>
+                    {% endif %}
 
                 </div>
             </div>
