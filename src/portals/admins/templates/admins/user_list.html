@@ -2,8 +2,8 @@
 {% load crispy_forms_tags %}
 {% load custom_tags %}
 
-{% block subtitle %}
-    Users List
+{% block base_title %}
+    Users
 {% endblock %}
 
 {% block content %}
@@ -42,10 +42,7 @@
                                     <th>Name</th>
                                     <th>Username</th>
                                     <th>Email</th>
-                                    <th>
-                                        Package
-                                    </th>
-                                    <th>Referred By</th>
+                                    <th>Phone</th>
                                     <th>Active</th>
                                     <th>Action</th>
                                 </tr>
@@ -59,30 +56,7 @@
                                         <td>{{ user.first_name }} {{ user.last_name }}</td>
                                         <td>{{ user.username }}</td>
                                         <td>{{ user.email }}</td>
-                                        <td>
-                                            {% if not user.current_subscription %}
-                                                <b class="text-danger"><i class="fa fa-times-circle"></i> Free</b>
-                                            {% else %}
-                                                <b class="text-success">
-                                                    <i class="fa fa-check-circle"></i> {{ user.current_subscription.package.name }}
-                                                </b>
-                                            {% endif %}
-                                        </td>
-                                        <td>
-
-                                            {% if user.referred_by %}
-                                                <b>
-                                                    <a href="#">
-                                                        {{ user.referred_by.username }}
-                                                    </a>
-                                                </b>
-                                            {% else %}
-                                                <b class="text-danger">
-                                                    None
-                                                </b>
-                                            {% endif %}
-
-                                        </td>
+                                        <td>{{ user.phone_number }}</td>
                                         <td>
                                             {% if user.is_active %}
                                                 <b class="text-success"><i class="fa fa-check-circle"></i></b>
@@ -94,7 +68,7 @@
                                         </td>
 
                                         <td>
-                                            <a href="#"
+                                            <a href="{% url 'admin-portal:user-detail' user.pk %}"
                                                class="text-decoration-none"><i
                                                     class="mdi mdi-eye icon-sm"></i> View
                                             </a>

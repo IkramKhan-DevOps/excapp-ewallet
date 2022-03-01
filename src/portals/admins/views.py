@@ -1,12 +1,16 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, login_required
+from django.contrib.auth.forms import AdminPasswordChangeForm
 from django.core.paginator import Paginator
 from django.db.models import Q, Sum, Count
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from django.utils.decorators import method_decorator
+from django.views import View
 from django.views.decorators.cache import never_cache
 from django.views.generic import (
-    TemplateView,
-    ListView, DetailView)
+    TemplateView, ListView, DetailView, UpdateView
+)
 
 from src.accounts.models import User
 from src.portals.admins.filters import UserFilter
@@ -62,6 +66,54 @@ class UserListView(ListView):
 
         context['object_list'] = page_object
         return context
+
+
+@method_decorator(admin_decorators, name='dispatch')
+class UserDetailView(DetailView):
+    model = User
+    template_name = 'admins/user_detail.html'
+
+    def get_context_data(self, **kwargs):
+
+        context = super(UserDetailView, self).get_context_data(**kwargs)
+        user = User.objects.get(pk=self.kwargs['pk'])
+
+        context['top_up'] = TopUp.objects.filter(wallet__user=user)
+        context['transaction'] = Transaction.objects.filter(
+            Q(sender_wallet__user=user) | Q(receiver_wallet__user=user)
+        )
+        context['withdrawal'] = Withdrawal.objects.filter(wallet__user=user)
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class UserUpdateView(UpdateView):
+    model = User
+    fields = [
+        'profile_image', 'first_name', 'last_name', 'username',
+        'email', 'gender', 'about', 'address', 'phone_number', 'is_customer', 'is_active'
+    ]
+    template_name = 'admins/user_form.html'
+
+    def get_success_url(self):
+        return reverse('admins-portal:user-detail', kwargs={'pk': self.object.pk})
+
+
+@method_decorator(login_required, name='dispatch')
+class UserPasswordResetView(View):
+
+    def get(self, request, pk):
+        user = get_object_or_404(User, pk=pk)
+        form = AdminPasswordChangeForm(user=user)
+        return render(request, 'admins/user_password_reset.html', {'form': form})
+
+    def post(self, request, pk):
+        user = get_object_or_404(User, pk=pk)
+        form = AdminPasswordChangeForm(data=request.POST, user=user)
+        if form.is_valid():
+            form.save(commit=True)
+            messages.success(request, f"{user.get_full_name()}'s password changed successfully.")
+        return render(request, 'admins/user_password_reset.html', {'form': form})
 
 
 """  WITHDRAWALS ------------------------------------------------------------------- """

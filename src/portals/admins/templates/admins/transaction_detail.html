@@ -14,11 +14,7 @@
     {% endif %}
 
     <b class="p-2 bg-dark text-white"><i class="bx bx-transfer"></i> P2P</b>
-    {% if object.sender_wallet.user == request.user %}
-        <b class="p-2 text-danger"><i class="fa fa-arrow-down"></i> Sent</b>
-    {% else %}
-        <b class="p-2 text-success"><i class="fa fa-arrow-up"></i> Received</b>
-    {% endif %}
+
 
 {% endblock %}
 
