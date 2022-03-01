@@ -1,0 +1,141 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block base_title %} Transaction {% endblock %}
+
+{% block page_heading %}
+
+    {% if object.status == 'com' %}
+        <b class="p-2 bg-success text-white"><i class="fa fa-check-circle"></i> {{ object.get_status_display }}</b>
+    {% elif object.status == 'pen' %}
+        <b class="p-2 bg-warning text-white"><i class="fa fa-exclamation-triangle"></i> {{ object.get_status_display }}</b>
+    {% else %}
+        <b class="p-2 bg-danger text-white"><i class="fa fa-times-circle"></i> {{ object.get_status_display }}</b>
+    {% endif %}
+
+    <b class="p-2 bg-dark text-white"><i class="bx bx-transfer"></i> P2P</b>
+    {% if object.sender_wallet.user == request.user %}
+        <b class="p-2 text-danger"><i class="fa fa-arrow-down"></i> Sent</b>
+    {% else %}
+        <b class="p-2 text-success"><i class="fa fa-arrow-up"></i> Received</b>
+    {% endif %}
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-8">
+
+            <div class="card-body border-bottom">
+                <p class="my-0 card-title">Transaction Information</p>
+            </div>
+            <div class="card-body">
+
+                <div class="row mt-4">
+                    <div class="col">
+                        <div class="avatar-sm mb-4">
+                            <span class="avatar-title rounded-circle bg-soft-dark font-size-18">
+                                <i class="fa fa-money-bill text-dark"></i>
+                            </span>
+                        </div>
+                        <p class="mb-0 small">Total Amount</p>
+                        <p class="h1 mb-0">${{ object.total }}</p>
+                    </div>
+                    <div class="col">
+                        <div class="avatar-sm mb-4">
+                            <span class="avatar-title rounded-circle bg-soft-danger font-size-18">
+                                <i class="fa fa-coins text-danger"></i>
+                            </span>
+                        </div>
+                        <p class="mb-0 small text-danger">Tax Charges</p>
+                        <p class="h1 mb-0 text-danger">${{ object.tax }}</p>
+                    </div>
+                    <div class="col">
+                        <div class="avatar-sm mb-4">
+                            <span class="avatar-title rounded-circle bg-soft-dark font-size-18">
+                                <i class="fa fa-hands-helping text-dark"></i>
+                            </span>
+                        </div>
+                        <p class="mb-0 small">Received Amount</p>
+                        <p class="h1 mb-0">${{ object.received }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body border-top">
+                <p class="mb-0"><i class="fa fa-calendar"></i> {{ object.created_on }}</p>
+            </div>
+
+        </div>
+        <div class="col-4">
+
+            <div class="card">
+                <div class="card-body border-bottom">
+                    <p class="my-0 card-title">Sender</p>
+                </div>
+                <div class="card-body">
+
+                    <div class="text-center">
+                        {% if object.sender_Wallet.user.profile_image %}
+                            <img class="rounded-circle avatar-xl" alt="200x200"
+                                 src="{{ object.sender_Wallet.user.profile_image.url }}"
+                                 data-holder-rendered="true">
+                        {% else %}
+                            <img class="rounded-circle avatar-xl" alt="200x200"
+                                 src="{% static 'core/images/no-user.png' %}"
+                                 data-holder-rendered="true">
+                        {% endif %}
+
+                        <p class="h3 mb-0 mt-2">
+                            {% if object.sender_wallet.user.first_name %}
+                                {{ object.sender_wallet.user.first_name }}
+                                {{ object.sender_wallet.user.last_name }}
+                            {% else %}
+                                {{ object.sender_wallet.user.username }}
+                            {% endif %}
+                        </p>
+                        <p class="mb-0">{{ object.sender_wallet.user.email }}</p>
+                        <p class="mb-0"><a href="#"><b><i class="fa fa-wallet"></i> {{ object.sender_wallet.pk }}
+                        </b></a></p>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body border-bottom">
+                    <p class="my-0 card-title">Receiver</p>
+                </div>
+                <div class="card-body">
+
+                    <div class="text-center">
+                        {% if object.receiver_Wallet.user.profile_image %}
+                            <img class="rounded-circle avatar-xl" alt="200x200"
+                                 src="{{ object.receiver_Wallet.user.profile_image.url }}"
+                                 data-holder-rendered="true">
+                        {% else %}
+                            <img class="rounded-circle avatar-xl" alt="200x200"
+                                 src="{% static 'core/images/no-user.png' %}"
+                                 data-holder-rendered="true">
+                        {% endif %}
+
+                        <p class="h3 mb-0 mt-2">
+                            {% if object.receiver_wallet.user.first_name %}
+                                {{ object.receiver_wallet.user.first_name }}
+                                {{ object.receiver_wallet.user.last_name }}
+                            {% else %}
+                                {{ object.receiver_wallet.user.username }}
+                            {% endif %}
+                        </p>
+                        <p class="mb-0">{{ object.receiver_wallet.user.email }}</p>
+                        <p class="mb-0"><a href="#"><b><i class="fa fa-wallet"></i> {{ object.receiver_wallet.pk }}
+                        </b></a></p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

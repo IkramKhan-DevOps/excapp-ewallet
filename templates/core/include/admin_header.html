@@ -9,19 +9,26 @@
 </li>
 
 
+{#USERS#}
+<li class="nav-item">
+    <a class="nav-link dropdown-toggle arrow-none" href="{% url 'admin-portal:user-list' %}">
+        <i class="bx bx-user-circle mr-2"></i>Users
+    </a>
+</li>
+
+
 {# Apps #}
 <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-pages" role="button"
        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="bx bx-customize mr-2"></i>Apps
+        <i class="bx bx-money mr-2"></i>Transactions
         <div class="arrow-down"></div>
     </a>
     <div class="dropdown-menu" aria-labelledby="topnav-pages">
 
-        <a href="#" class="dropdown-item">User Control</a>
-        <a href="#" class="dropdown-item">Wallet Control</a>
-        <a href="#" class="dropdown-item">Transaction Control</a>
-        <a href="#" class="dropdown-item">Withdrawal Control</a>
+        <a href="{% url 'admin-portal:transaction-list' %}" class="dropdown-item">P2P</a>
+        <a href="{% url 'admin-portal:topup-list' %}" class="dropdown-item">TopUps</a>
+        <a href="{% url 'admin-portal:withdrawal-list' %}" class="dropdown-item">Withdrawals</a>
     </div>
 </li>
 

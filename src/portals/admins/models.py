@@ -3,9 +3,20 @@ from django.db import models
 from src.accounts.models import User, Wallet
 
 
+class Country(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+
 class PaymentMethod(models.Model):
     name = models.CharField(max_length=255)
     icon = models.CharField(max_length=100, default="bx bx-transfer")
+    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name_plural = "Payment Methods"

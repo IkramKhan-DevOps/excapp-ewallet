@@ -1,0 +1,79 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block base_title %} # {{ object.pk }} {% endblock %}
+
+{% block page_heading %}
+    <b class="p-2 bg-success text-white"><i class="fa fa-check-circle"></i> Completed</b>
+    <b class="p-2 bg-dark text-white"><i class="bx bx-transfer"></i> Bank Transfer</b>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-8">
+
+            <div class="card-body border-bottom">
+                <p class="my-0 card-title">Withdrawal Information</p>
+            </div>
+            <div class="card-body">
+
+                <div class="row mt-4">
+                    <div class="col">
+                        <div class="avatar-sm mb-4">
+                            <span class="avatar-title rounded-circle bg-soft-dark font-size-18">
+                                <i class="fa fa-money-bill text-dark"></i>
+                            </span>
+                        </div>
+                        <p class="mb-0 small">Total Amount</p>
+                        <p class="h1 mb-0">${{ object.total }}</p>
+                    </div>
+                    <div class="col">
+                        <div class="avatar-sm mb-4">
+                            <span class="avatar-title rounded-circle bg-soft-danger font-size-18">
+                                <i class="fa fa-coins text-danger"></i>
+                            </span>
+                        </div>
+                        <p class="mb-0 small text-danger">Tax Charges</p>
+                        <p class="h1 mb-0 text-danger">${{ object.tax }}</p>
+                    </div>
+                    <div class="col">
+                        <div class="avatar-sm mb-4">
+                            <span class="avatar-title rounded-circle bg-soft-dark font-size-18">
+                                <i class="fa fa-hands-helping text-dark"></i>
+                            </span>
+                        </div>
+                        <p class="mb-0 small">Received Amount</p>
+                        <p class="h1 mb-0">${{ object.received }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body border-top">
+                <p class="mb-0"><i class="fa fa-calendar"></i> {{ object.created_on }}</p>
+            </div>
+
+        </div>
+        <div class="col-4">
+
+            <div class="card">
+                <div class="card-body border-bottom">
+                    <p class="my-0 card-title">Tansfared To</p>
+                </div>
+                <div class="card-body">
+
+                    <div class="text-center">
+                        <p class="h1 mb-0">
+                            <img alt="bank-pic" src="{% static 'core/portals/images/icons8-mastercard-100.png' %}">
+                        </p>
+                        <p class="h3 mb-0">{{ object.bank_name }}</p>
+                        <p class="mb-0"><a href="#"><b>{{ object.account_number }}</b></a></p>
+                        <p class="mb-0">{{ object.account_holder_name }}</p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

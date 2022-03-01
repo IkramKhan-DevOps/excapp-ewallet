@@ -2,7 +2,6 @@ import django_filters
 from django.forms import TextInput
 
 from src.accounts.models import User
-from src.application.models import Quiz, StudentGrade
 
 
 class UserFilter(django_filters.FilterSet):
