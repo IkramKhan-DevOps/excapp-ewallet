@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.core.paginator import Paginator
+from django.db.models import Q, Sum, Count
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
@@ -24,6 +25,23 @@ class DashboardView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(DashboardView, self).get_context_data(**kwargs)
+
+        # TODO:: statistics implementation required ----------------------------------------------------------
+        transaction_statistics = Transaction.objects.filter(status='com').aggregate(Sum('total'), Count('pk'))
+        top_up_statistics = TopUp.objects.filter(status='com').aggregate(Sum('total'), Count('pk'))
+        withdrawal_statistics = Withdrawal.objects.filter(status='com').aggregate(Sum('total'), Count('pk'))
+
+        context['total_transactions_amount'] = Transaction.objects.filter(status='com').count()
+        context['total_transactions_count'] = Transaction.objects.filter(status='com').count()
+        context['total_top_up_amount'] = TopUp.objects.filter(status='com').count()
+        context['total_top_up_count'] = TopUp.objects.filter(status='com').count()
+        context['total_withdrawal_amount'] = Withdrawal.objects.filter(status='com').count()
+        context['total_withdrawal_count'] = Withdrawal.objects.filter(status='com').count()
+        # ----------------------------------------------------------------------------------------------------
+
+        context['transactions_list'] = Transaction.objects.filter()[:10]
+        context['top_up_list'] = TopUp.objects.all()[:10]
+        context['withdrawal_list'] = Withdrawal.objects.all()[:10]
         return context
 
 
