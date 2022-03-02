@@ -1,4 +1,5 @@
 from django.db import models
+from django_resized import ResizedImageField
 
 from src.accounts.models import User, Wallet
 
@@ -8,6 +9,9 @@ class Country(models.Model):
     description = models.TextField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
 
+    class Meta:
+        verbose_name_plural = 'Countries'
+
     def __str__(self):
         return self.name
 
@@ -15,6 +19,11 @@ class Country(models.Model):
 class PaymentMethod(models.Model):
     name = models.CharField(max_length=255)
     icon = models.CharField(max_length=100, default="bx bx-transfer")
+    image = ResizedImageField(
+        upload_to='accounts/images/profiles/', null=True, blank=True, size=[100, 100], quality=75, force_format='PNG',
+        help_text='size of image must be 100*100 and format must be png image file', crop=['middle', 'center']
+    )
+    description = models.TextField(null=True, blank=True)
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True)
     is_active = models.BooleanField(default=True)
 
