@@ -13,9 +13,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 SECRET_KEY = 's(l5vi&5nq3619gdskadhgjaksd981234hlaskhjdlasd'
 
-DEBUG = True
-SERVER = False
-ALLOWED_HOSTS = ['127.0.0.1']
+DEBUG = False
+SERVER = True
+ALLOWED_HOSTS = ['*']
 
 if SERVER:
     STRIPE_PUBLISHABLE_KEY = 'pk_test_51KOk8vBXdgScJTxkzqhOkxuFkEQMmPEovaPOPkasrJSfFQytvh0gXHcZop8eB7KZzr0YWpWK2pr3vHAZMDoMpRsc00czwWEk29'
