@@ -6,6 +6,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django_resized import ResizedImageField
 
+from src.portals.admins.bll import generate_qr_code
+
 
 class User(AbstractUser):
     GENDER_CHOICE = (
@@ -36,16 +38,23 @@ class User(AbstractUser):
         super(User, self).delete(*args, **kwargs)
 
     def get_user_wallet(self):
+
         try:
-            return Wallet.objects.get(user__pk=self.pk)
+            wallet = Wallet.objects.get(user__pk=self.pk)
         except Wallet.DoesNotExist:
-            return Wallet.objects.create(user=self)
+            wallet = Wallet.objects.create(user=self)
+            generate_qr_code(wallet)
+        return wallet
 
 
 class Wallet(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     amount = models.FloatField(default=0)
-    code = models.UUIDField(max_length=1000, default=uuid.uuid4, unique=True, editable=False)
+    qr_code = models.UUIDField(max_length=1000, default=uuid.uuid4, unique=True, editable=False)
+    qr_image = models.ImageField(
+        upload_to='accounts/images/wallets/', null=True, blank=True,
+        help_text='size of logo must be 200*200 and format must be png image file',
+    )
 
     total_top_up_amount = models.FloatField(default=0)
     total_transactions_amount_sent = models.FloatField(default=0)
@@ -68,4 +77,3 @@ class Wallet(models.Model):
 
     def __str__(self):
         return self.user.username
-

@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (
-    HomeView, Error404View, PrivacyPolicyView, TermsAndConditionsView,
+    HomeView, PrivacyPolicyView, TermsAndConditionsView,
     BlogDetailView, BlogView, ContactView, ComingSoonView, LoginView, SignUpView, ForgetPasswordView,
     SupportView, AboutUsView
 )

@@ -1,6 +1,8 @@
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
+
 from django.db.models import Q
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy, reverse
@@ -9,6 +11,7 @@ from django.views import View
 from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView, ListView, CreateView, DetailView
 from src.accounts.decorators import customer_required
+from src.portals.admins.bll import generate_qr_code
 from src.portals.admins.models import (
     Withdrawal, Transaction, TopUp, PaymentMethod
 )
@@ -16,6 +19,7 @@ from src.accounts.models import (
     Wallet
 )
 from src.portals.customer.forms import WithdrawalForm
+import qrcode
 
 User = get_user_model()
 
@@ -38,6 +42,15 @@ class DashboardView(TemplateView):
         context['top_up_list'] = TopUp.objects.filter(wallet__user=self.request.user)[:10]
         context['withdrawal_list'] = Withdrawal.objects.filter(wallet__user=self.request.user)[:10]
         return context
+
+
+@method_decorator(customer_nocache_decorators, name='dispatch')
+class WalletGenerateQRCodeView(View):
+
+    def get(self, request, pk):
+        wallet = get_object_or_404(Wallet.objects.all(), pk=pk)
+        generate_qr_code(wallet)
+        return redirect('customer-portal:wallet-detail')
 
 
 """ ---------------------------------------------------------------------------------------------------------------- """

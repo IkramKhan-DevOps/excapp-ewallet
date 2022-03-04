@@ -140,17 +140,24 @@
 
             {# QR #}
             <div class="card">
-                <div class="card-header bg-white p-0 border-bottom">
-                    <img src="{% static 'core/images/qr-code-image.png' %}" class="img-fluid">
+                <div class="card-header bg-white border-bottom text-center">
+                    {% if wallet.qr_image %}
+                        <img src="{{ object.qr_image.url }}" class="img-fluid">
+                    {% else %}
+                        <p class="mb-0 text-danger"><b>No QR Code Found!</b></p>
+                    {% endif %}
                 </div>
                 <div class="card-body">
                     <div class="">
-                        <p class="small mb-0">Your QR Code</p>
-                        <h3 class="text-secondary">
-                            35678912379
-                            <button class="btn btn-light"><i class="fa fa-copy"></i></button>
-                            <button class="btn btn-light"><i class="fa fa-plus"></i> Generate</button>
-                        </h3>
+                        <p class="mb-0">Your QR Code</p>
+                        <div class="input-group mb-2">
+                            <input id="qr-code" class="form-control border-0 bg-light" disabled value="{{ object.qr_code|truncatechars:100 }}">
+                            <div class="input-group-append">
+                                <button onclick="copy_code()" class="btn btn-dark"><i class="fa fa-copy"></i></button>
+                            </div>
+                        </div>
+                        <a href="{% url 'customer-portal:generate-qr-code' object.pk %}" class="btn btn-danger"><i
+                                class="fa fa-qrcode"></i> Generate New Code</a>
                     </div>
 
                 </div>
@@ -193,4 +200,15 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block base_external_scripts %}
+    <script>
+        function copy_code() {
+            var copyText = document.getElementById("qr-code");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+        }
+    </script>
 {% endblock %}
