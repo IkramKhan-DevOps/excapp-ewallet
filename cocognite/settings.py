@@ -10,7 +10,6 @@ AUTH_USER_MODEL = 'accounts.User'
 ROOT_URLCONF = 'cocognite.urls'
 WSGI_APPLICATION = 'cocognite.wsgi.application'
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
-
 SECRET_KEY = 's(l5vi&5nq3619gdskadhgjaksd981234hlaskhjdlasd'
 
 DEBUG = False

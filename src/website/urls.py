@@ -1,6 +1,4 @@
 from django.urls import path
-from django.views.generic import TemplateView
-
 from .views import (
     HomeView, Error404View, PrivacyPolicyView, TermsAndConditionsView,
     BlogDetailView, BlogView, ContactView, ComingSoonView, LoginView, SignUpView, ForgetPasswordView,
