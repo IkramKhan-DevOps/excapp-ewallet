@@ -3,8 +3,8 @@ from .views import (
     DashboardView, WalletDetailView, WalletGenerateQRCodeView,
     TopUpListView, TopUpInvoiceView, TopUpDetailView, TopUpCreateView,
     TransactionListView, TransactionDetailView, TransactionInvoiceView, TransactionCreateView,
-    WithdrawalListView, WithdrawalInvoiceView, WithdrawalDetailView, WithdrawalCreateView
-)
+    WithdrawalListView, WithdrawalInvoiceView, WithdrawalDetailView, WithdrawalCreateView,
+    UserSanctionsUpdateView)
 
 app_name = "customer-portal"
 urlpatterns = [
@@ -12,6 +12,7 @@ urlpatterns = [
     path('', DashboardView.as_view(), name='dashboard'),
     path('wallet/', WalletDetailView.as_view(), name='wallet-detail'),
     path('wallet/<int:pk>/generate/qr-code/', WalletGenerateQRCodeView.as_view(), name='generate-qr-code'),
+    path('user/sanctions/change/', UserSanctionsUpdateView.as_view(), name='user-sanctions-change'),
 
     path('topup/', TopUpListView.as_view(), name='topup-list'),
     path('topup/add/', TopUpCreateView.as_view(), name='topup-create'),

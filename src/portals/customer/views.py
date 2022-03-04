@@ -1,4 +1,4 @@
-
+from django.forms import ModelForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
@@ -16,10 +16,9 @@ from src.portals.admins.models import (
     Withdrawal, Transaction, TopUp, PaymentMethod
 )
 from src.accounts.models import (
-    Wallet
+    Wallet, UserSanction
 )
 from src.portals.customer.forms import WithdrawalForm
-import qrcode
 
 User = get_user_model()
 
@@ -63,6 +62,43 @@ class WalletDetailView(DetailView):
 
     def get_object(self, queryset=None):
         return self.request.user.get_user_wallet()
+
+    def get_context_data(self, **kwargs):
+        context = super(WalletDetailView, self).get_context_data(**kwargs)
+        context['sanction_form'] = self.request.user.get_user_sanctions()
+        return context
+
+
+@method_decorator(customer_decorators, name='dispatch')
+class UserSanctionsUpdateView(View):
+
+    def post(self, request, *args, **kwargs):
+        user_sanction = UserSanction.objects.get(user=self.request.user)
+        _is_app_allowed = request.POST.get('is_app_allowed')
+        _is_top_up_allowed = request.POST.get('is_top_up_allowed')
+        _is_transaction_allowed = request.POST.get('is_transaction_allowed')
+        _is_withdrawal_allowed = request.POST.get('is_withdrawal_allowed')
+
+        user_sanction.is_app_allowed = False
+        user_sanction.is_transaction_allowed = False
+        user_sanction.is_withdrawal_allowed = False
+        user_sanction.is_top_up_allowed = False
+
+        if _is_app_allowed is not None:
+            user_sanction.is_app_allowed = True
+
+        if _is_top_up_allowed is not None:
+            user_sanction.is_top_up_allowed = True
+
+        if _is_transaction_allowed is not None:
+            user_sanction.is_transaction_allowed = True
+
+        if _is_withdrawal_allowed is not None:
+            user_sanction.is_withdrawal_allowed = True
+
+        user_sanction.save()
+        messages.success(request, f"{self.request.user} permissions updated successfully.")
+        return redirect('customer-portal:wallet-detail')
 
 
 """ ---------------------------------------------------------------------------------------------------------------- """

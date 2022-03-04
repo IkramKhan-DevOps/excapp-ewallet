@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+from src.accounts.models import UserSanction
 from .models import (
     PaymentMethod, TopUp, Transaction, Withdrawal, Country
 )
@@ -48,4 +49,5 @@ admin.site.register(Country, CountryAdmin)
 admin.site.register(TopUp, TopUpAdmin)
 admin.site.register(Transaction, TransactionAdmin)
 admin.site.register(Withdrawal, WithdrawalAdmin)
+admin.site.register(UserSanction)
 

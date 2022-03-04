@@ -2,9 +2,7 @@
 {% load static %}
 
 {% block base_title %} {{ request.user }} {% endblock %}
-
 {% block base_links %}{% endblock %}
-
 {% block content %}
 
     <div class="row">
@@ -151,7 +149,8 @@
                     <div class="">
                         <p class="mb-0">Your QR Code</p>
                         <div class="input-group mb-2">
-                            <input id="qr-code" class="form-control border-0 bg-light" disabled value="{{ object.qr_code|truncatechars:100 }}">
+                            <input id="qr-code" class="form-control border-0 bg-light" disabled
+                                   value="{{ object.qr_code|truncatechars:100 }}">
                             <div class="input-group-append">
                                 <button onclick="copy_code()" class="btn btn-dark"><i class="fa fa-copy"></i></button>
                             </div>
@@ -171,30 +170,48 @@
                     </p>
                 </div>
                 <div class="card-body">
+                    <form method="post" action="{% url 'customer-portal:user-sanctions-change' %}">
+                        {% csrf_token %}
+                        <div class="square-switch">
+                            <b>App allowed! </b><br>
+                            <input type="checkbox" id="is_app_allowed" name="is_app_allowed" switch="bool"
+                                    {% if sanction_form.is_app_allowed %}
+                                   checked=""
+                                    {% endif %} >
+                            <label for="is_app_allowed" data-on-label="Yes" data-off-label="No"></label>
+                        </div>
+                        <div class="square-switch">
+                            <b>TopUp allowed! </b><br>
+                            <input type="checkbox" id="is_top_up_allowed" name="is_top_up_allowed" switch="bool"
+                                    {% if sanction_form.is_top_up_allowed %}
+                                   checked=""
+                                    {% endif %}>
+                            <label for="is_top_up_allowed" data-on-label="Yes" data-off-label="No"></label>
+                        </div>
+                        <div class="square-switch">
+                            <b>Withdrawals allowed! </b><br>
+                            <input type="checkbox" id="is_withdrawal_allowed" name="is_withdrawal_allowed" switch="bool"
+                                    {% if sanction_form.is_withdrawal_allowed %}
+                                   checked=""
+                                    {% endif %}>
+                            <label for="is_withdrawal_allowed" data-on-label="Yes" data-off-label="No"></label>
+                        </div>
+                        <div class="square-switch">
+                            <b>Transactions allowed! </b><br>
+                            <input type="checkbox" id="is_transaction_allowed" name="is_transaction_allowed"
+                                   switch="bool" {% if sanction_form.is_transaction_allowed %}
+                                   checked=""
+                            {% endif %}>
+                            <label for="is_transaction_allowed" data-on-label="Yes" data-off-label="No"></label>
+                        </div>
                     <p class="text-muted">
                         Here are certain permissions to control your wallet, by checking yes these features will be
                         useable otherwise you can block these features
                     </p>
-                    <div class="square-switch">
-                        <b>App allowed! </b><br>
-                        <input type="checkbox" id="square-a" switch="bool" checked="">
-                        <label for="square-a" data-on-label="Yes" data-off-label="No"></label>
-                    </div>
-                    <div class="square-switch">
-                        <b>TopUp allowed! </b><br>
-                        <input type="checkbox" id="square-tu" switch="bool" checked="">
-                        <label for="square-tu" data-on-label="Yes" data-off-label="No"></label>
-                    </div>
-                    <div class="square-switch">
-                        <b>Withdrawals allowed! </b><br>
-                        <input type="checkbox" id="square-w" switch="bool" checked="">
-                        <label for="square-w" data-on-label="Yes" data-off-label="No"></label>
-                    </div>
-                    <div class="square-switch">
-                        <b>Transactions allowed! </b><br>
-                        <input type="checkbox" id="square-t" switch="bool" checked="">
-                        <label for="square-t" data-on-label="Yes" data-off-label="No"></label>
-                    </div>
+                        <div class="mt-2">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-shield-virus"></i> Update Permissions</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
