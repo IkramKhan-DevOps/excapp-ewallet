@@ -18,4 +18,3 @@ def generate_qr_code(wallet):
     wallet.qr_image.delete(save=True)
     wallet.qr_image.save(f'image{wallet.pk}.png', File(buffer), save=True)
     canvas.close()
-    

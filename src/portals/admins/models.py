@@ -10,6 +10,7 @@ class Country(models.Model):
     is_active = models.BooleanField(default=True)
 
     class Meta:
+        ordering = ['name']
         verbose_name_plural = 'Countries'
 
     def __str__(self):
@@ -28,6 +29,7 @@ class PaymentMethod(models.Model):
     is_active = models.BooleanField(default=True)
 
     class Meta:
+        ordering = ['name']
         verbose_name_plural = "Payment Methods"
 
     def __str__(self):
@@ -56,6 +58,7 @@ class TopUp(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        ordering = ['-created_on']
         verbose_name_plural = "Top Ups"
 
     def __str__(self):
@@ -89,6 +92,7 @@ class Withdrawal(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        ordering = ['-created_on']
         verbose_name_plural = "Withdrawals"
 
     def __str__(self):
@@ -117,6 +121,7 @@ class Transaction(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        ordering = ['-created_on']
         verbose_name_plural = "Transactions"
 
     def __str__(self):

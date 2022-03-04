@@ -142,7 +142,7 @@
             <div class="card">
                 <div class="card-header bg-white border-bottom text-center">
                     {% if wallet.qr_image %}
-                        <img src="{{ object.qr_image.url }}" class="img-fluid">
+                        <img alt="qr-image" src="{{ object.qr_image.url }}" class="img-fluid">
                     {% else %}
                         <p class="mb-0 text-danger"><b>No QR Code Found!</b></p>
                     {% endif %}

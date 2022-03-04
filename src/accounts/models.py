@@ -1,11 +1,12 @@
 import uuid
 
 from django.contrib.auth.models import AbstractUser
-from django.db import models
+from django.db import models, signals
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django_resized import ResizedImageField
 
+from cocognite import settings
 from src.portals.admins.bll import generate_qr_code
 
 
@@ -28,6 +29,7 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=15, null=True, blank=True)
 
     class Meta:
+        ordering = ['-date_joined']
         verbose_name_plural = "Users"
 
     def __str__(self):
@@ -38,13 +40,19 @@ class User(AbstractUser):
         super(User, self).delete(*args, **kwargs)
 
     def get_user_wallet(self):
-
         try:
             wallet = Wallet.objects.get(user__pk=self.pk)
         except Wallet.DoesNotExist:
             wallet = Wallet.objects.create(user=self)
             generate_qr_code(wallet)
         return wallet
+
+    def get_user_sanctions(self):
+        try:
+            sanction = UserSanction.objects.get(user__pk=self.pk)
+        except UserSanction.DoesNotExist:
+            sanction = UserSanction.objects.create(user=self)
+        return sanction
 
 
 class Wallet(models.Model):
@@ -73,7 +81,30 @@ class Wallet(models.Model):
     is_active = models.BooleanField(default=True)
 
     class Meta:
+        ordering = ['-user']
         verbose_name_plural = 'Wallets'
 
     def __str__(self):
         return self.user.username
+
+
+class UserSanction(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    is_app_allowed = models.BooleanField(default=True)
+    is_top_up_allowed = models.BooleanField(default=False)
+    is_transaction_allowed = models.BooleanField(default=False)
+    is_withdrawal_allowed = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-user']
+        verbose_name_plural = 'User Sanctions'
+
+
+""" ---------------------------------------------------------------------------------------- """
+
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL, dispatch_uid="create_statics")
+def user_post_create_init(sender, created, instance, **kwargs):
+    if created:
+        instance.get_user_wallet()
+        instance.get_user_sanctions()
