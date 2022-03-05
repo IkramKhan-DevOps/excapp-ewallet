@@ -7,15 +7,17 @@
 
 {% block content %}
 
-    <div class="row mb-2">
-        <div class="col-12">
+    {% if request.user.get_user_sanctions.is_top_up_allowed %}
+        <div class="row mb-2">
+            <div class="col-12">
 
-            <a class="btn btn-primary" href="{% url 'customer-portal:topup-create' %}">
-                <i class="fa fa-arrow-up"></i> Load Balance
-            </a>
+                <a class="btn btn-primary" href="{% url 'customer-portal:topup-create' %}">
+                    <i class="fa fa-arrow-up"></i> Load Balance
+                </a>
 
+            </div>
         </div>
-    </div>
+    {% endif %}
 
     <div class="row">
         <div class="col-12">
@@ -99,33 +101,33 @@
 
     {% if object_list %}
         <div class="row">
-        <div class="col-lg-12">
-            <ul class="pagination pagination-rounded justify-content-center mt-4">
-                {% if page_obj.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page=1"><<</a>
+            <div class="col-lg-12">
+                <ul class="pagination pagination-rounded justify-content-center mt-4">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1"><<</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                <i class="mdi mdi-chevron-left"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li class="page-item active">
+                        <a class="page-link">{{ page_obj.number }}</a>
                     </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
-                            <i class="mdi mdi-chevron-left"></i>
-                        </a>
-                    </li>
-                {% endif %}
-                <li class="page-item active">
-                    <a class="page-link">{{ page_obj.number }}</a>
-                </li>
-                {% if page_obj.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}"><i
-                                class="mdi mdi-chevron-right"></i></a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">>></a>
-                    </li>
-                {% endif %}
-            </ul>
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}"><i
+                                    class="mdi mdi-chevron-right"></i></a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">>></a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
-    </div>
     {% endif %}
 
 {% endblock %}

@@ -4,6 +4,9 @@ from django_resized import ResizedImageField
 from src.accounts.models import User, Wallet
 
 
+""" GENERAL """
+
+
 class Country(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
@@ -15,6 +18,9 @@ class Country(models.Model):
 
     def __str__(self):
         return self.name
+
+
+""" MAIN """
 
 
 class PaymentMethod(models.Model):
@@ -126,3 +132,43 @@ class Transaction(models.Model):
 
     def __str__(self):
         return str(self.pk)
+
+
+""" TICKET SYSTEM """
+
+
+class TicketType(models.Model):
+    PRIORITY_CHOICES = (
+        ('h', 'High'),
+        ('m', 'Medium'),
+        ('l', 'Low'),
+    )
+    name = models.CharField(max_length=255)
+    priority = models.CharField(max_length=1, choices=PRIORITY_CHOICES)
+
+    class Meta:
+        ordering = ['-id']
+
+    def __str__(self):
+        return self.name
+
+
+class Ticket(models.Model):
+    PRIORITY_CHOICES = (
+        ('h', 'High'),
+        ('m', 'Medium'),
+        ('l', 'Low'),
+    )
+    ticket_type = models.ForeignKey(TicketType, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    description = models.TextField(null=True, blank=True)
+
+    is_completed = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-id']
+
+    def __str__(self):
+        return self.user.username

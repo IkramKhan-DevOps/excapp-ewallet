@@ -7,15 +7,17 @@
 
 {% block content %}
 
-    <div class="row mb-2">
-        <div class="col-12">
+    {% if request.user.get_user_sanctions.is_withdrawal_allowed %}
+        <div class="row mb-2">
+            <div class="col-12">
 
-            <a class="btn btn-primary" href="{% url 'customer-portal:withdrawal-create' %}">
-                <i class="fa fa-arrow-right"></i> Withdraw
-            </a>
+                <a class="btn btn-primary" href="{% url 'customer-portal:withdrawal-create' %}">
+                    <i class="fa fa-arrow-right"></i> Withdraw
+                </a>
 
+            </div>
         </div>
-    </div>
+    {% endif %}
 
     <div class="row">
         <div class="col-12">
