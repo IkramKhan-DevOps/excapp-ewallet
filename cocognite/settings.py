@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     'src.portals.customer',
     'src.portals.admins',
     'src.payments',
+    'src.api',
 
     # MUST BE AT THE END
     'notifications'

@@ -10,7 +10,8 @@ from django.views import View
 from django.views.decorators.cache import never_cache
 from django.views.generic import (
     TemplateView, ListView, DetailView, UpdateView,
-    CreateView)
+    CreateView
+)
 
 from src.accounts.models import User
 from src.portals.admins.filters import UserFilter
