@@ -1,3 +1,4 @@
+import notifications.urls
 from django.conf.urls import url
 from django.views.generic import TemplateView
 
@@ -25,7 +26,7 @@ urlpatterns += [
     path('a/', include('src.portals.admins.urls', namespace='admin-portal')),
     path('c/', include('src.portals.customer.urls', namespace='moderator-portal')),
     path('api/', include('src.api.urls', namespace='api')),
-    # url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
+    url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
 ]
 
 urlpatterns += [
