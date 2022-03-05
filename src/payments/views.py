@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
+from notifications.signals import notify
 
 from cocognite import settings
 from src.accounts.models import Wallet
@@ -136,6 +137,16 @@ class SuccessView(TemplateView):
         wallet.total_top_up += 1
         wallet.total_top_up_amount += top_up.total
         wallet.save()
+
+        # TODO: notification
+        notify.send(
+            request.user,
+            recipient=wallet.user,
+            verb=f'Balance Load',
+            level='info',
+            description=f"You have successfully deposited an amount of ${top_up.total} to your wallet."
+        )
+        # ------------------
 
         return render(request, self.template_name)
 

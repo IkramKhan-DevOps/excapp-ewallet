@@ -10,6 +10,8 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView, ListView, CreateView, DetailView
+from notifications.signals import notify
+
 from src.accounts.decorators import customer_required
 from src.portals.admins.bll import generate_qr_code, check_sanction_for_web
 from src.portals.admins.models import (
@@ -119,12 +121,11 @@ class TopUpCreateView(CreateView):
     fields = ['total']
     template_name = 'customer/topup_create.html'
 
-    def dispatch(self, request, *args, **kwargs):
+    def dispatch(self, *args, **kwargs):
         if not check_sanction_for_web(self.request.user.get_user_sanctions(), 'top_up'):
             messages.error(self.request, "You don't have permission to perform any Top Up.")
             return redirect('customer-portal:topup-list')
-
-        return super(TopUpCreateView, self).setup(**kwargs)
+        return super(TopUpCreateView, self).dispatch(self.request)
 
     def form_valid(self, form):
         form.instance.wallet = self.request.user.get_user_wallet()
@@ -217,6 +218,25 @@ class TransactionCreateView(View):
                             status='com',
                             received=amount, tax=0
                         )
+
+                        # TODO: notification
+                        notify.send(
+                            request.user,
+                            recipient=sender_wallet.user,
+                            verb=f'Funds Transferred',
+                            level='info',
+                            description=f"You have successfully transferred an amount of ${amount} to ${receiver_wallet.user.username}"
+                        )
+                        # ------------------
+                        # TODO: notification
+                        notify.send(
+                            request.user,
+                            recipient=receiver_wallet.user,
+                            verb=f'Funds Received',
+                            level='info',
+                            description=f"You have received an amount of ${amount} from ${sender_wallet.user.username}"
+                        )
+                        # ------------------
                         # TODO: calculate_charges + bll
                         messages.success(request,
                                          f"Amount {amount} successfully transferred to receiver {receiver_wallet.pk}")
@@ -360,6 +380,15 @@ class TicketCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        # TODO: notification
+        notify.send(
+            self.request.user,
+            recipient=self.request.user,
+            verb=f'Ticket Created',
+            level='info',
+            description=f"Your ticket has been created successfully, support team will contact you on your email."
+        )
+        # ------------------
         return super(TicketCreateView, self).form_valid(form)
 
     def get_success_url(self):
