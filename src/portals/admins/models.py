@@ -171,4 +171,4 @@ class Ticket(models.Model):
         ordering = ['-id']
 
     def __str__(self):
-        return self.user.username
+        return str(self.pk)

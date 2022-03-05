@@ -3,18 +3,18 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib.auth.forms import AdminPasswordChangeForm
 from django.core.paginator import Paginator
 from django.db.models import Q, Sum, Count
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.cache import never_cache
 from django.views.generic import (
-    TemplateView, ListView, DetailView, UpdateView
-)
+    TemplateView, ListView, DetailView, UpdateView,
+    CreateView)
 
 from src.accounts.models import User
 from src.portals.admins.filters import UserFilter
-from src.portals.admins.models import Withdrawal, Transaction, TopUp
+from src.portals.admins.models import Withdrawal, Transaction, TopUp, Ticket
 
 admin_decorators = [login_required, user_passes_test(lambda u: u.is_superuser)]
 admin_nocache_decorators = [login_required, user_passes_test(lambda u: u.is_superuser), never_cache]
@@ -182,3 +182,32 @@ class TopUpInvoiceView(DetailView):
         return get_object_or_404(
             TopUp.objects.filter(status='com'), pk=self.kwargs['pk']
         )
+
+
+""" -------------------------------------------------------------------------- """
+
+
+@method_decorator(admin_decorators, name='dispatch')
+class TicketListView(ListView):
+    paginate_by = 25
+    queryset = Ticket.objects.all()
+
+
+@method_decorator(admin_decorators, name='dispatch')
+class TicketDetailView(DetailView):
+    model = Ticket
+
+
+@method_decorator(admin_decorators, name='dispatch')
+class TicketStatusChangeView(View):
+
+    def get(self, request, pk,  *args, **kwargs):
+        ticket = Ticket.objects.get(pk=pk)
+        if ticket.is_completed:
+            messages.success(request, f"ID {ticket.pk} has re-opened and case has been marked as unresolved")
+            ticket.is_completed = False
+        else:
+            messages.success(request, f"ID {ticket.pk} has been closed and case has been marked as resolved")
+            ticket.is_completed = True
+        ticket.save()
+        return redirect('admin-portal:ticket-detail', ticket.pk)

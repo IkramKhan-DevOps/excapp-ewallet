@@ -13,8 +13,8 @@ from django.views.generic import TemplateView, ListView, CreateView, DetailView
 from src.accounts.decorators import customer_required
 from src.portals.admins.bll import generate_qr_code, check_sanction_for_web
 from src.portals.admins.models import (
-    Withdrawal, Transaction, TopUp, PaymentMethod
-)
+    Withdrawal, Transaction, TopUp, PaymentMethod,
+    Ticket)
 from src.accounts.models import (
     Wallet, UserSanction
 )
@@ -338,3 +338,39 @@ class WithdrawalCreateView(View):
         self.context['form'] = self.form_class
         return render(request, self.template_name, self.context)
 
+
+""" ---------------------------------------------------------------------------------------------------------------- """
+
+
+@method_decorator(customer_required, name='dispatch')
+class TicketListView(ListView):
+    template_name = 'customer/ticket_list.html'
+    paginate_by = 25
+
+    def get_queryset(self):
+        return Ticket.objects.filter(user=self.request.user)
+
+
+@method_decorator(customer_required, name='dispatch')
+class TicketCreateView(CreateView):
+    template_name = 'customer/ticket_create.html'
+    model = Ticket
+    fields = ['ticket_type', 'description']
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(TicketCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('customer-portal:ticket-list')
+
+
+@method_decorator(customer_required, name='dispatch')
+class TicketDetailView(DetailView):
+    model = Ticket
+    template_name = 'customer/ticket_detail.html'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(
+            Ticket.objects.filter(user=self.request.user), pk=self.kwargs['pk']
+        )

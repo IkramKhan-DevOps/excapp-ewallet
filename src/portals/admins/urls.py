@@ -5,8 +5,9 @@ from src.portals.admins.views import (
     UserListView, UserDetailView, UserUpdateView, UserPasswordResetView,
     TopUpListView, TopUpDetailView, TopUpInvoiceView,
     TransactionListView, TransactionDetailView, TransactionInvoiceView,
-    WithdrawalListView, WithdrawalDetailView, WithdrawalInvoiceView
-)
+    WithdrawalListView, WithdrawalDetailView, WithdrawalInvoiceView,
+    TicketListView, TicketDetailView,
+    TicketStatusChangeView)
 
 app_name = "admin-portal"
 urlpatterns = [
@@ -27,5 +28,9 @@ urlpatterns = [
     path('withdrawal/', WithdrawalListView.as_view(), name='withdrawal-list'),
     path('withdrawal/<int:pk>/', WithdrawalDetailView.as_view(), name='withdrawal-detail'),
     path('withdrawal/<int:pk>/invoice/', WithdrawalInvoiceView.as_view(), name='withdrawal-invoice'),
+
+    path('ticket/', TicketListView.as_view(), name='ticket-list'),
+    path('ticket/<int:pk>/', TicketDetailView.as_view(), name='ticket-detail'),
+    path('ticket/<int:pk>/status/change/', TicketStatusChangeView.as_view(), name='ticket-status-change'),
 
 ]

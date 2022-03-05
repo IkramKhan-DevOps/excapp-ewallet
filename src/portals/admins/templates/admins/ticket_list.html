@@ -1,0 +1,135 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{% block base_title %} Tickets {% endblock %}
+{% block page_heading %} Tickets{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-12">
+
+            <div class="card">
+                <div class="card-body">
+                    {% if object_list %}
+
+                        <div class="table-responsive">
+                            <table class="table table-centered table-nowrap table-hover">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">User</th>
+                                    <th scope="col">email</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Priority</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Opened On</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for object in object_list %}
+                                    <tr>
+                                        <td>
+                                            {{ object.pk }}
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'admin-portal:user-detail' object.user.pk %}"><b>
+                                                {% if object.user.first_name %}
+                                                    {{ object.user.first_name }} {{ object.user.last_name }}
+                                                {% else %}
+                                                    {{ object.user.username }}
+                                                {% endif %}
+                                                </b>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <b><a href="mailto:{{ object.user.email }}">{{ object.user.email }}</a></b>
+                                        </td>
+                                        <td>
+                                            {{ object.ticket_type.name }}
+                                        </td>
+                                        <td>
+                                            {% if object.ticket_type.priority == 'h' %}
+                                                <b class="text-danger">
+                                                    <i class="fa fa-check-circle"></i> High
+                                                </b>
+                                            {% elif object.ticket_type.priority == 'm' %}
+                                                <b class="text-warning">
+                                                    <i class="fa fa-check-circle"></i> Medium
+                                                </b>
+                                            {% else %}
+                                                <b class="text-secondary">
+                                                    <i class="fa fa-check-circle"></i> Low
+                                                </b>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if object.is_active %}
+                                                <b class="text-success">
+                                                    <i class="fa fa-check-circle"></i>
+                                                </b>
+                                            {% else %}
+                                                <b class="text-danger">
+                                                    <i class="fa fa-times-circle"></i>
+                                                </b>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ object.created_on }}</td>
+                                        <td>
+                                            <a href="{% url 'admin-portal:ticket-detail' object.pk %}"><b><i
+                                                    class="fa fa-eye"></i> view</b></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    {% else %}
+                        <p class="text-danger">
+                            <b><i class="fa fa-exclamation-circle"></i> No Tickets opened yet.</b>
+                        </p>
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    {% if object_list %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="mt-4">
+                    <ul class="pagination">
+                        {% if object_list.has_previous %}
+                            <li>
+                            <span>
+                                <a href="{% relative_url object_list.previous_page_number 'page' request.GET.urlencode %}">
+                                    Previous
+                                </a>
+                            </span>
+                            </li>
+                        {% endif %}
+                        <li class="">
+                            <span>Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.</span>
+                        </li>
+                        {% if object_list.has_next %}
+                            <li>
+                            <span>
+                                <a href="{% relative_url object_list.next_page_number 'page' request.GET.urlencode %}">
+                                    Next
+                                </a>
+                            </span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

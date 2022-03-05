@@ -4,12 +4,12 @@ from .views import (
     TopUpListView, TopUpInvoiceView, TopUpDetailView, TopUpCreateView,
     TransactionListView, TransactionDetailView, TransactionInvoiceView, TransactionCreateView,
     WithdrawalListView, WithdrawalInvoiceView, WithdrawalDetailView, WithdrawalCreateView,
-    UserSanctionsUpdateView
+    UserSanctionsUpdateView,
+    TicketListView, TicketCreateView, TicketDetailView
 )
 
 app_name = "customer-portal"
 urlpatterns = [
-
     path('', DashboardView.as_view(), name='dashboard'),
     path('wallet/', WalletDetailView.as_view(), name='wallet-detail'),
     path('wallet/<int:pk>/generate/qr-code/', WalletGenerateQRCodeView.as_view(), name='generate-qr-code'),
@@ -30,4 +30,7 @@ urlpatterns = [
     path('withdrawal/<int:pk>/', WithdrawalDetailView.as_view(), name='withdrawal-detail'),
     path('withdrawal/<int:pk>/invoice/', WithdrawalInvoiceView.as_view(), name='withdrawal-invoice'),
 
+    path('ticket/', TicketListView.as_view(), name='ticket-list'),
+    path('ticket/add/', TicketCreateView.as_view(), name='ticket-create'),
+    path('ticket/<int:pk>/', TicketDetailView.as_view(), name='ticket-detail'),
 ]

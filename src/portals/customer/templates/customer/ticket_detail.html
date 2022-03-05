@@ -1,0 +1,36 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block base_title %} # {{ object.pk }} {% endblock %}
+
+{% block page_heading %}
+    {% if object.is_completed %}
+        <b class="p-2 bg-success text-white"><i class="fa fa-check-circle"></i> Completed</b>
+    {% else %}
+        <b class="p-2 bg-warning text-white"><i class="fa fa-exclamation-circle"></i> Pending</b>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-6 border">
+
+            <div class="card-body border-bottom">
+                <p class="my-0 card-title">Ticket Information</p>
+            </div>
+            <div class="card-body">
+                <p>
+                    <b>
+                        {{ object.description }}
+                    </b>
+                </p>
+            </div>
+            <div class="card-body border-top">
+                <p class="mb-0"><i class="fa fa-calendar"></i> {{ object.created_on }}</p>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

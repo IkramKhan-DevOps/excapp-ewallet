@@ -33,12 +33,19 @@
 </li>
 
 {#DASHBOARD#}
-<li class="nav-item">
-    <a class="nav-link dropdown-toggle arrow-none text-danger" href="#">
-        <b>
-            <i class="fa fa-cog fa fa-spin mr-2"></i>Security
-        </b>
+{# Apps #}
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-pages" role="button"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="bx bx-money mr-2"></i>Settings
+        <div class="arrow-down"></div>
     </a>
+    <div class="dropdown-menu" aria-labelledby="topnav-pages">
+
+        <a href="{% url 'customer-portal:ticket-list' %}" class="dropdown-item">Report</a>
+        <a href="#" class="dropdown-item">2-Step Auth</a>
+        <a href="#" class="dropdown-item">Permissions</a>
+    </div>
 </li>
 
 
