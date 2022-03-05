@@ -14,7 +14,7 @@ from src.accounts.decorators import customer_required
 from src.portals.admins.bll import generate_qr_code, check_sanction_for_web
 from src.portals.admins.models import (
     Withdrawal, Transaction, TopUp, PaymentMethod,
-    Ticket)
+    Ticket, Country)
 from src.accounts.models import (
     Wallet, UserSanction
 )
@@ -336,6 +336,7 @@ class WithdrawalCreateView(View):
     def get(self, request, *args, **kwargs):
 
         self.context['form'] = self.form_class
+        self.context['countries'] = Country.objects.all()
         return render(request, self.template_name, self.context)
 
 

@@ -31,18 +31,38 @@
                 {# RIGHT #}
                 <div class="col-xl-10 col-sm-9">
                     <div class="card">
+
+                        <div class="card-body border-bottom">
+                            <h4 class="card-title mb-0">Payment information</h4>
+                        </div>
+
                         <div class="card-body">
                             <div class="tab-content" id="v-pills-tabContent">
                                 <div class="tab-pane fade active show" id="v-pills-payment" role="tabpanel"
                                      aria-labelledby="v-pills-payment-tab">
                                     <div>
-                                        <h4 class="card-title">Payment information</h4>
-                                        <p class="card-title-desc">Fill all information below</p>
+                                        <div id="div_id_country" class="form-group">
+                                            <label for="id_country" class=" requiredField">Country
+                                                <span class="asteriskField">*</span>
+                                            </label>
+                                            <div class="">
+                                                <select class="form-control" id="country">
+                                                    <option value="0">Select your country</option>
+                                                    {% for country in countries %}
+                                                        <option value="{{ country.pk }}">{{ country.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
 
-                                        <h5 class="mt-5 mb-3 font-size-15">Moreover</h5>
-                                        <div class="p-4 border">
-                                            {% csrf_token %}
-                                            {{ form|crispy }}
+                                        <div class="" id="pay-div">
+
+                                            <p class="card-title mb-0">Payment Methods</p>
+                                            <p class="card-text">Payments methods available in your country</p>
+
+                                            <div class="row" id="pay-methods">
+
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -80,4 +100,43 @@
         </form>
     </div>
 
+{% endblock %}
+
+{% block base_external_scripts %}
+    <script>
+        $(document).ready(function () {
+
+            let pay_div = $('#pay-div');
+            let pay_methods = $('#pay-methods');
+            let country = $('#country');
+
+            pay_div.hide();
+            country.change(function (event) {
+                const value = $(this).val();
+                if (value !== '0') {
+                    pay_div.show();
+                    pay_methods.html('');
+                    get_payment_methods_api(value);
+                }else{
+                    pay_div.hide();
+                }
+            });
+
+            function get_payment_methods_api(country) {
+                $.get('/api/paymentmethod/?country=' + country, function (data) {
+                    let html_ = '';
+                    for (let i = 0; i < data.length; i++) {
+                        html_ += `<div class="cols text-center p-4 bg-light mr-2">
+                                                    <a href="#" id="pay-link" class="text-secondary">
+                                                        <h3 class="mb-0"><i class="${data[i].icon}" id="pay-icon"></i>
+                                                        </h3>
+                                                        <p class="mb-0"><b id="pay-name">${data[i].name}</b></p>
+                                                    </a>
+                                                </div>`;
+                    }
+                    pay_methods.append(html_);
+                });
+            }
+        })
+    </script>
 {% endblock %}
