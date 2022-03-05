@@ -4,7 +4,8 @@ from .views import (
     TopUpListView, TopUpInvoiceView, TopUpDetailView, TopUpCreateView,
     TransactionListView, TransactionDetailView, TransactionInvoiceView, TransactionCreateView,
     WithdrawalListView, WithdrawalInvoiceView, WithdrawalDetailView, WithdrawalCreateView,
-    UserSanctionsUpdateView)
+    UserSanctionsUpdateView
+)
 
 app_name = "customer-portal"
 urlpatterns = [
