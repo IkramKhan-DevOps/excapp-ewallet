@@ -1,0 +1,17 @@
+[
+  {
+    "model": "socialaccount.socialapp",
+    "pk": 1,
+    "fields": {
+      "provider": "google",
+      "name": "EXARTH-DEV-GOOGLE OAuth2",
+      "client_id": "370944119419-lcf8s0uj0uhe74cckc2kt9sbekg17lm7.apps.googleusercontent.com",
+      "secret": "i5_Pq1WZvK-Z5p0p60VMC4w3",
+      "key": "",
+      "sites": [
+        1,
+        2
+      ]
+    }
+  }
+]

@@ -144,7 +144,7 @@ class TicketType(models.Model):
         ('l', 'Low'),
     )
     name = models.CharField(max_length=255)
-    priority = models.CharField(max_length=1, choices=PRIORITY_CHOICES)
+    priority = models.CharField(max_length=1, choices=PRIORITY_CHOICES, default='m')
 
     class Meta:
         ordering = ['-id']

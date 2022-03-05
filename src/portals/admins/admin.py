@@ -2,8 +2,8 @@ from django.contrib import admin
 
 from src.accounts.models import UserSanction
 from .models import (
-    PaymentMethod, TopUp, Transaction, Withdrawal, Country
-)
+    PaymentMethod, TopUp, Transaction, Withdrawal, Country,
+    TicketType, Ticket)
 
 
 class TopUpAdmin(admin.ModelAdmin):
@@ -44,10 +44,24 @@ class PaymentMethodAdmin(admin.ModelAdmin):
     list_filter = ['is_active', 'country']
 
 
+class TicketTypeAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'priority']
+    search_fields = ['id', 'name']
+    list_filter = ['priority']
+
+
+class TicketAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user', 'is_completed', 'is_active', 'created_on']
+    search_fields = ['id', 'user']
+    list_filter = ['is_active', 'is_completed', 'ticket_type']
+
+
 admin.site.register(PaymentMethod, PaymentMethodAdmin)
 admin.site.register(Country, CountryAdmin)
 admin.site.register(TopUp, TopUpAdmin)
 admin.site.register(Transaction, TransactionAdmin)
 admin.site.register(Withdrawal, WithdrawalAdmin)
 admin.site.register(UserSanction)
+admin.site.register(TicketType, TicketTypeAdmin)
+admin.site.register(Ticket, TicketAdmin)
 
