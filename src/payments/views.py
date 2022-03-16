@@ -1,7 +1,8 @@
 import json
 
+import requests
 import stripe
-from django.http import JsonResponse, HttpResponse, HttpResponseNotFound
+from django.http import JsonResponse, HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse
 from django.views import View
@@ -12,6 +13,7 @@ from notifications.signals import notify
 from cocognite import settings
 from src.accounts.models import Wallet
 from src.portals.admins.models import TopUp
+import urllib
 
 """ STRIPE REQUESTS"""
 
@@ -72,6 +74,41 @@ def stripe_webhook(request):
         # product = Product.objects.get(id=product_id)
 
     return HttpResponse(status=200)
+
+
+class StripeAuthorizeView(View):
+
+    def get(self, request):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('account_login'))
+        url = 'https://connect.stripe.com/oauth/authorize'
+        params = {
+            'response_type': 'code',
+            'scope': 'read_write',
+            'client_id': settings.STRIPE_CONNECT_CLIENT_ID,
+            'redirect_uri': f'http://127.0.0.1:8000/users/oauth/callback'
+        }
+        url = f'{url}?{urllib.parse.urlencode(params)}'
+        return redirect(url)
+
+
+class StripeAuthorizeCallbackView(View):
+
+    def get(self, request):
+        code = request.GET.get('code')
+        if code:
+            data = {
+                'client_secret': settings.STRIPE_SECRET_KEY,
+                'grant_type': 'authorization_code',
+                'client_id': settings.STRIPE_CONNECT_CLIENT_ID,
+                'code': code
+            }
+            url = 'https://connect.stripe.com/oauth/token'
+            resp = requests.post(url, params=data)
+            print(resp.json())
+        url = reverse('website:home')
+        response = redirect(url)
+        return response
 
 
 class SuccessView(TemplateView):

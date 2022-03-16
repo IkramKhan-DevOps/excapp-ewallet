@@ -8,9 +8,7 @@ def stripe_connect_account_create():
     url = '/v1/accounts/'
     stripe.api_key = settings.STRIPE_SECRET_KEY
     response = stripe.Account.create(
-        type="express",
-        country="UK",
-        email="ikram.khan0762@gmail.com",
+        type="express"
     )
     print(response)
 

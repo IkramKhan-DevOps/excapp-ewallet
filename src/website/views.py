@@ -10,7 +10,6 @@ class HomeView(TemplateView):
     template_name = 'website/home.html'
 
     def get_context_data(self, **kwargs):
-        stripe_connect_account_create()
         return super(HomeView, self).get_context_data(**kwargs)
 
 
