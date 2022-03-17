@@ -12,8 +12,8 @@ WSGI_APPLICATION = 'cocognite.wsgi.application'
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 SECRET_KEY = 's(l5vi&5nq3619gdskadhgjaksd981234hlaskhjdlasd'
 
-DEBUG = True
-SERVER = False
+DEBUG = False
+SERVER = True
 ALLOWED_HOSTS = ['*']
 
 if SERVER:

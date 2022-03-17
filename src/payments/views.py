@@ -87,7 +87,7 @@ class StripeAuthorizeView(View):
             'response_type': 'code',
             'scope': 'read_write',
             'client_id': settings.STRIPE_CONNECT_CLIENT_ID,
-            'redirect_uri': f'http://127.0.0.1:8000/users/oauth/callback'
+            'redirect_uri': f'{settings.DOMAIN_URL}users/oauth/callback'
         }
         url = f'{url}?{urllib.parse.urlencode(params)}'
         return redirect(url)
