@@ -5,7 +5,8 @@ from .views import (
     TransactionListView, TransactionDetailView, TransactionInvoiceView, TransactionCreateView,
     WithdrawalListView, WithdrawalInvoiceView, WithdrawalDetailView, WithdrawalCreateView,
     UserSanctionsUpdateView,
-    TicketListView, TicketCreateView, TicketDetailView
+    TicketListView, TicketCreateView, TicketDetailView,
+    PaymentMethodView
 )
 
 app_name = "customer-portal"
@@ -33,4 +34,6 @@ urlpatterns = [
     path('ticket/', TicketListView.as_view(), name='ticket-list'),
     path('ticket/add/', TicketCreateView.as_view(), name='ticket-create'),
     path('ticket/<int:pk>/', TicketDetailView.as_view(), name='ticket-detail'),
+
+    path('payment-methods/', PaymentMethodView.as_view(), name='payment-methods'),
 ]

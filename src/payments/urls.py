@@ -13,6 +13,7 @@ urlpatterns = [
     path('success/', SuccessView.as_view(), name='success'),  # new
     path('cancelled/', CancelledView.as_view(), name='cancel'),  # new
     path('webhook/', stripe_webhook, name='stripe-webhook'),
+
     path('authorize/', StripeAuthorizeView.as_view(), name='authorize'),
     path('users/oauth/callback/', StripeAuthorizeCallbackView.as_view(), name='authorize_callback'),
 ]

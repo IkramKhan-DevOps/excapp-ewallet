@@ -13,20 +13,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 SECRET_KEY = 's(l5vi&5nq3619gdskadhgjaksd981234hlaskhjdlasd'
 
 DEBUG = True
-SERVER = True
+SERVER = False
 ALLOWED_HOSTS = ['*']
 
 if SERVER:
-    STRIPE_PUBLISHABLE_KEY = 'pk_test_51KOk8vBXdgScJTxkzqhOkxuFkEQMmPEovaPOPkasrJSfFQytvh0gXHcZop8eB7KZzr0YWpWK2pr3vHAZMDoMpRsc00czwWEk29'
-    STRIPE_SECRET_KEY = 'sk_test_51KOk8vBXdgScJTxk22T3bOcTpYhOu508E6udhxCMrezc7AM3DCqtGfvMESsPuQ0pHokZj4zmZx45esCbDdxpUaS3005oAq8vyq'
+    STRIPE_PUBLISHABLE_KEY = 'pk_test_51KNUx8GWh1G1v77h4cAKDbEvH3wEbK4yVZfSGKT5f5wgShK8cipV0ctpNrZ2tqt63fsVmJp4sAk6cs8mogGlzHlL00CTKGtGvE'
+    STRIPE_SECRET_KEY = 'sk_test_51KNUx8GWh1G1v77hDR40VBVDDZTK2pgUZMk0yxDyN4evl4lBg2LyxFyOQCDoLQWhgy1t9bAzcC63c681rUe5mxtv00vHfKyh2r'
     STRIPE_ENDPOINT_SECRET = 'https://exarthdev4.pythonanywhere.com/webhook/'
     STRIPE_CONNECT_CLIENT_ID = 'ca_LJXOn5lzLW8IVP0ikolZhksjmSCP4HZa'
     GOOGLE_CALLBACK_ADDRESS = "https://exarthdev4.pythonanywhere.com/accounts/google/login/callback/"
     SITE_ID = 2
     DOMAIN_URL = 'https://exarthdev4.pythonanywhere.com/'
 else:
-    STRIPE_PUBLISHABLE_KEY = 'pk_test_51KOk8vBXdgScJTxkzqhOkxuFkEQMmPEovaPOPkasrJSfFQytvh0gXHcZop8eB7KZzr0YWpWK2pr3vHAZMDoMpRsc00czwWEk29'
-    STRIPE_SECRET_KEY = 'sk_test_51KOk8vBXdgScJTxk22T3bOcTpYhOu508E6udhxCMrezc7AM3DCqtGfvMESsPuQ0pHokZj4zmZx45esCbDdxpUaS3005oAq8vyq'
+    STRIPE_PUBLISHABLE_KEY = 'pk_test_51KNUx8GWh1G1v77h4cAKDbEvH3wEbK4yVZfSGKT5f5wgShK8cipV0ctpNrZ2tqt63fsVmJp4sAk6cs8mogGlzHlL00CTKGtGvE'
+    STRIPE_SECRET_KEY = 'sk_test_51KNUx8GWh1G1v77hDR40VBVDDZTK2pgUZMk0yxDyN4evl4lBg2LyxFyOQCDoLQWhgy1t9bAzcC63c681rUe5mxtv00vHfKyh2r'
     GOOGLE_CALLBACK_ADDRESS = "http://127.0.0.1:8000/accounts/google/login/callback/"
     STRIPE_ENDPOINT_SECRET = 'whsec_1d8d3fe0a2aa5e4636cd1343c86fdc72d962593725e8d3a4ab8ad122b8522893'
     STRIPE_CONNECT_CLIENT_ID = 'ca_LJXOn5lzLW8IVP0ikolZhksjmSCP4HZa'
@@ -196,7 +196,7 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 OLD_PASSWORD_FIELD_ENABLED = True
 LOGOUT_ON_PASSWORD_CHANGE = False
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 """ RESIZER IMAGE --------------------------------------------------------------------------------"""
 DJANGORESIZED_DEFAULT_SIZE = [1920, 1080]

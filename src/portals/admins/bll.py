@@ -1,4 +1,4 @@
-import qrcode
+import qrcode as qc
 import uuid
 from io import BytesIO
 from PIL import Image, ImageDraw
@@ -9,7 +9,7 @@ def generate_qr_code(wallet):
     wallet.qr_code = uuid.uuid4()
     wallet.save()
 
-    qr_code_img = qrcode.make(wallet.qr_code)
+    qr_code_img = qc.make(wallet.qr_code)
     canvas = Image.new("RGB", (380, 380), "white")
     draw = ImageDraw.Draw(canvas)
     canvas.paste(qr_code_img)

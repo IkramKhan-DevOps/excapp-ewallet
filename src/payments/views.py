@@ -2,6 +2,7 @@ import json
 
 import requests
 import stripe
+from django.contrib import messages
 from django.http import JsonResponse, HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse
@@ -11,7 +12,7 @@ from django.views.generic import TemplateView
 from notifications.signals import notify
 
 from cocognite import settings
-from src.accounts.models import Wallet
+from src.accounts.models import Wallet, StripeAccount
 from src.portals.admins.models import TopUp
 import urllib
 
@@ -81,7 +82,7 @@ class StripeAuthorizeView(View):
     def get(self, request):
         if not self.request.user.is_authenticated:
             return HttpResponseRedirect(reverse('account_login'))
-        url = 'https://connect.stripe.com/oauth/authorize'
+        url = 'https://connect.stripe.com/express/oauth/authorize'
         params = {
             'response_type': 'code',
             'scope': 'read_write',
@@ -105,8 +106,20 @@ class StripeAuthorizeCallbackView(View):
             }
             url = 'https://connect.stripe.com/oauth/token'
             resp = requests.post(url, params=data)
-            print(resp.json())
-        url = reverse('website:home')
+
+            stripe_user_id = resp.json()['stripe_user_id']
+            stripe_access_token = resp.json()['access_token']
+            stripe_refresh_token = resp.json()['refresh_token']
+
+            account = request.user.get_or_create_stripe_account()
+            account.stripe_user_id = stripe_user_id
+            account.stripe_access_token = stripe_access_token
+            account.stripe_refresh_token = stripe_refresh_token
+            account.is_active = True
+            account.save()
+            messages.success(request, "Stripe Account Added successfully")
+
+        url = reverse('accounts:cross-auth-view')
         response = redirect(url)
         return response
 

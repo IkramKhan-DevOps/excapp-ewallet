@@ -404,3 +404,13 @@ class TicketDetailView(DetailView):
         return get_object_or_404(
             Ticket.objects.filter(user=self.request.user), pk=self.kwargs['pk']
         )
+
+
+class PaymentMethodView(TemplateView):
+    template_name = 'customer/payment_method_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PaymentMethodView, self).get_context_data(**kwargs)
+        stripe_account = self.request.user.get_stripe_account()
+        context['stripe_account'] = stripe_account
+        return context
