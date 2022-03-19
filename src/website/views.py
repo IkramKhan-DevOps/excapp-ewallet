@@ -1,15 +1,16 @@
 from django.core.paginator import Paginator
 from django.views.generic import TemplateView, ListView, DetailView
+
+from src.payments.bll import get_connected_account, payout_create
 from src.website.forms import ArticleFilter
 from src.website.models import Article, ArticleTag, ArticleCategory
-
-from src.payments.bll import stripe_connect_account_create
 
 
 class HomeView(TemplateView):
     template_name = 'website/home.html'
 
     def get_context_data(self, **kwargs):
+        print(payout_create())
         return super(HomeView, self).get_context_data(**kwargs)
 
 

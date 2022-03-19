@@ -1,23 +1,17 @@
+from cocognite import settings
 import stripe
 
-from cocognite import settings
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
-# CREATE ACCOUNT [POST]
-def stripe_connect_account_create():
-    url = '/v1/accounts/'
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-    response = stripe.Account.create(
-        type="express"
-    )
-    print(response)
+def stripe_error_filters():
+    pass
 
 
-def stripe_account_create_link():
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-    stripe.AccountLink.create(
-        account="acct_1032D82eZvKYlo2C",
-        refresh_url="https://example.com/reauth",
-        return_url="https://example.com/return",
-        type="account_onboarding",
-    )
+# ACCOUNT INFO >>
+def get_connected_account(stripe_user_id):
+    return stripe.Account.retrieve(stripe_user_id)
+
+
+def payout_create():
+    stripe.Payout.create(amount=1100, currency="usd")
