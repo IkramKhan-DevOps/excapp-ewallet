@@ -8,6 +8,7 @@ from src.accounts.models import User, Wallet
 
 class Country(models.Model):
     name = models.CharField(max_length=255)
+    phone_code = models.CharField(max_length=5)
     description = models.TextField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
 
@@ -81,6 +82,7 @@ class Withdrawal(models.Model):
     tax = models.FloatField(default=0)
     received = models.FloatField(default=0)
     wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, blank=True)
+    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True)
     bank_name = models.CharField(max_length=1000)
     bank_branch = models.CharField(
         max_length=1000, null=True, blank=True

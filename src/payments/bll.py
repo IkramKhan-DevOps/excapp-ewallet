@@ -101,4 +101,12 @@ def stripe_payment_method_delete(customer, bank_account):
     print(response)
 
 
+def stripe_bank_account_verify(customer, bank_account):
+    bank_account = stripe.Customer.retrieve_source(
+        customer, bank_account
+    )
+    response = bank_account.verify(amounts=[32, 45])
+    print(response)
+
+
 """ ---------------------------------------------------------------------------------------------------------------- """
