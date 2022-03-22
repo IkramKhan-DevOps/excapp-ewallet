@@ -13,10 +13,12 @@ def stripe_error_filters():
 """ ---------------------------------------------------------------------------------------------------------------- """
 
 
+# WORKING FINE >>
 def stripe_connected_account(stripe_user_id):
     return stripe.Account.retrieve(stripe_user_id)
 
 
+# WORKING FINE >>
 def stripe_countries_list(limit=None):
     if limit:
         countries = stripe.CountrySpec.list(limit=limit)
@@ -25,6 +27,7 @@ def stripe_countries_list(limit=None):
     return countries
 
 
+# WORKING FINE >>
 def stripe_country_get(name="US"):
     account = stripe.CountrySpec.retrieve(name)
 
@@ -32,8 +35,9 @@ def stripe_country_get(name="US"):
 """ ACCOUNTS ------------------------------------------------------------------------------------------------------- """
 
 
+# WORKING FINE >>
 def stripe_account_create():
-    account = stripe.Account.create(
+    response = stripe.Account.create(
         type="custom",
         country="US",
         email="email@email.com",
@@ -42,6 +46,43 @@ def stripe_account_create():
             "transfers": {"requested": True},
         },
     )
+    print(response)
+
+
+# ERROR IN UPDATE >>
+def stripe_account_update(account_id):
+    response = stripe.Account.modify(
+        id=account_id,
+        metadata={
+            'type': "express",
+            'country': "US",
+            'email': "email@email.com",
+            'capabilities': {
+                "card_payments": {"requested": True},
+                "transfers": {"requested": True},
+            },
+            'individual': {
+                "first_name": "Ikram",
+                "last_name": "Khan",
+                "gender": "male",
+                "id_number": "1350387834811",
+                "phone": "04000000000",
+            },
+        }
+    )
+    print(response)
+
+
+# WORKING FINE >>
+def stripe_account_get(account_id):
+    response = stripe.Account.retrieve(account_id)
+    print(response)
+
+
+# WORKING FINE >>
+def stripe_account_delete(account_id):
+    response = stripe.Account.delete(account_id)
+    print(response['deleted'])
 
 
 """ PAYOUTS -------------------------------------------------------------------------------------------------------- """

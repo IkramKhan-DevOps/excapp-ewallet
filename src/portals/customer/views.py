@@ -13,6 +13,7 @@ from django.views.generic import TemplateView, ListView, CreateView, DetailView
 from notifications.signals import notify
 
 from src.accounts.decorators import customer_required
+from src.payments.bll import stripe_account_delete, stripe_account_create, stripe_account_get, stripe_account_update
 from src.portals.admins.bll import generate_qr_code, check_sanction_for_web
 from src.portals.admins.models import (
     Withdrawal, Transaction, TopUp, PaymentMethod,
@@ -42,6 +43,7 @@ class DashboardView(TemplateView):
         )[:10]
         context['top_up_list'] = TopUp.objects.filter(wallet__user=self.request.user)[:10]
         context['withdrawal_list'] = Withdrawal.objects.filter(wallet__user=self.request.user)[:10]
+
         return context
 
 
