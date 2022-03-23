@@ -13,7 +13,10 @@ from django.views.generic import TemplateView, ListView, CreateView, DetailView
 from notifications.signals import notify
 
 from src.accounts.decorators import customer_required
-from src.payments.bll import stripe_account_delete, stripe_account_create, stripe_account_get, stripe_account_update
+from src.payments.bll import stripe_account_delete, stripe_account_create, stripe_account_get, stripe_account_update, \
+    stripe_countries_list, stripe_country_get, create_customer, stripe_customer_get, stripe_customer_update, \
+    stripe_customer_delete, stripe_connect_bank_accounts_list, stripe_payment_method_create, \
+    stripe_payment_method_attach
 from src.portals.admins.bll import generate_qr_code, check_sanction_for_web
 from src.portals.admins.models import (
     Withdrawal, Transaction, TopUp, PaymentMethod,
@@ -43,7 +46,7 @@ class DashboardView(TemplateView):
         )[:10]
         context['top_up_list'] = TopUp.objects.filter(wallet__user=self.request.user)[:10]
         context['withdrawal_list'] = Withdrawal.objects.filter(wallet__user=self.request.user)[:10]
-
+        stripe_payment_method_attach('cus_LL20Ifk1RmIiFB', 'pm_1Kg7HIGWh1G1v77hkKqIqXDK')
         return context
 
 

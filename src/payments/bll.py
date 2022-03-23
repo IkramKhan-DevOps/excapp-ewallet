@@ -29,7 +29,8 @@ def stripe_countries_list(limit=None):
 
 # WORKING FINE >>
 def stripe_country_get(name="US"):
-    account = stripe.CountrySpec.retrieve(name)
+    country = stripe.CountrySpec.retrieve(name)
+    return country
 
 
 """ ACCOUNTS ------------------------------------------------------------------------------------------------------- """
@@ -49,7 +50,7 @@ def stripe_account_create():
     print(response)
 
 
-# ERROR IN UPDATE >>
+# WORKING FINE >>
 def stripe_account_update(account_id):
     response = stripe.Account.modify(
         id=account_id,
@@ -111,16 +112,30 @@ def stripe_payout_cancel(payout_id):
 """ BANK ACCOUNTS CONNECTED ---------------------------------------------------------------------------------------- """
 
 
+# DONE
 def stripe_connect_bank_accounts_list(customer):
     response = stripe.Customer.list_payment_methods(customer, type="card")
     print(response)
 
 
+# DONE >> first create then attach
 def stripe_payment_method_create(customer):
-    response = stripe.Customer.list_sources(
-        customer,
-        object="bank_account",
-        limit=10,
+    response = stripe.PaymentMethod.create(
+        type="card",
+        card={
+            "number": "4242424242424242",
+            "exp_month": 3,
+            "exp_year": 2023,
+            "cvc": "314",
+        },
+    )
+    print(response)
+
+
+def stripe_payment_method_attach(customer, payment_method):
+    response = stripe.PaymentMethod.attach(
+        payment_method,
+        customer=customer,
     )
     print(response)
 
@@ -150,4 +165,39 @@ def stripe_bank_account_verify(customer, bank_account):
     print(response)
 
 
-""" ---------------------------------------------------------------------------------------------------------------- """
+""" CUSTOMER ------------------------------------------------------------------------------------------------------- """
+
+
+# FINE
+def create_customer():
+    response = stripe.Customer.create(
+        description="My First Test Customer (created for API docs)",
+        email="ikram.khan079962@gmail.com",
+        name="Ikram Khan",
+        phone="+923005849613"
+    )
+    print(response)
+
+
+# FINE
+def stripe_customer_get(customer_id):
+    response = stripe.Customer.retrieve(customer_id)
+    print(response)
+
+
+# FINE
+def stripe_customer_update(customer_id):
+    response = stripe.Customer.modify(
+        customer_id,
+        description="This has been updated"
+    )
+    print(response)
+
+
+# FINE
+def stripe_customer_delete(customer_id):
+    response = stripe.Customer.delete(
+        customer_id
+    )
+    print(response)
+
