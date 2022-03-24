@@ -1,6 +1,6 @@
 from django.db import models
 from django_resized import ResizedImageField
-from src.accounts.models import User, Wallet
+from src.accounts.models import Wallet
 
 
 """ GENERAL """
@@ -161,7 +161,7 @@ class Ticket(models.Model):
         ('l', 'Low'),
     )
     ticket_type = models.ForeignKey(TicketType, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
     description = models.TextField(null=True, blank=True)
 
     is_completed = models.BooleanField(default=False)

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Wallet, StripeAccount
+from .models import User, Wallet
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
@@ -216,15 +216,9 @@ class WalletAdmin(admin.ModelAdmin):
     list_filter = ['is_active']
 
 
-class StripeAccountAdmin(admin.ModelAdmin):
-    list_display = ['pk', 'user', 'stripe_user_id', 'is_active', 'created_on']
-    list_filter = ['is_active']
-
-
 # CUSTOM USER
 admin.site.register(User, UserCustomAdmin)
 admin.site.register(Wallet, WalletAdmin)
-admin.site.register(StripeAccount, StripeAccountAdmin)
 
 admin.site.site_header = "SKISIP | root access"
 admin.site.site_title = "SkiSip"

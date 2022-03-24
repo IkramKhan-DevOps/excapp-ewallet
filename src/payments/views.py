@@ -12,7 +12,7 @@ from django.views.generic import TemplateView
 from notifications.signals import notify
 
 from cocognite import settings
-from src.accounts.models import Wallet, StripeAccount
+from src.accounts.models import Wallet
 from src.portals.admins.models import TopUp
 import urllib
 

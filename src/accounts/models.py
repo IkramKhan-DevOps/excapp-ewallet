@@ -7,6 +7,7 @@ from django.dispatch import receiver
 from django_resized import ResizedImageField
 
 from cocognite import settings
+from src.payments.models import StripeCustomer
 from src.portals.admins.bll import generate_qr_code
 
 
@@ -55,21 +56,9 @@ class User(AbstractUser):
         return sanction
 
     def is_stripe_account_exists(self):
-        if StripeAccount.objects.filter(user__pk=self.pk, is_active=True):
+        if StripeCustomer.objects.filter(user__pk=self.pk, is_active=True):
             return True
         return False
-
-    def get_stripe_account(self):
-        account = StripeAccount.objects.filter(user__pk=self.pk, is_active=True)
-        if account:
-            return account[0]
-        return None
-
-    def get_or_create_stripe_account(self):
-        account = StripeAccount.objects.filter(user__pk=self.pk)
-        if account:
-            return account[0]
-        return StripeAccount.objects.create(user=self)
 
 
 class Wallet(models.Model):
@@ -115,21 +104,6 @@ class UserSanction(models.Model):
     class Meta:
         ordering = ['-user']
         verbose_name_plural = 'User Sanctions'
-
-
-class StripeAccount(models.Model):
-    user = models.OneToOneField('accounts.User', on_delete=models.CASCADE)
-    stripe_user_id = models.CharField(max_length=1000, null=True, blank=True)
-    stripe_refresh_token = models.CharField(max_length=5000, null=True, blank=True)
-    stripe_access_token = models.CharField(max_length=5000, null=True, blank=True)
-    is_active = models.BooleanField(default=False)
-    created_on = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        verbose_name_plural = 'Stripe Accounts'
-
-    def __str__(self):
-        return self.user.username
 
 
 """ ---------------------------------------------------------------------------------------- """
