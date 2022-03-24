@@ -440,9 +440,9 @@ class StripeCustomerAccountCreateView(CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_stripe_account_exists():
-            print("exists")
             messages.warning(request, "Connect Account is already created")
             return redirect('customer-portal:stripe-customer-account')
+        return super(StripeCustomerAccountCreateView, self).dispatch(request)
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -454,6 +454,7 @@ class StripeCustomerAccountUpdateView(UpdateView):
     model = StripeCustomer
     template_name = 'customer/connect_account_update_form.html'
     fields = ['name', 'email', 'phone', 'country']
+    success_url = reverse_lazy('customer-portal:stripe-customer-account')
 
     def dispatch(self, request, *args, **kwargs):
         stripe_customer = StripeCustomer.objects.filter(user=self.request.user)
@@ -469,6 +470,7 @@ class StripeCustomerAccountUpdateView(UpdateView):
 @method_decorator(customer_required, name='dispatch')
 class StripeCustomerAccountDeleteView(DeleteView):
     template_name = 'customer/connect_account_delete.html'
+    success_url = reverse_lazy('customer-portal:stripe-customer-account')
 
     def get_object(self, queryset=None):
         return get_object_or_404(StripeCustomer.objects.filter(user=self.request.user, pk=self.kwargs['pk']))

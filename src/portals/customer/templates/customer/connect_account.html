@@ -6,6 +6,12 @@
 
 {% block content %}
 
+    <div class="row mb-4">
+        <div class="col">
+            <b><a href="{% url 'customer-portal:stripe-customer-account-update' object.pk %}"><i class="fa fa-edit"></i> Update Connect Account Details</a></b>
+        </div>
+    </div>
+
     <div class="row">
 
         {# WALLETS DIV #}
@@ -145,6 +151,13 @@
             </div>
         </div>
 
+    </div>
+
+    <div class="row mt-3">
+        <div class="col">
+            <b><a class="text-danger" href="{% url 'customer-portal:stripe-customer-account-delete' object.pk %}">
+                <i class="fa fa-trash"></i> Remove Connect Account</a></b>
+        </div>
     </div>
 
 {% endblock %}
