@@ -427,12 +427,26 @@ class StripeCustomerAccountView(DetailView):
             return redirect("customer-portal:stripe-customer-account-create")
         return super(StripeCustomerAccountView, self).dispatch(request)
 
+    def get_object(self, queryset=None):
+        return get_object_or_404(StripeCustomer.objects.filter(user=self.request.user))
+
 
 @method_decorator(customer_required, name='dispatch')
 class StripeCustomerAccountCreateView(CreateView):
     model = StripeCustomer
     template_name = 'customer/connect_account_create_form.html'
     fields = ['name', 'email', 'phone', 'country']
+    success_url = reverse_lazy('customer-portal:stripe-customer-account')
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_stripe_account_exists():
+            print("exists")
+            messages.warning(request, "Connect Account is already created")
+            return redirect('customer-portal:stripe-customer-account')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(StripeCustomerAccountCreateView, self).form_valid(form)
 
 
 @method_decorator(customer_required, name='dispatch')

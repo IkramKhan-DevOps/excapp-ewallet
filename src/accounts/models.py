@@ -56,9 +56,15 @@ class User(AbstractUser):
         return sanction
 
     def is_stripe_account_exists(self):
-        if StripeCustomer.objects.filter(user__pk=self.pk, is_active=True):
+        if StripeCustomer.objects.filter(user__pk=self.pk):
             return True
         return False
+
+    def get_stripe_account(self):
+        account = StripeCustomer.objects.filter(user__pk=self.pk)
+        if account:
+            return account[0]
+        return None
 
 
 class Wallet(models.Model):

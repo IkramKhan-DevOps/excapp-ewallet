@@ -15,10 +15,13 @@
                     <p class="mb-0 card-title"><i class="fa fa-award"></i> Create Connect</p>
                 </div>
                 <div class="card-body">
-                    {{ form|crispy }}
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fa fa-check-circle"></i> Submit
-                    </button>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-check-circle"></i> Submit
+                        </button>
+                    </form>
                 </div>
             </div>
 
