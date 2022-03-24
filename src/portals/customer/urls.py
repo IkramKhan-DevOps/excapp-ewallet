@@ -6,8 +6,8 @@ from .views import (
     WithdrawalListView, WithdrawalInvoiceView, WithdrawalDetailView, WithdrawalCreateView,
     UserSanctionsUpdateView,
     TicketListView, TicketCreateView, TicketDetailView,
-    PaymentMethodView
-)
+    StripeCustomerAccountView, StripeCustomerAccountUpdateView, StripeCustomerAccountDeleteView,
+    StripeCustomerAccountCreateView)
 
 app_name = "customer-portal"
 urlpatterns = [
@@ -35,5 +35,8 @@ urlpatterns = [
     path('ticket/add/', TicketCreateView.as_view(), name='ticket-create'),
     path('ticket/<int:pk>/', TicketDetailView.as_view(), name='ticket-detail'),
 
-    path('payment-methods/', PaymentMethodView.as_view(), name='payment-methods'),
+    path('connect/', StripeCustomerAccountView.as_view(), name='stripe-customer-account'),
+    path('connect/create/', StripeCustomerAccountCreateView.as_view(), name='stripe-customer-account-create'),
+    path('connect/<int:pk>/change/', StripeCustomerAccountUpdateView.as_view(), name='stripe-customer-account-update'),
+    path('connect/<int:pk>/delete/', StripeCustomerAccountDeleteView.as_view(), name='stripe-customer-account-delete')
 ]

@@ -1,7 +1,6 @@
 from django.db import models
 from django_resized import ResizedImageField
 
-
 STRIPE_ACCOUNT_TYPE_CHOICES = (
     ('s', "Standard"),
     ('e', "Express"),
@@ -40,6 +39,9 @@ class StripePaymentMethod(models.Model):
 class StripeAcceptedCountry(models.Model):
     country = models.ForeignKey('admins.Country', on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.country.name
+
     class Meta:
         ordering = ['-id']
         verbose_name_plural = "Stripe Accepted Countries"
@@ -47,14 +49,21 @@ class StripeAcceptedCountry(models.Model):
 
 class StripeCustomer(models.Model):
     user = models.OneToOneField('accounts.User', on_delete=models.CASCADE, blank=True)
-    name = models.CharField(max_length=255)
-    email = models.EmailField()
-    phone = models.CharField(max_length=15)
-    country = models.CharField(max_length=255)
+    name = models.CharField(
+        max_length=255,
+        help_text="Kindly! use your full correct name that must be same to your National ID, Passport or Bank Acounts"
+    )
+    email = models.EmailField(help_text="")
+    phone = models.CharField(max_length=15, help_text="Phone number without country code")
+    country = models.CharField(
+        max_length=255,
+        help_text="Select the country in which you reside now, according to your according payments methods, wallets "
+                  "and bank accounts will be visible"
+    )
     state = models.CharField(max_length=255, null=True, blank=True)
     city = models.CharField(max_length=255, null=True, blank=True)
-    postal_code = models.TextField(null=True, blank=True)
-    address = models.TextField(null=True, blank=True)
+    postal_code = models.TextField(null=True, blank=True, help_text="Postal code according to your country")
+    address = models.TextField(null=True, blank=True, help_text="Your home or office address.")
     description = models.CharField(max_length=5000, null=True, blank=True)
 
     is_active = models.BooleanField(default=False)
@@ -81,4 +90,3 @@ class StripeAccount(models.Model):
 
     def __str__(self):
         return self.user.username
-

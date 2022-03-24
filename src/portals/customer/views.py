@@ -4,12 +4,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 
 from django.db.models import Q
+from django.http import Http404
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.cache import never_cache
-from django.views.generic import TemplateView, ListView, CreateView, DetailView
+from django.views.generic import TemplateView, ListView, CreateView, DetailView, DeleteView, UpdateView
 from notifications.signals import notify
 
 from src.accounts.decorators import customer_required
@@ -17,6 +18,7 @@ from src.payments.bll import stripe_account_delete, stripe_account_create, strip
     stripe_countries_list, stripe_country_get, create_customer, stripe_customer_get, stripe_customer_update, \
     stripe_customer_delete, stripe_connect_bank_accounts_list, stripe_payment_method_create, \
     stripe_payment_method_attach
+from src.payments.models import StripeCustomer
 from src.portals.admins.bll import generate_qr_code, check_sanction_for_web
 from src.portals.admins.models import (
     Withdrawal, Transaction, TopUp, PaymentMethod,
@@ -46,7 +48,6 @@ class DashboardView(TemplateView):
         )[:10]
         context['top_up_list'] = TopUp.objects.filter(wallet__user=self.request.user)[:10]
         context['withdrawal_list'] = Withdrawal.objects.filter(wallet__user=self.request.user)[:10]
-        stripe_payment_method_attach('cus_LL20Ifk1RmIiFB', 'pm_1Kg7HIGWh1G1v77hkKqIqXDK')
         return context
 
 
@@ -411,11 +412,49 @@ class TicketDetailView(DetailView):
         )
 
 
-class PaymentMethodView(TemplateView):
-    template_name = 'customer/payment_method_list.html'
+""" -------------------------------------------------------------------------------------------------"""
 
-    def get_context_data(self, **kwargs):
-        context = super(PaymentMethodView, self).get_context_data(**kwargs)
-        stripe_account = self.request.user.get_stripe_account()
-        context['stripe_account'] = stripe_account
-        return context
+
+@method_decorator(customer_required, name='dispatch')
+class StripeCustomerAccountView(DetailView):
+    model = StripeCustomer
+    template_name = 'customer/connect_account.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        stripe_customer = StripeCustomer.objects.filter(user=self.request.user)
+        if not stripe_customer:
+            messages.error(request, "Please create your connect account first")
+            return redirect("customer-portal:stripe-customer-account-create")
+        return super(StripeCustomerAccountView, self).dispatch(request)
+
+
+@method_decorator(customer_required, name='dispatch')
+class StripeCustomerAccountCreateView(CreateView):
+    model = StripeCustomer
+    template_name = 'customer/connect_account_create_form.html'
+    fields = ['name', 'email', 'phone', 'country']
+
+
+@method_decorator(customer_required, name='dispatch')
+class StripeCustomerAccountUpdateView(UpdateView):
+    model = StripeCustomer
+    template_name = 'customer/connect_account_update_form.html'
+    fields = ['name', 'email', 'phone', 'country']
+
+    def dispatch(self, request, *args, **kwargs):
+        stripe_customer = StripeCustomer.objects.filter(user=self.request.user)
+        if not stripe_customer:
+            messages.error(request, "Please create your connect account first")
+            return redirect("customer-portal:stripe-customer-account-create")
+        return super(StripeCustomerAccountUpdateView, self).dispatch(request)
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(StripeCustomer.objects.filter(user=self.request.user, pk=self.kwargs['pk']))
+
+
+@method_decorator(customer_required, name='dispatch')
+class StripeCustomerAccountDeleteView(DeleteView):
+    template_name = 'customer/connect_account_delete.html'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(StripeCustomer.objects.filter(user=self.request.user, pk=self.kwargs['pk']))
