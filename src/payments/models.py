@@ -55,8 +55,8 @@ class StripeCustomer(models.Model):
     )
     email = models.EmailField(help_text="")
     phone = models.CharField(max_length=15, help_text="Phone number without country code")
-    country = models.CharField(
-        max_length=255,
+    country = models.ForeignKey(
+        StripeAcceptedCountry, on_delete=models.SET_NULL, null=True, blank=False,
         help_text="Select the country in which you reside now, according to your according payments methods, wallets "
                   "and bank accounts will be visible"
     )

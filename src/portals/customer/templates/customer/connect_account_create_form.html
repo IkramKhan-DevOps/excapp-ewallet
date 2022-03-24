@@ -7,18 +7,61 @@
 
 {% block content %}
 
-    <div class="row justify-content-center">
-        <div class="col-sm-6">
+    <div class="row">
+        <div class="col-sm-8">
 
             <div class="card">
                 <div class="card-body border-bottom">
-                    <p class="mb-0 card-title"><i class="fa fa-award"></i> Signup For Connect</p>
+                    <p class="mb-0 card-title"><i class="fa fa-award"></i> Create Connect</p>
                 </div>
                 <div class="card-body">
                     {{ form|crispy }}
                     <button type="submit" class="btn btn-primary">
                         <i class="fa fa-check-circle"></i> Submit
                     </button>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-sm-4">
+            <div class="card-body border-bottom">
+                <p><b>Why we need connect Account?</b></p>
+                <p class="card-text">
+                    Connect account is used to connect your Skisip account with your other wallets, cards and bank
+                    accounts, make sure all required information is correct.
+                </p>
+            </div>
+            <div class="card-body">
+                <p><b>Supported Payment Gateways</b></p>
+                <div class="row">
+
+                    <div class="cols p-2">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h1 class="mb-0"><i class="bx bxs-bank"></i></h1>
+                                <p class="mb-0"><b>Banks</b></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cols p-2">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h1 class="mb-0"><i class="bx bxs-wallet"></i></h1>
+                                <p class="mb-0"><b>Wallets</b></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cols p-2">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h1 class="mb-0"><i class="bx bxs-card"></i></h1>
+                                <p class="mb-0"><b>Cards</b></p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
