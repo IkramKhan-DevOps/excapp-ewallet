@@ -29,6 +29,8 @@ class StripePaymentMethod(models.Model):
         null=True, blank=True
     )
 
+    # stripe_payment_methods_id = models.CharField(max_length=1000, unique=True, null=False, blank=True)
+
     is_active = models.BooleanField(default=True)
     created_on = models.BooleanField(default=True)
 
@@ -66,6 +68,8 @@ class StripeCustomer(models.Model):
     address = models.TextField(null=True, blank=True, help_text="Your home or office address.")
     description = models.CharField(max_length=5000, null=True, blank=True)
 
+    # customer_account_id = models.CharField(max_length=255, unique=True, null=False, blank=True)
+
     is_active = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
 
@@ -81,6 +85,8 @@ class StripeAccount(models.Model):
     account_type = models.CharField(max_length=1, choices=STRIPE_ACCOUNT_TYPE_CHOICES, default='e')
     business_type = models.CharField(max_length=1, choices=STRIPE_BUSINESS_TYPE_CHOICES, default='i')
     email = models.EmailField()
+
+    # connect_account_id = models.CharField(max_length=255, unique=True, null=False, blank=True)
 
     is_active = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
