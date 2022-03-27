@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block base_title %} Connect Delete {% endblock %}
+
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <form method="post">{% csrf_token %}
+                        <p class="mb-2">Are you sure you want to delete connected account
+                            <b class="text-danger">"{{ object }}"</b>
+                            ?</p>
+                        <input type="submit" class="btn btn-danger" value="Confirm">
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

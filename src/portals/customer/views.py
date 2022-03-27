@@ -17,7 +17,8 @@ from src.accounts.decorators import customer_required
 from src.payments.bll import stripe_account_delete, stripe_account_create, stripe_account_get, stripe_account_update, \
     stripe_countries_list, stripe_country_get, create_customer, stripe_customer_get, stripe_customer_update, \
     stripe_customer_delete, stripe_connect_bank_accounts_list, stripe_payment_method_create, \
-    stripe_payment_method_attach
+    stripe_payment_method_attach, stripe_setup_pay, stripe_payout_create, stripe_connect_account_create, \
+    stripe_external_account_add, stripe_error_filters, stripe_payout, stripe_to_stripe
 from src.payments.models import StripeCustomer
 from src.portals.admins.bll import generate_qr_code, check_sanction_for_web
 from src.portals.admins.models import (
@@ -48,6 +49,7 @@ class DashboardView(TemplateView):
         )[:10]
         context['top_up_list'] = TopUp.objects.filter(wallet__user=self.request.user)[:10]
         context['withdrawal_list'] = Withdrawal.objects.filter(wallet__user=self.request.user)[:10]
+        stripe_to_stripe()
         return context
 
 
@@ -474,3 +476,22 @@ class StripeCustomerAccountDeleteView(DeleteView):
 
     def get_object(self, queryset=None):
         return get_object_or_404(StripeCustomer.objects.filter(user=self.request.user, pk=self.kwargs['pk']))
+
+
+""" -------------------------------------------------------------------------------------------------"""
+
+
+class StripeBankAccountCreateView(TemplateView):
+    template_name = 'customer/stripe_bank_account_create_form.html'
+
+
+class StripeBankAccountDetailView(TemplateView):
+    template_name = 'customer/stripe_bank_account.html'
+
+
+class StripeBankAccountUpdateView(TemplateView):
+    template_name = 'customer/stripe_bank_account_update_form.html'
+
+
+class StripeBankAccountDeleteView(TemplateView):
+    template_name = 'customer/stripe_bank_account_create_form.html'

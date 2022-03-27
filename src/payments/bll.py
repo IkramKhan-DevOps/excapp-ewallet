@@ -7,7 +7,42 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def stripe_error_filters():
-    pass
+    try:
+        response = stripe.Account.create(
+            type="express",
+            country="US",
+            email="ikram.khan07622@gmail.com",
+            business_type="individual",
+            capabilities={
+                "card_payments": {"requested": True},
+                "transfers": {"requested": True},
+            },
+            individual={
+                "email": "ikram.khan07622@gmail.com",
+                "first_name": "Ikram",
+                "gender": "male",
+                "last_name": "Khans",
+            }
+        )
+        print(response)
+
+    except stripe.error.CardError as e:
+        print('Status is: %s' % e.http_status)
+        print('Code is: %s' % e.code)
+        print('Param is: %s' % e.param)
+        print('Message is: %s' % e.user_message)
+    except stripe.error.RateLimitError as e:
+        print(e)
+    except stripe.error.InvalidRequestError as e:
+        print(e)
+    except stripe.error.AuthenticationError as e:
+        print(e)
+    except stripe.error.APIConnectionError as e:
+        print(e)
+    except stripe.error.StripeError as e:
+        print(e)
+    except Exception as e:
+        print(e)
 
 
 """ ---------------------------------------------------------------------------------------------------------------- """
@@ -90,7 +125,11 @@ def stripe_account_delete(account_id):
 
 
 def stripe_payout_create(amount, bank_account, currency="usd"):
-    response = stripe.Payout.create(amount=amount, currency=currency, destination=bank_account)
+    response = stripe.Payout.create(
+        amount=amount,
+        currency=currency,
+        destination=bank_account
+    )
     print(response)
 
 
@@ -201,3 +240,250 @@ def stripe_customer_delete(customer_id):
     )
     print(response)
 
+
+# FINE
+def stripe_setup_pay():
+    response = stripe.SetupIntent.create(
+        payment_method_types=["card"],
+    )
+    print(response)
+
+
+""" =================================================================================================== """
+
+
+def stripe_connect_account_create():
+    response = stripe.Account.create(
+        type="express",
+        country="US",
+        email="ikram.khan07622@gmail.com",
+        business_type="individual",
+        capabilities={
+            "card_payments": {"requested": True},
+            "transfers": {"requested": True},
+        },
+        individual={
+            "address": "fake address",
+            "email": "ikram.khan07622@gmail.com",
+            "first_name": "Ikram",
+            "gender": "male",
+            "last_name": "Khans",
+        }
+    )
+    print(response)
+
+
+def stripe_external_account_add(account_id="acct_1Khrk12eTaL0y3sK"):
+    response = stripe.Account.create_external_account(
+        account_id,
+        external_account={
+            "object": "bank_account",
+            "country": "US",
+            "currency": "usd",
+            "account_holder_name": "Ikram Khan",
+            "account_holder_type": "individual",
+            "routing_number": "110000000",
+            "account_number": "000123456789",
+        }
+    )
+    print(response)
+
+
+def stripe_to_stripe(account_id="acct_1Khrk12eTaL0y3sK"):
+    response = stripe.Transfer.create(
+        amount=100,
+        currency="usd",
+        destination=account_id,
+        transfer_group="ORDER_95",
+    )
+    print(response)
+
+
+def stripe_payout(account_id="acct_1Khrk12eTaL0y3sK"):
+    response = stripe.Payout.create(amount=1100, currency="usd", destination="ba_1Khrpr2eTaL0y3sKkeC5wT6o")
+    print(response)
+
+# v = {
+#     "business_profile": {
+#         "mcc": null,
+#         "name": null,
+#         "product_description": null,
+#         "support_address": null,
+#         "support_email": null,
+#         "support_phone": null,
+#         "support_url": null,
+#         "url": null
+#     },
+#     "business_type": "individual",
+#     "capabilities": {
+#         "card_payments": "inactive",
+#         "transfers": "inactive"
+#     },
+#     "charges_enabled": false,
+#     "company": {
+#         "address": {
+#             "city": null,
+#             "country": "US",
+#             "line1": null,
+#             "line2": null,
+#             "postal_code": null,
+#             "state": null
+#         },
+#         "directors_provided": true,
+#         "executives_provided": true,
+#         "name": null,
+#         "owners_provided": true,
+#         "tax_id_provided": false,
+#         "verification": {
+#             "document": {
+#                 "back": null,
+#                 "details": null,
+#                 "details_code": null,
+#                 "front": null
+#             }
+#         }
+#     },
+#     "country": "US",
+#     "created": 1648367737,
+#     "default_currency": "usd",
+#     "details_submitted": false,
+#     "email": "ikram.khan0762@gmail.com",
+#     "external_accounts": {
+#         "data": [],
+#         "has_more": false,
+#         "object": "list",
+#         "total_count": 0,
+#         "url": "/v1/accounts/acct_1KhqwnGhJD0zkSfg/external_accounts"
+#     },
+#     "future_requirements": {
+#         "alternatives": [],
+#         "current_deadline": null,
+#         "currently_due": [],
+#         "disabled_reason": null,
+#         "errors": [],
+#         "eventually_due": [],
+#         "past_due": [],
+#         "pending_verification": []
+#     },
+#     "id": "acct_1KhqwnGhJD0zkSfg",
+#     "login_links": {
+#         "data": [],
+#         "has_more": false,
+#         "object": "list",
+#         "total_count": 0,
+#         "url": "/v1/accounts/acct_1KhqwnGhJD0zkSfg/login_links"
+#     },
+#     "metadata": {},
+#     "object": "account",
+#     "payouts_enabled": false,
+#     "requirements": {
+#         "alternatives": [],
+#         "current_deadline": null,
+#         "currently_due": [
+#             "business_profile.mcc",
+#             "business_profile.url",
+#             "external_account",
+#             "individual.address.city",
+#             "individual.address.line1",
+#             "individual.address.postal_code",
+#             "individual.address.state",
+#             "individual.dob.day",
+#             "individual.dob.month",
+#             "individual.dob.year",
+#             "individual.email",
+#             "individual.first_name",
+#             "individual.id_number",
+#             "individual.last_name",
+#             "individual.phone",
+#             "tos_acceptance.date",
+#             "tos_acceptance.ip"
+#         ],
+#         "disabled_reason": "requirements.past_due",
+#         "errors": [],
+#         "eventually_due": [
+#             "business_profile.mcc",
+#             "business_profile.url",
+#             "external_account",
+#             "individual.address.city",
+#             "individual.address.line1",
+#             "individual.address.postal_code",
+#             "individual.address.state",
+#             "individual.dob.day",
+#             "individual.dob.month",
+#             "individual.dob.year",
+#             "individual.email",
+#             "individual.first_name",
+#             "individual.id_number",
+#             "individual.last_name",
+#             "individual.phone",
+#             "tos_acceptance.date",
+#             "tos_acceptance.ip"
+#         ],
+#         "past_due": [
+#             "business_profile.mcc",
+#             "business_profile.url",
+#             "external_account",
+#             "individual.address.city",
+#             "individual.address.line1",
+#             "individual.address.postal_code",
+#             "individual.address.state",
+#             "individual.dob.day",
+#             "individual.dob.month",
+#             "individual.dob.year",
+#             "individual.email",
+#             "individual.first_name",
+#             "individual.id_number",
+#             "individual.last_name",
+#             "individual.phone",
+#             "tos_acceptance.date",
+#             "tos_acceptance.ip"
+#         ],
+#         "pending_verification": []
+#     },
+#     "settings": {
+#         "bacs_debit_payments": {},
+#         "branding": {
+#             "icon": null,
+#             "logo": null,
+#             "primary_color": null,
+#             "secondary_color": null
+#         },
+#         "card_issuing": {
+#             "tos_acceptance": {
+#                 "date": null,
+#                 "ip": null
+#             }
+#         },
+#         "card_payments": {
+#             "decline_on": {
+#                 "avs_failure": false,
+#                 "cvc_failure": false
+#             },
+#             "statement_descriptor_prefix": null
+#         },
+#         "dashboard": {
+#             "display_name": null,
+#             "timezone": "Etc/UTC"
+#         },
+#         "payments": {
+#             "statement_descriptor": null,
+#             "statement_descriptor_kana": null,
+#             "statement_descriptor_kanji": null
+#         },
+#         "payouts": {
+#             "debit_negative_balances": true,
+#             "schedule": {
+#                 "delay_days": 2,
+#                 "interval": "daily"
+#             },
+#             "statement_descriptor": null
+#         },
+#         "sepa_debit_payments": {}
+#     },
+#     "tos_acceptance": {
+#         "date": null,
+#         "ip": null,
+#         "user_agent": null
+#     },
+#     "type": "express"
+# }
