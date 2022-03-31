@@ -252,55 +252,87 @@ def stripe_setup_pay():
 """ =================================================================================================== """
 
 
-def stripe_connect_account_create():
+# FOR PAYOUT  SETTINGS
+# 1: create stripe account (connect)
+# 2: add payment methods (bank/card)
+# 2: transfer stripe to stripe
+# 3: stripe to bank out
+
+
+def stripe_get_balance():
+    response = stripe.Balance.retrieve()
+    print(response)
+
+
+def stripe_connect_account_create(email, fname, lname):
     response = stripe.Account.create(
-        type="express",
-        country="US",
-        email="ikram.khan07622@gmail.com",
-        business_type="individual",
+        type="custom",
+        country="GB",
+        email=email,
         capabilities={
-            "card_payments": {"requested": True},
+            # "card_payments": {"requested": True},
             "transfers": {"requested": True},
         },
+        business_type="individual",
         individual={
-            "address": "fake address",
-            "email": "ikram.khan07622@gmail.com",
-            "first_name": "Ikram",
+            "address": {
+                "city": "London",
+                "country": "GB",
+                "line1": "A4, London WC2N 5DU, UK",
+                "postal_code": "WC2N 5DU",
+                "state": "London",
+            },
+            "dob": {
+                "day": 30,
+                "month": 12,
+                "year": 2001,
+            },
+            "email": email,
+            "first_name": fname,
             "gender": "male",
-            "last_name": "Khans",
+            "last_name": lname,
+            "phone": "3419387283",
+        },
+        tos_acceptance={
+            "date": 1648375904,
+            "ip": "192.168.100.11",
+            "service_agreement": "recipient",
+            "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36"
         }
     )
     print(response)
 
 
-def stripe_external_account_add(account_id="acct_1Khrk12eTaL0y3sK"):
+def stripe_external_account_add(account_id="acct_1KjLsJGgTB55MMlS"):
     response = stripe.Account.create_external_account(
         account_id,
         external_account={
             "object": "bank_account",
-            "country": "US",
-            "currency": "usd",
-            "account_holder_name": "Ikram Khan",
+            "country": "GB",
+            "currency": "gbp",
+            "account_holder_name": "UK 1",
             "account_holder_type": "individual",
-            "routing_number": "110000000",
-            "account_number": "000123456789",
+            "routing_number": "108800",
+            "account_number": "00012345",
         }
     )
     print(response)
 
 
-def stripe_to_stripe(account_id="acct_1Khrk12eTaL0y3sK"):
-    response = stripe.Transfer.create(
-        amount=100,
-        currency="usd",
-        destination=account_id,
-        transfer_group="ORDER_95",
+def stripe_payout(account_id="acct_1KjLsJGgTB55MMlS", bank_id="ba_1KjLyzGgTB55MMlS8f2714Az"):
+    response = stripe.Payout.create(
+        amount=1000, currency="GBP", destination=bank_id, stripe_account=account_id
     )
     print(response)
 
 
-def stripe_payout(account_id="acct_1Khrk12eTaL0y3sK"):
-    response = stripe.Payout.create(amount=1100, currency="usd", destination="ba_1Khrpr2eTaL0y3sKkeC5wT6o")
+def stripe_account_transfer(account_id='acct_1KjLsJGgTB55MMlS'):
+    response = stripe.Transfer.create(
+        amount=10000,
+        currency="usd",
+        destination=account_id,
+        source_type="card",
+    )
     print(response)
 
 # v = {

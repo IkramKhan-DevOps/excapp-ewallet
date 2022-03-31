@@ -18,7 +18,8 @@ from src.payments.bll import stripe_account_delete, stripe_account_create, strip
     stripe_countries_list, stripe_country_get, create_customer, stripe_customer_get, stripe_customer_update, \
     stripe_customer_delete, stripe_connect_bank_accounts_list, stripe_payment_method_create, \
     stripe_payment_method_attach, stripe_setup_pay, stripe_payout_create, stripe_connect_account_create, \
-    stripe_external_account_add, stripe_error_filters, stripe_payout, stripe_to_stripe
+    stripe_external_account_add, stripe_error_filters, stripe_payout, stripe_account_transfer, \
+    stripe_get_balance
 from src.payments.models import StripeCustomer
 from src.portals.admins.bll import generate_qr_code, check_sanction_for_web
 from src.portals.admins.models import (
@@ -49,7 +50,15 @@ class DashboardView(TemplateView):
         )[:10]
         context['top_up_list'] = TopUp.objects.filter(wallet__user=self.request.user)[:10]
         context['withdrawal_list'] = Withdrawal.objects.filter(wallet__user=self.request.user)[:10]
-        stripe_to_stripe()
+
+        account_id = "acct_1KjM822cdRjpWk9K"
+        bank_id = "ba_1KjMAW2cdRjpWk9KRoa2WwV8"
+
+        # stripe_get_balance()
+        # stripe_connect_account_create("gbp3@uk.com", "UK", "3")
+        # stripe_external_account_add(account_id)
+        # stripe_account_transfer(account_id)
+        stripe_payout(account_id, bank_id)
         return context
 
 
