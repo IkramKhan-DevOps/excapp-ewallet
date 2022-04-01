@@ -264,7 +264,8 @@ def stripe_get_balance():
     print(response)
 
 
-def stripe_connect_account_create(email, fname, lname):
+def stripe_connect_account_create(
+        email, fname, lname, phone, country, city, address_line_1, address_line_2, postal_code, day, month, year):
     response = stripe.Account.create(
         type="custom",
         country="GB",

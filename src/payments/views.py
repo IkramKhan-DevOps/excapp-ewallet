@@ -8,11 +8,12 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 from notifications.signals import notify
 
 from cocognite import settings
 from src.accounts.models import Wallet
+from src.payments.models import Connect
 from src.portals.admins.models import TopUp
 import urllib
 
@@ -77,53 +78,6 @@ def stripe_webhook(request):
     return HttpResponse(status=200)
 
 
-class StripeAuthorizeView(View):
-
-    def get(self, request):
-        if not self.request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('account_login'))
-        url = 'https://connect.stripe.com/express/oauth/authorize'
-        params = {
-            'response_type': 'code',
-            'scope': 'read_write',
-            'client_id': settings.STRIPE_CONNECT_CLIENT_ID,
-            'redirect_uri': f'{settings.DOMAIN_URL}users/oauth/callback'
-        }
-        url = f'{url}?{urllib.parse.urlencode(params)}'
-        return redirect(url)
-
-
-class StripeAuthorizeCallbackView(View):
-
-    def get(self, request):
-        code = request.GET.get('code')
-        if code:
-            data = {
-                'client_secret': settings.STRIPE_SECRET_KEY,
-                'grant_type': 'authorization_code',
-                'client_id': settings.STRIPE_CONNECT_CLIENT_ID,
-                'code': code
-            }
-            url = 'https://connect.stripe.com/oauth/token'
-            resp = requests.post(url, params=data)
-
-            stripe_user_id = resp.json()['stripe_user_id']
-            stripe_access_token = resp.json()['access_token']
-            stripe_refresh_token = resp.json()['refresh_token']
-
-            account = request.user.get_or_create_stripe_account()
-            account.stripe_user_id = stripe_user_id
-            account.stripe_access_token = stripe_access_token
-            account.stripe_refresh_token = stripe_refresh_token
-            account.is_active = True
-            account.save()
-            messages.success(request, "Stripe Account Added successfully")
-
-        url = reverse('accounts:cross-auth-view')
-        response = redirect(url)
-        return response
-
-
 class SuccessView(TemplateView):
     template_name = 'payments/success.html'
 
@@ -161,3 +115,7 @@ class SuccessView(TemplateView):
 
 class CancelledView(TemplateView):
     template_name = 'payments/cancelled.html'
+
+
+class ConnectAccount(DetailView):
+    model = Connect

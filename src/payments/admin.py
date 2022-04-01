@@ -1,10 +1,16 @@
 from django.contrib import admin
-from .models import StripeCustomer, StripeAccount, StripeAcceptedCountry, StripePaymentMethod
+from .models import (
+    StripeAcceptedCountry, Connect, City, Currency, ExternalAccount
+)
 
 
-class StripeCustomerAdmin(admin.ModelAdmin):
-    list_display = ['pk', 'user', 'name', 'email', 'phone', 'country', 'is_active', 'created_on']
+class ConnectAdmin(admin.ModelAdmin):
+    list_display = [
+        'pk', 'user', 'connect_id', 'first_name', 'last_name', 'email', 'phone',
+        'country', 'city', 'business_type', 'is_active', 'created_on'
+    ]
     list_filter = ['is_active']
+    search_fields = ['user', 'connect_id', 'first_name', 'last_name', 'email', 'phone']
 
 
 class StripeAccountAdmin(admin.ModelAdmin):
@@ -12,16 +18,20 @@ class StripeAccountAdmin(admin.ModelAdmin):
     list_filter = ['is_active']
 
 
+class CityAdmin(admin.ModelAdmin):
+    list_display = ['pk', 'name', 'country']
+    list_filter = ['country']
+
+
+class CurrencyAdmin(admin.ModelAdmin):
+    list_display = ['pk', 'name']
+
+
 class StripeAcceptedCountryAdmin(admin.ModelAdmin):
     list_display = ['pk', 'country']
+    list_filter = ['country']
 
 
 class StripePaymentMethodAdmin(admin.ModelAdmin):
     list_display = ['pk', 'name', 'is_active', 'created_on']
     list_filter = ['is_active']
-
-
-admin.site.register(StripeCustomer, StripeCustomerAdmin)
-admin.site.register(StripeAccount, StripeAccountAdmin)
-admin.site.register(StripeAcceptedCountry, StripeAcceptedCountryAdmin)
-admin.site.register(StripePaymentMethod, StripePaymentMethodAdmin)

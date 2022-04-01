@@ -20,7 +20,7 @@ from src.payments.bll import stripe_account_delete, stripe_account_create, strip
     stripe_payment_method_attach, stripe_setup_pay, stripe_payout_create, stripe_connect_account_create, \
     stripe_external_account_add, stripe_error_filters, stripe_payout, stripe_account_transfer, \
     stripe_get_balance
-from src.payments.models import StripeCustomer
+from src.payments.models import Connect
 from src.portals.admins.bll import generate_qr_code, check_sanction_for_web
 from src.portals.admins.models import (
     Withdrawal, Transaction, TopUp, PaymentMethod,
@@ -58,7 +58,7 @@ class DashboardView(TemplateView):
         # stripe_connect_account_create("gbp3@uk.com", "UK", "3")
         # stripe_external_account_add(account_id)
         # stripe_account_transfer(account_id)
-        stripe_payout(account_id, bank_id)
+        # stripe_payout(account_id, bank_id)
         return context
 
 
@@ -426,81 +426,65 @@ class TicketDetailView(DetailView):
 """ -------------------------------------------------------------------------------------------------"""
 
 
-@method_decorator(customer_required, name='dispatch')
-class StripeCustomerAccountView(DetailView):
-    model = StripeCustomer
-    template_name = 'customer/connect_account.html'
-
-    def dispatch(self, request, *args, **kwargs):
-        stripe_customer = StripeCustomer.objects.filter(user=self.request.user)
-        if not stripe_customer:
-            messages.error(request, "Please create your connect account first")
-            return redirect("customer-portal:stripe-customer-account-create")
-        return super(StripeCustomerAccountView, self).dispatch(request)
-
-    def get_object(self, queryset=None):
-        return get_object_or_404(StripeCustomer.objects.filter(user=self.request.user))
-
-
-@method_decorator(customer_required, name='dispatch')
-class StripeCustomerAccountCreateView(CreateView):
-    model = StripeCustomer
-    template_name = 'customer/connect_account_create_form.html'
-    fields = ['name', 'email', 'phone', 'country']
-    success_url = reverse_lazy('customer-portal:stripe-customer-account')
-
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_stripe_account_exists():
-            messages.warning(request, "Connect Account is already created")
-            return redirect('customer-portal:stripe-customer-account')
-        return super(StripeCustomerAccountCreateView, self).dispatch(request)
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super(StripeCustomerAccountCreateView, self).form_valid(form)
-
-
-@method_decorator(customer_required, name='dispatch')
-class StripeCustomerAccountUpdateView(UpdateView):
-    model = StripeCustomer
-    template_name = 'customer/connect_account_update_form.html'
-    fields = ['name', 'email', 'phone', 'country']
-    success_url = reverse_lazy('customer-portal:stripe-customer-account')
-
-    def dispatch(self, request, *args, **kwargs):
-        stripe_customer = StripeCustomer.objects.filter(user=self.request.user)
-        if not stripe_customer:
-            messages.error(request, "Please create your connect account first")
-            return redirect("customer-portal:stripe-customer-account-create")
-        return super(StripeCustomerAccountUpdateView, self).dispatch(request)
-
-    def get_object(self, queryset=None):
-        return get_object_or_404(StripeCustomer.objects.filter(user=self.request.user, pk=self.kwargs['pk']))
-
-
-@method_decorator(customer_required, name='dispatch')
-class StripeCustomerAccountDeleteView(DeleteView):
-    template_name = 'customer/connect_account_delete.html'
-    success_url = reverse_lazy('customer-portal:stripe-customer-account')
-
-    def get_object(self, queryset=None):
-        return get_object_or_404(StripeCustomer.objects.filter(user=self.request.user, pk=self.kwargs['pk']))
-
+# @method_decorator(customer_required, name='dispatch')
+# class ConnectAccountView(DetailView):
+#     model = Connect
+#     template_name = 'customer/connect_account.html'
+#
+#     def dispatch(self, request, *args, **kwargs):
+#         stripe_customer = Connect.objects.filter(user=self.request.user)
+#         if not stripe_customer:
+#             messages.error(request, "Please create your connect account first")
+#             return redirect("customer-portal:stripe-customer-account-create")
+#         return super(ConnectAccountView, self).dispatch(request)
+#
+#     def get_object(self, queryset=None):
+#         return get_object_or_404(Connect.objects.filter(user=self.request.user))
+#
+#
+# @method_decorator(customer_required, name='dispatch')
+# class ConnectAccountCreateView(CreateView):
+#     model = Connect
+#     template_name = 'customer/connect_account_create_form.html'
+#     fields = ['name', 'email', 'phone', 'country']
+#     success_url = reverse_lazy('customer-portal:stripe-customer-account')
+#
+#     def dispatch(self, request, *args, **kwargs):
+#         if request.user.is_stripe_account_exists():
+#             messages.warning(request, "Connect Account is already created")
+#             return redirect('customer-portal:stripe-customer-account')
+#         return super(ConnectAccountCreateView, self).dispatch(request)
+#
+#     def form_valid(self, form):
+#         form.instance.user = self.request.user
+#         return super(ConnectAccountCreateView, self).form_valid(form)
+#
+#
+# @method_decorator(customer_required, name='dispatch')
+# class ConnectAccountUpdateView(UpdateView):
+#     model = Connect
+#     template_name = 'customer/connect_account_update_form.html'
+#     fields = ['name', 'email', 'phone', 'country']
+#     success_url = reverse_lazy('customer-portal:stripe-customer-account')
+#
+#     def dispatch(self, request, *args, **kwargs):
+#         stripe_customer = Connect.objects.filter(user=self.request.user)
+#         if not stripe_customer:
+#             messages.error(request, "Please create your connect account first")
+#             return redirect("customer-portal:stripe-customer-account-create")
+#         return super(ConnectAccountUpdateView, self).dispatch(request)
+#
+#     def get_object(self, queryset=None):
+#         return get_object_or_404(Connect.objects.filter(user=self.request.user, pk=self.kwargs['pk']))
+#
+#
+# @method_decorator(customer_required, name='dispatch')
+# class ConnectAccountDeleteView(DeleteView):
+#
+#     template_name = 'customer/connect_account_delete.html'
+#     success_url = reverse_lazy('customer-portal:stripe-customer-account')
+#
+#     def get_object(self, queryset=None):
+#         return get_object_or_404(Connect.objects.filter(user=self.request.user, pk=self.kwargs['pk']))
 
 """ -------------------------------------------------------------------------------------------------"""
-
-
-class StripeBankAccountCreateView(TemplateView):
-    template_name = 'customer/stripe_bank_account_create_form.html'
-
-
-class StripeBankAccountDetailView(TemplateView):
-    template_name = 'customer/stripe_bank_account.html'
-
-
-class StripeBankAccountUpdateView(TemplateView):
-    template_name = 'customer/stripe_bank_account_update_form.html'
-
-
-class StripeBankAccountDeleteView(TemplateView):
-    template_name = 'customer/stripe_bank_account_create_form.html'

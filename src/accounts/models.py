@@ -7,7 +7,7 @@ from django.dispatch import receiver
 from django_resized import ResizedImageField
 
 from cocognite import settings
-from src.payments.models import StripeCustomer
+from src.payments.models import Connect
 from src.portals.admins.bll import generate_qr_code
 
 
@@ -56,12 +56,12 @@ class User(AbstractUser):
         return sanction
 
     def is_stripe_account_exists(self):
-        if StripeCustomer.objects.filter(user__pk=self.pk):
+        if Connect.objects.filter(user__pk=self.pk):
             return True
         return False
 
     def get_stripe_account(self):
-        account = StripeCustomer.objects.filter(user__pk=self.pk)
+        account = Connect.objects.filter(user__pk=self.pk)
         if account:
             return account[0]
         return None

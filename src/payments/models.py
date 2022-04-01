@@ -21,23 +21,6 @@ STRIPE_PAYMENT_TYPE_CHOICES = (
 )
 
 
-class StripePaymentMethod(models.Model):
-    name = models.CharField(max_length=255)
-    icon = models.CharField(max_length=255)
-    image = ResizedImageField(
-        upload_to='portals/accounts/payment_methods/', height_field=100, width_field=200, quality=75,
-        null=True, blank=True
-    )
-
-    # stripe_payment_methods_id = models.CharField(max_length=1000, unique=True, null=False, blank=True)
-
-    is_active = models.BooleanField(default=True)
-    created_on = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.name
-
-
 class StripeAcceptedCountry(models.Model):
     country = models.ForeignKey('admins.Country', on_delete=models.CASCADE)
 
@@ -49,28 +32,49 @@ class StripeAcceptedCountry(models.Model):
         verbose_name_plural = "Stripe Accepted Countries"
 
 
-class StripeCustomer(models.Model):
-    user = models.OneToOneField('accounts.User', on_delete=models.CASCADE, blank=True)
-    name = models.CharField(
-        max_length=255,
-        help_text="Kindly! use your full correct name that must be same to your National ID, Passport or Bank Acounts"
+class City(models.Model):
+    name = models.CharField(max_length=255)
+    country = models.ForeignKey('admins.Country', on_delete=models.SET_NULL, null=True, blank=False)
+
+    class Meta:
+        ordering = ['-id']
+        verbose_name_plural = 'Cities'
+
+
+class Currency(models.Model):
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        ordering = ['-id']
+        verbose_name_plural = 'Currencies'
+
+
+class Connect(models.Model):
+    BUSINESS_TYPE_CHOICE = (
+        ('individual', 'individual'),
+        ('company', 'company'),
     )
-    email = models.EmailField(help_text="")
-    phone = models.CharField(max_length=15, help_text="Phone number without country code")
+    connect_id = models.CharField(max_length=1000, null=True, blank=True, editable=False)
+    user = models.OneToOneField('accounts.User', on_delete=models.CASCADE, blank=True)
+    first_name = models.CharField(max_length=255, help_text="First Name for user")
+    last_name = models.CharField(max_length=255, help_text="First Name for user")
+    email = models.EmailField(help_text="Your professional email that will be linked with connect account")
+    phone = models.CharField(max_length=15, help_text="Phone number that will be linked with connect account")
+
     country = models.ForeignKey(
         StripeAcceptedCountry, on_delete=models.SET_NULL, null=True, blank=False,
         help_text="Select the country in which you reside now, according to your according payments methods, wallets "
                   "and bank accounts will be visible"
     )
-    state = models.CharField(max_length=255, null=True, blank=True)
-    city = models.CharField(max_length=255, null=True, blank=True)
+    city = models.ForeignKey(City, on_delete=models.SET_NULL, help_text="Select your city", null=True, blank=True)
+
     postal_code = models.TextField(null=True, blank=True, help_text="Postal code according to your country")
     address = models.TextField(null=True, blank=True, help_text="Your home or office address.")
     description = models.CharField(max_length=5000, null=True, blank=True)
-
-    # customer_account_id = models.CharField(max_length=255, unique=True, null=False, blank=True)
+    business_type = models.CharField(max_length=255, choices=BUSINESS_TYPE_CHOICE, default='individual')
 
     is_active = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
     created_on = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -80,19 +84,26 @@ class StripeCustomer(models.Model):
         return self.user.username
 
 
-class StripeAccount(models.Model):
-    user = models.OneToOneField('accounts.User', on_delete=models.CASCADE, blank=True)
-    account_type = models.CharField(max_length=1, choices=STRIPE_ACCOUNT_TYPE_CHOICES, default='e')
-    business_type = models.CharField(max_length=1, choices=STRIPE_BUSINESS_TYPE_CHOICES, default='i')
-    email = models.EmailField()
-
-    # connect_account_id = models.CharField(max_length=255, unique=True, null=False, blank=True)
-
-    is_active = models.BooleanField(default=False)
-    created_on = models.DateTimeField(auto_now_add=True)
+class ExternalAccount(models.Model):
+    BUSINESS_TYPE_CHOICE = (
+        ('individual', 'individual'),
+        ('company', 'company'),
+    )
+    connect = models.ForeignKey(Connect, on_delete=models.CASCADE)
+    country = models.CharField(max_length=255, blank=False, help_text="Select Bank/Card Country Name")
+    currency = models.CharField(max_length=255, blank=False, help_text="Select Currency")
+    account_holder_name = models.CharField(
+        max_length=255, blank=False, help_text="Your full name on card or bank account"
+    )
+    account_holder_type = models.CharField(
+        max_length=255, choices=BUSINESS_TYPE_CHOICE, default='individual',
+    )
+    routing_number = models.CharField(max_length=255, blank=False)
+    account_number = models.CharField(max_length=255, blank=False)
 
     class Meta:
-        verbose_name_plural = 'Stripe Account'
+        verbose_name_plural = 'External Account'
 
     def __str__(self):
-        return self.user.username
+        return self.connect.connect_id
+
