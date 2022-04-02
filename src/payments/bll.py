@@ -265,10 +265,12 @@ def stripe_get_balance():
 
 
 def stripe_connect_account_create(
-        email, fname, lname, phone, country, city, address_line_1, address_line_2, postal_code, day, month, year):
+        email, first_name, last_name, phone, gender, day, month, year,
+        country, city, state, address_line_1, address_line_2, postal_code,
+):
     response = stripe.Account.create(
-        type="custom",
-        country="GB",
+        type="custom",  # Custom
+        country=country,  # GB
         email=email,
         capabilities={
             # "card_payments": {"requested": True},
@@ -277,22 +279,22 @@ def stripe_connect_account_create(
         business_type="individual",
         individual={
             "address": {
-                "city": "London",
-                "country": "GB",
-                "line1": "A4, London WC2N 5DU, UK",
-                "postal_code": "WC2N 5DU",
-                "state": "London",
+                "city": city,  # London
+                "country": country,  # GB
+                "line1": address_line_1,  # A4, London WC2N 5DU, UK
+                "postal_code": postal_code,  # WC2N 5DU
+                "state": state,  # London
             },
             "dob": {
-                "day": 30,
-                "month": 12,
-                "year": 2001,
+                "day": day,  # 30
+                "month": month,  # 12
+                "year": year,  # 2001
             },
             "email": email,
-            "first_name": fname,
-            "gender": "male",
-            "last_name": lname,
-            "phone": "3419387283",
+            "first_name": first_name,
+            "gender": gender,
+            "last_name": last_name,
+            "phone": phone,  # 3419387283
         },
         tos_acceptance={
             "date": 1648375904,

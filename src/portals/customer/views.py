@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
@@ -20,7 +20,7 @@ from src.payments.bll import stripe_account_delete, stripe_account_create, strip
     stripe_payment_method_attach, stripe_setup_pay, stripe_payout_create, stripe_connect_account_create, \
     stripe_external_account_add, stripe_error_filters, stripe_payout, stripe_account_transfer, \
     stripe_get_balance
-from src.payments.models import Connect
+from src.payments.models import Connect, City
 from src.portals.admins.bll import generate_qr_code, check_sanction_for_web
 from src.portals.admins.models import (
     Withdrawal, Transaction, TopUp, PaymentMethod,

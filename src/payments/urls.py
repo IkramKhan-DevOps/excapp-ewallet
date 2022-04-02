@@ -3,12 +3,12 @@ from .views import (
 
     stripe_config,
     create_checkout_session, CancelledView, SuccessView, stripe_webhook,
-
-    )
+    ConnectCreateView
+)
 
 app_name = 'payment-stripe'
 urlpatterns = [
-
+    path('connect/', ConnectCreateView.as_view(), name='connect-create')
 ]
 
 urlpatterns += [

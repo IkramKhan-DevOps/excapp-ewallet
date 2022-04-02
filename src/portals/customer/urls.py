@@ -8,7 +8,7 @@ from .views import (
     TicketListView, TicketCreateView, TicketDetailView,
     # ConnectAccountView, ConnectAccountUpdateView, ConnectAccountDeleteView,
     # ConnectAccountCreateView
-)
+    )
 
 app_name = "customer-portal"
 urlpatterns = [

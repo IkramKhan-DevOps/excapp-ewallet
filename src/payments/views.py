@@ -13,6 +13,7 @@ from notifications.signals import notify
 
 from cocognite import settings
 from src.accounts.models import Wallet
+from src.payments.forms import ConnectCreateForm
 from src.payments.models import Connect
 from src.portals.admins.models import TopUp
 import urllib
@@ -119,3 +120,23 @@ class CancelledView(TemplateView):
 
 class ConnectAccount(DetailView):
     model = Connect
+
+
+""" CONNECT ACCOUNT """
+""" ---------------------------------------------------------------------------------------------------------------- """
+
+
+class ConnectCreateView(View):
+    template_name = 'payments/connect_form.html'
+    context = {}
+    form_class = ConnectCreateForm
+
+    def get(self, request):
+        self.context['form'] = self.form_class
+        return render(request, self.template_name, self.context)
+
+    def post(self, request):
+        form = ConnectCreateForm(request.POST)
+        if form.is_valid():
+            pass
+        return render(request, self.template_name, self.context)

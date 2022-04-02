@@ -52,7 +52,6 @@ class Currency(models.Model):
 class Connect(models.Model):
     BUSINESS_TYPE_CHOICE = (
         ('individual', 'individual'),
-        ('company', 'company'),
     )
     connect_id = models.CharField(max_length=1000, null=True, blank=True, editable=False)
     user = models.OneToOneField('accounts.User', on_delete=models.CASCADE, blank=True)
@@ -68,7 +67,9 @@ class Connect(models.Model):
     )
     city = models.ForeignKey(City, on_delete=models.SET_NULL, help_text="Select your city", null=True, blank=True)
 
-    postal_code = models.TextField(null=True, blank=True, help_text="Postal code according to your country")
+    postal_code = models.CharField(
+        max_length=255, null=True, blank=True, help_text="Postal code according to your country and city"
+    )
     address = models.TextField(null=True, blank=True, help_text="Your home or office address.")
     description = models.CharField(max_length=5000, null=True, blank=True)
     business_type = models.CharField(max_length=255, choices=BUSINESS_TYPE_CHOICE, default='individual')
