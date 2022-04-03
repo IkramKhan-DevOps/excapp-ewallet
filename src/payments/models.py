@@ -45,7 +45,8 @@ class City(models.Model):
 
 
 class Currency(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
+    short_code = models.CharField(max_length=3, unique=True)
 
     class Meta:
         ordering = ['-id']
@@ -90,20 +91,35 @@ class Connect(models.Model):
     def __str__(self):
         return self.user.username
 
+    def get_external_accounts(self):
+        return self.externalaccount_set.all()
+
 
 class ExternalAccount(models.Model):
     BUSINESS_TYPE_CHOICE = (
         ('individual', 'individual'),
-        ('company', 'company'),
     )
-    connect = models.OneToOneField(Connect, on_delete=models.CASCADE)
-    country = models.CharField(max_length=255, blank=False, help_text="Select Bank/Card Country Name")
-    currency = models.CharField(max_length=255, blank=False, help_text="Select Currency")
+    ACCOUNT_TYPE_CHOICE = (
+        ('card', 'Card'),
+        ('bank', 'Bank'),
+    )
+    connect = models.ForeignKey(Connect, on_delete=models.CASCADE)
+    country = models.ForeignKey(
+        StripeAcceptedCountry, on_delete=models.SET_NULL, blank=False, null=True,
+        help_text="Select Bank/Card Country Name"
+    )
+    currency = models.ForeignKey(
+        Currency, blank=False, null=True, on_delete=models.SET_NULL,
+        help_text="Select Currency according to your account"
+    )
     account_holder_name = models.CharField(
         max_length=255, blank=False, help_text="Your full name on card or bank account"
     )
     account_holder_type = models.CharField(
         max_length=255, choices=BUSINESS_TYPE_CHOICE, default='individual',
+    )
+    account_type = models.CharField(
+        max_length=255, choices=ACCOUNT_TYPE_CHOICE, default='bank',
     )
     routing_number = models.CharField(max_length=255, blank=False)
     account_number = models.CharField(max_length=255, blank=False)
@@ -116,5 +132,5 @@ class ExternalAccount(models.Model):
         verbose_name_plural = 'External Account'
 
     def __str__(self):
-        return self.connect.connect_id
+        return str(self.connect.connect_id)
 

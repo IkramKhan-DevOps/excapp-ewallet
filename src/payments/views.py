@@ -203,7 +203,7 @@ class ExternalAccountListView(ListView):
 
 
 class ExternalAccountCreateView(View):
-    template_name = 'payments/connect.html'
+    template_name = 'payments/externalaccount_form.html'
     context = {}
     form_class = ExternalAccountCreateForm
 
@@ -233,7 +233,7 @@ class ExternalAccountCreateView(View):
 
 
 class ExternalAccountUpdateView(View):
-    template_name = 'payments/connect_form.html'
+    template_name = 'payments/externalaccount_form.html'
     context = {}
     form_class = ExternalAccountUpdateForm
 
@@ -243,25 +243,25 @@ class ExternalAccountUpdateView(View):
             return redirect('payment-stripe:connect')
         return super(ExternalAccountUpdateView, self).dispatch(request)
 
-    def get(self, request, pk):
-        e_account = get_object_or_404(ExternalAccount.objects.filter(connect__user=self.request.user), pk=pk)
+    def get(self, request, *args, **kwargs):
+        e_account = get_object_or_404(ExternalAccount.objects.filter(connect__user=self.request.user), pk=self.kwargs['pk'])
         self.context['form'] = ExternalAccountUpdateForm(instance=e_account)
         return render(request, self.template_name, self.context)
 
-    def post(self, request, pk):
-        e_account = get_object_or_404(ExternalAccount.objects.filter(connect__user=self.request.user), pk=pk)
+    def post(self, request, *args, **kwargs):
+        e_account = get_object_or_404(ExternalAccount.objects.filter(connect__user=self.request.user), pk=self.kwargs['pk'])
         form = ExternalAccountUpdateForm(instance=e_account, data=request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, "External Account updated successfully")
-            redirect('payment-stripe:connect-external-account')
+            return redirect('payment-stripe:connect-external-account')
         self.context['form'] = form
         return render(request, self.template_name, self.context)
 
 
 class ExternalAccountDeleteView(DeleteView):
     model = ExternalAccount
-    success_url = reverse_lazy("payment-stripe:external-account")
+    success_url = reverse_lazy("payment-stripe:connect-external-account")
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_stripe_account_exists():

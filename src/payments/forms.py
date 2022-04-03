@@ -22,7 +22,7 @@ class ExternalAccountCreateForm(ModelForm):
     class Meta:
         model = ExternalAccount
         fields = [
-            'country', 'account_holder_name', 'routing_number', 'account_number'
+            'country', 'currency', 'account_holder_name', 'routing_number', 'account_number'
         ]
 
 
@@ -30,6 +30,6 @@ class ExternalAccountUpdateForm(ModelForm):
     class Meta:
         model = ExternalAccount
         fields = [
-            'country', 'account_holder_name', 'routing_number', 'account_number'
+            'country', 'currency', 'account_holder_name', 'routing_number', 'account_number'
         ]
 

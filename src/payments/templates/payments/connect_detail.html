@@ -90,27 +90,30 @@
                 <div class="card-body">
                     <table class="table table-hover table-striped">
                         <tbody>
-                        <tr>
-                            <th><b class="mb-0"><i class="fa fa-house-user"></i></b></th>
-                            <th><b class="mb-0">*********1234</b></th>
-                            <th><b class="mb-0"><a href="#" class="text-success"><i class="fa fa-check-circle"></i>
-                                verified</a></b>
-                            </th>
-                            <th><b class="mb-0"><a href="#" class="text-primary"><i class="fa fa-edit"></i></a></b>
-                            </th>
-                        </tr>
-                        <tr>
-                            <th><b class="mb-0"><i class="fa fa-credit-card"></i></b></th>
-                            <th><b class="mb-0">*********1234</b></th>
-                            <th><b class="mb-0"><a href="#" class="text-danger"><i class="fa fa-times-circle"></i> un
-                                verified</a></b>
-                            </th>
-                            <th><b class="mb-0"><a href="#" class="text-primary"><i class="fa fa-edit"></i></a></b>
-                            </th>
-                        </tr>
+                        {% for object in object.get_external_accounts %}
+                            <tr>
+                                <th><b class="mb-0"><i class="fa fa-house-user"></i></b></th>
+                                <th><b class="mb-0">{{ object.account_number }}</b></th>
+                                <th>
+                                    {% if object.is_verified %}
+                                        <b class="mb-0"><a href="#" class="text-success">
+                                            <i class="fa fa-check-circle"></i> verified</a>
+                                        </b>
+                                    {% else %}
+                                        <b class="mb-0"><a href="#" class="text-danger">
+                                        <i class="fa fa-times-circle"></i> not verified</a>
+                                    </b>
+                                    {% endif %}
+                                </th>
+                                <th><b class="mb-0"><a href="{% url 'payment-stripe:connect-external-account-change' object.pk %}" class="text-primary"><i class="fa fa-edit"></i></a></b>
+                                </th>
+                            </tr>
+                        {% endfor %}
+
                         </tbody>
                     </table>
-                    <p class="mb-0"><b><a href="#">View External Accounts</a></b></p>
+                    <p class="mb-0"><b><a href="{% url 'payment-stripe:connect-external-account' %}">View External
+                        Accounts</a></b></p>
                 </div>
             </div>
 

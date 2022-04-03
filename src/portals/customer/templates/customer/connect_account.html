@@ -1,4 +1,4 @@
-{% extends 'core/base.html' %}
+s{% extends 'core/base.html' %}
 {% load static %}
 
 {% block base_title %} Connect {% endblock %}
@@ -78,7 +78,7 @@
                 </div>
                 <div class="card-body border-top">
                     <b>
-                        <a href="#">
+                        <a href="{% url 'payment-stripe:connect-external-account' %}">
                             <i class="fa fa-plus"></i> Attach Card
                         </a>
                     </b>
@@ -168,7 +168,7 @@
                 </div>
                 <div class="card-body border-top">
                     <b>
-                        <a href="#">
+                        <a href="{% url 'payment-stripe:connect-external-account' %}">
                             <i class="fa fa-plus"></i> Attach Bank
                         </a>
                     </b>
@@ -180,7 +180,7 @@
 
     <div class="row mt-3">
         <div class="col">
-            <b><a class="text-danger" href="{% url 'customer-portal:stripe-customer-account-delete' object.pk %}">
+            <b><a class="text-danger" href="{% url 'payment-stripe:connect-delete' object.pk %}">
                 <i class="fa fa-trash"></i> Remove Connect Account</a></b>
         </div>
     </div>

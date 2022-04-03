@@ -1,0 +1,90 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block base_title %} External Account {% endblock %}
+{% block content %}
+
+    <div class="row mb-2">
+        <div class="col-12">
+
+            <a class="btn btn-primary" href="{% url 'payment-stripe:connect-external-account-create' %}">
+                <i class="fa fa-arrow-up"></i> Attach Bank/Card
+            </a>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+
+            {% if object_list %}
+                <div class="row">
+
+                    {% for object in object_list %}
+                        <div class="col-sm-3">
+
+                            <div class="card">
+                                <div class="card-body text-center border-bottom">
+
+                                    <p class="h1 mb-0">
+                                        <img alt="bank-pic"
+                                             src="{% static 'core/portals/images/icons8-mastercard-100.png' %}">
+                                    </p>
+                                    <p class="mb-0"><b>{{ object.account_type }} Account</b></p>
+                                    {% if object.is_verified %}
+
+                                        <p class="mb-0 text-muted">
+                                            <b>
+                                                ( <i class="fa fa-check-circle text-success"></i> verified )
+                                            </b>
+                                        </p>
+
+                                    {% else %}
+
+                                        <p class="mb-0 text-muted">
+                                            <b>
+                                                ( <i class="fa fa-times-circle text-danger"></i>
+                                                non-verified,
+                                                <a href="{% url 'payment-stripe:connect-external-account-change' object.pk %}">Verify here</a>
+                                                )
+                                            </b>
+                                        </p>
+
+                                    {% endif %}
+
+                                </div>
+                                <div class="card-body text-center">
+                                    <p class="mb-0"><a href="#"><b>{{ object.account_holder_name }}</b></a></p>
+                                    <p class="mb-0"><a href="#"><b>{{ object.account_number }}</b></a></p>
+                                    <p class=""><a href="#"><b>{{ object.country }} ({{ object.currency.short_code }})</b></a></p>
+                                    <p class="mb-0 text-muted">{{ object.created_on }}</p>
+                                </div>
+                                <div class="border-top card-body">
+                                    <div class="row text-center">
+                                        <div class="col">
+                                            <b><a href="{% url 'payment-stripe:connect-external-account-change' object.pk %}"><i class="fa fa-eye"></i></a></b>
+                                        </div>
+                                        <div class="col">
+                                            <b><a href="{% url 'payment-stripe:connect-external-account-change' object.pk %}"><i class="fa fa-edit"></i></a></b>
+                                        </div>
+                                        <div class="col">
+                                            <b><a href="{% url 'payment-stripe:connect-external-account-delete' object.pk %}" class="text-danger"><i class="fa fa-trash"></i></a></b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    {% endfor %}
+
+                </div>
+            {% else %}
+                <p class="mb-0 text-danger"><b>No external accounts are created yet.</b></p>
+            {% endif %}
+
+        </div>
+    </div>
+
+
+{% endblock %}
