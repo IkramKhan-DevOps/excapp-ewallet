@@ -198,6 +198,12 @@ class ConnectDeleteView(DeleteView):
 
 class ExternalAccountListView(ListView):
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_stripe_account_exists():
+            messages.error(request, "Please create connect account first")
+            return redirect('payment-stripe:connect-create')
+        return super(ExternalAccountListView, self).dispatch(request)
+
     def get_queryset(self):
         return ExternalAccount.objects.filter(connect__user=self.request.user)
 
@@ -206,6 +212,12 @@ class ExternalAccountCreateView(View):
     template_name = 'payments/externalaccount_form.html'
     context = {}
     form_class = ExternalAccountCreateForm
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_stripe_account_exists():
+            messages.error(request, "Please create connect account first")
+            return redirect('payment-stripe:connect-create')
+        return super(ExternalAccountCreateView, self).dispatch(request)
 
     def get(self, request):
         self.context['form'] = self.form_class
@@ -239,8 +251,8 @@ class ExternalAccountUpdateView(View):
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_stripe_account_exists():
-            messages.error(request, "You don't have any account yet.")
-            return redirect('payment-stripe:connect')
+            messages.error(request, "Please create connect account first")
+            return redirect('payment-stripe:connect-create')
         return super(ExternalAccountUpdateView, self).dispatch(request)
 
     def get(self, request, *args, **kwargs):
@@ -265,7 +277,7 @@ class ExternalAccountDeleteView(DeleteView):
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_stripe_account_exists():
-            messages.error(request, "You don't have any account yet.")
+            messages.error(request, "Please create connect account first")
             return redirect('payment-stripe:connect-create')
         return super(ExternalAccountDeleteView, self).dispatch(request)
 
