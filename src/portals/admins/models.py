@@ -7,6 +7,7 @@ from src.accounts.models import Wallet
 
 
 class Country(models.Model):
+
     name = models.CharField(max_length=255, unique=True)
     short_code = models.CharField(max_length=2, unique=True)
     phone_code = models.CharField(max_length=5, unique=True)

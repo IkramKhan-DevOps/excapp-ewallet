@@ -4,11 +4,11 @@
 {% block base_title %} Connect {% endblock %}
 
 {% block page_heading %}
-    {#    {% if object.is_verified %}#}
-    {#        <b class="p-2 bg-success text-white"><i class="fa fa-check-circle"></i> Completed</b>#}
-    {#    {% else %}#}
-    {#        <b class="p-2 bg-danger text-white"><i class="fa fa-times-circle"></i> Un Verified</b>#}
-    {#    {% endif %}#}
+    {% if object.is_verified %}
+        <b class="p-1 bg-success text-white"><i class="fa fa-check-circle"></i> Completed</b>
+    {% else %}
+        <b class="p-1 bg-danger text-white"><i class="fa fa-times-circle"></i> Un Verified</b>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -16,8 +16,19 @@
     <div class="row">
         <div class="col-sm-8">
 
-            <div>
-                <h4 class="text-primary mb-4"><b><i class="fa fa-link"></i> BA_362987897ASDAS432423</b></h4>
+            <div class="border-bottom card-body">
+                <p class="card-title">
+                    Connect Information
+                    <a href="{% url 'payment-stripe:connect-update' %}"><i class="fa fa-edit"></i></a>
+                </p>
+                <h4 class="text-primary mb-4"><b><i class="fa fa-link"></i>
+                    {% if object.connect_id %}
+                        {{ object.connect_id }}
+                    {% else %}
+                        -
+                    {% endif %}
+
+                </b></h4>
                 <h5><i class="fa fa-user"></i> {{ object.first_name }} {{ object.last_name }}</h5>
                 <h5><i class="fa fa-home"></i> Individual Account</h5>
                 <h5><i class="fa fa-inbox"></i> {{ object.email }}</h5>
@@ -25,6 +36,25 @@
                 <h5><i class="fa fa-map"></i> {{ object.address }} - {{ object.city }} <b>({{ object.postal_code }})</b>
                     - {{ object.country }}</h5>
             </div>
+
+            <div class="card-body border-bottom">
+                <b class="p-1 bg-success text-white"><i class="fa fa-check-circle"></i> Transfers: Yes</b>
+                <b class="p-1 bg-success text-white"><i class="fa fa-check-circle"></i> Payouts: Yes</b>
+            </div>
+
+            <div class="card-body">
+                <p class="mb-0">
+                    <small class="text-muted">{{ object.created_on }}</small>
+                </p>
+            </div>
+
+            {% if not object.is_verified %}
+                <div class="card-body border-top">
+                    <p class="mb-0">
+                        <b class=""><a href="#">Please verify your account first - click here.</a></b>
+                    </p>
+                </div>
+            {% endif %}
 
         </div>
         <div class="col-sm-4">
@@ -96,7 +126,8 @@
                             related to this connected account.
                         </b>
                     </p>
-                    <a href="{% url 'payment-stripe:connect-delete' %}" class="btn btn-light text-danger">Delete Account</a>
+                    <a href="{% url 'payment-stripe:connect-delete' %}" class="btn btn-light text-danger">Delete
+                        Account</a>
                 </div>
             </div>
 
