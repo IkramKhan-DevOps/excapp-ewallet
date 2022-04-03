@@ -142,6 +142,7 @@ class ConnectCreateView(View):
             form.instance.user = request.user
             form.save()
             messages.success(request, "Connect account added successfully - please verify")
+            return redirect('payment-stripe:connect')
         self.context['form'] = form
         return render(request, self.template_name, self.context)
 
@@ -160,6 +161,7 @@ class ConnectUpdateView(View):
         if form.is_valid():
             form.save()
             messages.success(request, "Connect account updated successfully - please verify")
+            return redirect('payment-stripe:connect')
         self.context['form'] = form
         return render(request, self.template_name, self.context)
 
