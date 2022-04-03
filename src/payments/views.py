@@ -13,6 +13,7 @@ from notifications.signals import notify
 
 from cocognite import settings
 from src.accounts.models import Wallet
+from src.payments.bll import stripe_connect_account_create, stripe_external_account_add
 from src.payments.forms import ConnectCreateForm, ConnectUpdateForm, ExternalAccountCreateForm, \
     ExternalAccountUpdateForm
 from src.payments.models import Connect, ExternalAccount
@@ -195,6 +196,36 @@ class ConnectDeleteView(DeleteView):
         return get_object_or_404(Connect.objects.filter(), user=self.request.user)
 
 
+class ConnectVerifyView(View):
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_stripe_account_exists():
+            messages.error(request, "Please create connect account first")
+            return redirect('payment-stripe:connect-create')
+        return super(ConnectVerifyView, self).dispatch(request)
+
+    def get(self, request):
+        c_account = request.user.get_stripe_account()
+        if c_account.is_verified and c_account.connect_id:
+            pass
+        else:
+            response = stripe_connect_account_create(
+                email=c_account.email, first_name=c_account.first_name, last_name=c_account.last_name,
+                phone=c_account.phone, gender='male', day=30, month=12, year=2001,
+                address_line_1='A4, London WC2N 5DU, UK', city=c_account.city.name,
+                country=c_account.country.country.short_code, postal_code='WC2N 5DU', state=c_account.city.name
+            )
+            print(response)
+            connect_id = response['id']
+            # connect_card_payments = response['capabilities']['card_payments']
+            # connect_transfers = response['capabilities']['transfers']
+            c_account.connect_id = connect_id
+            c_account.is_verified = True
+            c_account.save()
+            messages.success(request, "Verified")
+        return redirect('payment-stripe:connect')
+
+
 """ EXTERNAL ACCOUNTS """
 
 
@@ -274,14 +305,35 @@ class ExternalAccountUpdateView(View):
 
 
 class ExternalAccountDeleteView(DeleteView):
-    model = ExternalAccount
-    success_url = reverse_lazy("payment-stripe:connect-external-account")
+    pass
+
+
+class ExternalAccountVerifyView(View):
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_stripe_account_exists():
             messages.error(request, "Please create connect account first")
             return redirect('payment-stripe:connect-create')
-        return super(ExternalAccountDeleteView, self).dispatch(request)
+        return super(ExternalAccountVerifyView, self).dispatch(request)
 
-    def get_object(self, queryset=None):
-        return get_object_or_404(ExternalAccount.objects.filter(connect__user=self.request.user), pk=self.kwargs['pk'])
+    def get(self, request):
+        c_account = request.user.get_stripe_account()
+        b_account = get_object_or_404(ExternalAccount.objects.all(), pk=self.kwargs['pk'])
+
+        if b_account.is_verified:
+            pass
+        else:
+            if c_account.is_verified:
+                response = stripe_external_account_add(
+                    c_account.connect_id, country=b_account.country.country.short_code,
+                    currency=b_account.currency.short_code,
+                    name=b_account.account_holder_name, routing_number=b_account.routing_number,
+                    account_number=b_account.account_number
+                )
+                b_account.external_account_id = response['id']
+                b_account.is_verified = True
+                b_account.save()
+                messages.success(request, "Bank Account added successfully")
+            else:
+                messages.error(request, "Please verify your connect account first")
+        return redirect('payment-stripe:connect')

@@ -51,7 +51,7 @@
             {% if not object.is_verified %}
                 <div class="card-body border-top">
                     <p class="mb-0">
-                        <b class=""><a href="#">Please verify your account first - click here.</a></b>
+                        <b class=""><a href="{% url 'payment-stripe:connect-verify' %}">Please verify your account first - click here.</a></b>
                     </p>
                 </div>
             {% endif %}

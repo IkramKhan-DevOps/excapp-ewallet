@@ -103,6 +103,7 @@ class ExternalAccount(models.Model):
         ('card', 'Card'),
         ('bank', 'Bank'),
     )
+    external_account_id = models.CharField(max_length=1000, null=True, blank=True)
     connect = models.ForeignKey(Connect, on_delete=models.CASCADE)
     country = models.ForeignKey(
         StripeAcceptedCountry, on_delete=models.SET_NULL, blank=False, null=True,

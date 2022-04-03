@@ -118,12 +118,6 @@ def stripe_account_get(account_id):
     print(response)
 
 
-# WORKING FINE >>
-def stripe_account_delete(account_id):
-    response = stripe.Account.delete(account_id)
-    print(response['deleted'])
-
-
 """ PAYOUTS -------------------------------------------------------------------------------------------------------- """
 
 
@@ -269,7 +263,7 @@ def stripe_get_balance():
 
 def stripe_connect_account_create(
         email, first_name, last_name, phone, gender, day, month, year,
-        country, city, state, address_line_1, address_line_2, postal_code,
+        country, city, state, address_line_1, postal_code, address_line_2=None
 ):
     response = stripe.Account.create(
         type="custom",  # Custom
@@ -306,23 +300,23 @@ def stripe_connect_account_create(
             "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36"
         }
     )
-    print(response)
+    return response
 
 
-def stripe_external_account_add(account_id="acct_1KjLsJGgTB55MMlS"):
+def stripe_external_account_add(account_id, country, currency, name, routing_number, account_number):
     response = stripe.Account.create_external_account(
         account_id,
         external_account={
             "object": "bank_account",
-            "country": "GB",
-            "currency": "gbp",
-            "account_holder_name": "UK 1",
+            "country": country,  # GB
+            "currency": currency,  # gbp
+            "account_holder_name": name,
             "account_holder_type": "individual",
-            "routing_number": "108800",
-            "account_number": "00012345",
+            "routing_number": '108800',  # 108800
+            "account_number": '00012345',  # 00012345
         }
     )
-    print(response)
+    return response
 
 
 def stripe_payout(account_id="acct_1KjLsJGgTB55MMlS", bank_id="ba_1KjLyzGgTB55MMlS8f2714Az"):
@@ -340,6 +334,11 @@ def stripe_account_transfer(account_id='acct_1KjLsJGgTB55MMlS'):
         source_type="card",
     )
     print(response)
+
+
+def stripe_account_delete(account_id):
+    response = stripe.Account.delete(account_id)
+    print(response['deleted'])
 
 # v = {
 #     "business_profile": {
