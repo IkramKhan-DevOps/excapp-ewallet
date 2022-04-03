@@ -8,13 +8,14 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import TemplateView, DetailView, DeleteView
+from django.views.generic import TemplateView, DetailView, DeleteView, ListView
 from notifications.signals import notify
 
 from cocognite import settings
 from src.accounts.models import Wallet
-from src.payments.forms import ConnectCreateForm, ConnectUpdateForm
-from src.payments.models import Connect
+from src.payments.forms import ConnectCreateForm, ConnectUpdateForm, ExternalAccountCreateForm, \
+    ExternalAccountUpdateForm
+from src.payments.models import Connect, ExternalAccount
 from src.portals.admins.models import TopUp
 import urllib
 
@@ -190,3 +191,83 @@ class ConnectDeleteView(DeleteView):
 
     def get_object(self, queryset=None):
         return get_object_or_404(Connect.objects.filter(), user=self.request.user)
+
+
+""" EXTERNAL ACCOUNTS """
+
+
+class ExternalAccountListView(ListView):
+
+    def get_queryset(self):
+        return ExternalAccount.objects.filter(connect__user=self.request.user)
+
+
+class ExternalAccountCreateView(View):
+    template_name = 'payments/connect.html'
+    context = {}
+    form_class = ExternalAccountCreateForm
+
+    def get(self, request):
+        self.context['form'] = self.form_class
+        return render(request, self.template_name, self.context)
+
+    def post(self, request):
+        form = ExternalAccountCreateForm(data=request.POST)
+
+        # 0:: OVERALL VALIDATIONS
+        if form.is_valid():
+            connect_account = request.user.get_stripe_account()
+
+            # 1:: IF CONNECT ACCOUNT EXISTS
+            if connect_account:
+                form.instance.connect = connect_account
+                e_account = form.save()
+                messages.success(request, "External account added successfully")
+                return redirect('payment-stripe:connect-external-account')
+            else:
+                messages.error(request, "Please create your connect account first")
+                return redirect('payment-stripe:connect')
+
+        self.context['form'] = form
+        return render(request, self.template_name, self.context)
+
+
+class ExternalAccountUpdateView(View):
+    template_name = 'payments/connect_form.html'
+    context = {}
+    form_class = ExternalAccountUpdateForm
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_stripe_account_exists():
+            messages.error(request, "You don't have any account yet.")
+            return redirect('payment-stripe:connect')
+        return super(ExternalAccountUpdateView, self).dispatch(request)
+
+    def get(self, request, pk):
+        e_account = get_object_or_404(ExternalAccount.objects.filter(connect__user=self.request.user), pk=pk)
+        self.context['form'] = ExternalAccountUpdateForm(instance=e_account)
+        return render(request, self.template_name, self.context)
+
+    def post(self, request, pk):
+        e_account = get_object_or_404(ExternalAccount.objects.filter(connect__user=self.request.user), pk=pk)
+        form = ExternalAccountUpdateForm(instance=e_account, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "External Account updated successfully")
+            redirect('payment-stripe:connect-external-account')
+        self.context['form'] = form
+        return render(request, self.template_name, self.context)
+
+
+class ExternalAccountDeleteView(DeleteView):
+    model = ExternalAccount
+    success_url = reverse_lazy("payment-stripe:external-account")
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_stripe_account_exists():
+            messages.error(request, "You don't have any account yet.")
+            return redirect('payment-stripe:connect-create')
+        return super(ExternalAccountDeleteView, self).dispatch(request)
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(ExternalAccount.objects.filter(connect__user=self.request.user), pk=self.kwargs['pk'])

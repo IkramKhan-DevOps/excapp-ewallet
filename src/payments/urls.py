@@ -1,8 +1,8 @@
 from django.urls import path
 from .views import (
     stripe_config, create_checkout_session, CancelledView, SuccessView, stripe_webhook,
-    ConnectCreateView, ConnectUpdateView, ConnectDetailView, ConnectDeleteView
-)
+    ConnectCreateView, ConnectUpdateView, ConnectDetailView, ConnectDeleteView,
+    ExternalAccountListView, ExternalAccountUpdateView, ExternalAccountDeleteView)
 
 app_name = 'payment-stripe'
 
@@ -11,6 +11,19 @@ urlpatterns = [
     path('connect/create/', ConnectCreateView.as_view(), name='connect-create'),
     path('connect/change/', ConnectUpdateView.as_view(), name='connect-update'),
     path('connect/delete/', ConnectDeleteView.as_view(), name='connect-delete'),
+
+    path(
+        'connect/external-account/', ExternalAccountListView.as_view(),
+        name='connect-external-account'
+    ),
+    path(
+        'connect/external-account/<int:pk>/change/', ExternalAccountUpdateView.as_view(),
+        name='connect-external-account-change'
+    ),
+    path(
+        'connect/external-account/<int:pk>/delete/', ExternalAccountDeleteView.as_view(),
+        name='connect-external-account-delete'
+    ),
 ]
 
 urlpatterns += [
