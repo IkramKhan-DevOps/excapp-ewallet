@@ -1,18 +1,104 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block base_title %} # {{ object.pk }} {% endblock %}
+{% block base_title %} Connect {% endblock %}
 
 {% block page_heading %}
-    <b class="p-2 bg-success text-white"><i class="fa fa-check-circle"></i> Completed</b>
-    <b class="p-2 bg-dark text-white"><i class="bx bx-transfer"></i> Bank Transfer</b>
+    {#    {% if object.is_verified %}#}
+    {#        <b class="p-2 bg-success text-white"><i class="fa fa-check-circle"></i> Completed</b>#}
+    {#    {% else %}#}
+    {#        <b class="p-2 bg-danger text-white"><i class="fa fa-times-circle"></i> Un Verified</b>#}
+    {#    {% endif %}#}
 {% endblock %}
 
 {% block content %}
 
     <div class="row">
-        <div class="col-8">
+        <div class="col-sm-8">
 
+            <div>
+                <h4 class="text-primary mb-4"><b><i class="fa fa-link"></i> BA_362987897ASDAS432423</b></h4>
+                <h5><i class="fa fa-user"></i> {{ object.first_name }} {{ object.last_name }}</h5>
+                <h5><i class="fa fa-home"></i> Individual Account</h5>
+                <h5><i class="fa fa-inbox"></i> {{ object.email }}</h5>
+                <h5 class="mt-4"><i class="fa fa-phone"></i> {{ object.phone }}</h5>
+                <h5><i class="fa fa-map"></i> {{ object.address }} - {{ object.city }} <b>({{ object.postal_code }})</b>
+                    - {{ object.country }}</h5>
+            </div>
+
+        </div>
+        <div class="col-sm-4">
+
+            {# VERIFY #}
+            <div class="card">
+                <div class="card-body border-bottom">
+                    <p class="mb-0 card-title">Verification</p>
+                </div>
+                <div class="card-body">
+                    {% if not object.is_verified %}
+                        <p class="mb-0 text-danger card-text">
+                            <b>
+                                Your connect account is not verified fully please check the errors below and fulfill
+                                the requirements.
+                            </b>
+                        </p>
+                    {% else %}
+                        <p class="mb-0 text-danger card-text">
+                            <b>Verified account</b>
+                        </p>
+                    {% endif %}
+
+                    <p class="mb-0 mt-3"><b><a href="#">View Verifications</a></b></p>
+                </div>
+            </div>
+
+            {# Bank Accounts #}
+            <div class="card">
+                <div class="card-body border-bottom">
+                    <p class="mb-0 card-title">Cards and Banks</p>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover table-striped">
+                        <tbody>
+                        <tr>
+                            <th><b class="mb-0"><i class="fa fa-house-user"></i></b></th>
+                            <th><b class="mb-0">*********1234</b></th>
+                            <th><b class="mb-0"><a href="#" class="text-success"><i class="fa fa-check-circle"></i>
+                                verified</a></b>
+                            </th>
+                            <th><b class="mb-0"><a href="#" class="text-primary"><i class="fa fa-edit"></i></a></b>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th><b class="mb-0"><i class="fa fa-credit-card"></i></b></th>
+                            <th><b class="mb-0">*********1234</b></th>
+                            <th><b class="mb-0"><a href="#" class="text-danger"><i class="fa fa-times-circle"></i> un
+                                verified</a></b>
+                            </th>
+                            <th><b class="mb-0"><a href="#" class="text-primary"><i class="fa fa-edit"></i></a></b>
+                            </th>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p class="mb-0"><b><a href="#">View External Accounts</a></b></p>
+                </div>
+            </div>
+
+            {# DELETE #}
+            <div class="card bg-danger">
+                <div class="card-body text-white border-bottom border-white">
+                    <p class="mb-0 card-title">Remove Account</p>
+                </div>
+                <div class="card-body text-white">
+                    <p class="card-text">
+                        <b>
+                            Are you sure you want to delete your connect account, there is no way to get back your data
+                            related to this connected account.
+                        </b>
+                    </p>
+                    <a href="{% url 'payment-stripe:connect-delete' %}" class="btn btn-light text-danger">Delete Account</a>
+                </div>
+            </div>
 
         </div>
     </div>

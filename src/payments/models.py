@@ -40,6 +40,9 @@ class City(models.Model):
         ordering = ['-id']
         verbose_name_plural = 'Cities'
 
+    def __str__(self):
+        return self.name
+
 
 class Currency(models.Model):
     name = models.CharField(max_length=255)
@@ -47,6 +50,9 @@ class Currency(models.Model):
     class Meta:
         ordering = ['-id']
         verbose_name_plural = 'Currencies'
+
+    def __str__(self):
+        return self.name
 
 
 class Connect(models.Model):
@@ -90,7 +96,7 @@ class ExternalAccount(models.Model):
         ('individual', 'individual'),
         ('company', 'company'),
     )
-    connect = models.ForeignKey(Connect, on_delete=models.CASCADE)
+    connect = models.OneToOneField(Connect, on_delete=models.CASCADE)
     country = models.CharField(max_length=255, blank=False, help_text="Select Bank/Card Country Name")
     currency = models.CharField(max_length=255, blank=False, help_text="Select Currency")
     account_holder_name = models.CharField(
@@ -101,6 +107,10 @@ class ExternalAccount(models.Model):
     )
     routing_number = models.CharField(max_length=255, blank=False)
     account_number = models.CharField(max_length=255, blank=False)
+
+    created_on = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+    is_verified = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = 'External Account'

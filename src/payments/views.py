@@ -5,15 +5,15 @@ import stripe
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import TemplateView, DetailView, DeleteView
 from notifications.signals import notify
 
 from cocognite import settings
 from src.accounts.models import Wallet
-from src.payments.forms import ConnectCreateForm
+from src.payments.forms import ConnectCreateForm, ConnectUpdateForm
 from src.payments.models import Connect
 from src.portals.admins.models import TopUp
 import urllib
@@ -136,7 +136,57 @@ class ConnectCreateView(View):
         return render(request, self.template_name, self.context)
 
     def post(self, request):
-        form = ConnectCreateForm(request.POST)
+        form = ConnectCreateForm(data=request.POST)
         if form.is_valid():
-            pass
+            form.instance.user = request.user
+            form.save()
+            messages.success(request, "Connect account added successfully - please verify")
+        self.context['form'] = form
         return render(request, self.template_name, self.context)
+
+
+class ConnectUpdateView(View):
+    template_name = 'payments/connect_form.html'
+    context = {}
+    form_class = ConnectUpdateForm
+
+    def get(self, request):
+        self.context['form'] = ConnectUpdateForm(instance=Connect.objects.get(user=request.user))
+        return render(request, self.template_name, self.context)
+
+    def post(self, request):
+        form = ConnectUpdateForm(instance=Connect.objects.get(user=request.user), data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Connect account updated successfully - please verify")
+        self.context['form'] = form
+        return render(request, self.template_name, self.context)
+
+
+class ConnectDetailView(DetailView):
+    template_name = 'payments/connect_detail.html'
+    model = Connect
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_stripe_account_exists():
+            messages.error(request, "Please create connect account first")
+            return redirect('payment-stripe:connect-create')
+        return super(ConnectDetailView, self).dispatch(request)
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Connect.objects.filter(), user=self.request.user)
+
+
+class ConnectDeleteView(DeleteView):
+    template_name = 'payments/connect_delete_confirm.html'
+    model = Connect
+    success_url = reverse_lazy("payment-stripe:connect-create")
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_stripe_account_exists():
+            messages.error(request, "You don't have any account yet.")
+            return redirect('payment-stripe:connect-create')
+        return super(ConnectDeleteView, self).dispatch(request)
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Connect.objects.filter(), user=self.request.user)

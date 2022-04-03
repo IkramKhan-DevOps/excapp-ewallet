@@ -7,14 +7,24 @@
 {% block content %}
 
     <div class="row">
-        <div class="col-md-12">
-            <div class="card">
+        <div class="col-md-8">
+            <div class="">
+                <div class="card-body border-bottom">
+                    <p class="card-title mb-0">Account Delete Confirmation</p>
+                </div>
                 <div class="card-body">
 
                     <form method="post">{% csrf_token %}
-                        <p class="mb-2">Are you sure you want to delete connected account
-                            <b class="text-danger">"{{ object }}"</b>
-                            ?</p>
+                        <p class="mb-3">
+                            Are you sure you want to delete connected account <b class="text-danger">"{{ object }}"</b>,
+                            if you delete there is no way to retrieve data again please read below.
+                        </p>
+                        <ul>
+                            <li>Account will be permanently deleted</li>
+                            <li>Balance in this account will be removed</li>
+                            <li>All sending and receiving will be cancelled</li>
+                            <li>External accounts will be removed banks or cards</li>
+                        </ul>
                         <input type="submit" class="btn btn-danger" value="Confirm">
                     </form>
 

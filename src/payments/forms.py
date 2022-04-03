@@ -9,3 +9,11 @@ class ConnectCreateForm(ModelForm):
             'first_name', 'last_name', 'email', 'phone', 'country', 'city', 'postal_code', 'address'
         ]
 
+
+class ConnectUpdateForm(ModelForm):
+    class Meta:
+        model = Connect
+        fields = [
+            'first_name', 'last_name', 'email', 'phone', 'city', 'postal_code', 'address'
+        ]
+
