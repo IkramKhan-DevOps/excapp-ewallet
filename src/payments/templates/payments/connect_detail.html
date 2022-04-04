@@ -161,19 +161,23 @@
         <div class="col-sm-4">
 
             {# DELETE #}
-            <div class="card bg-danger">
-                <div class="card-body text-white border-bottom border-white">
+            <div class="card">
+                <div class="card-body border-bottom">
                     <p class="mb-0 card-title">Remove Account</p>
                 </div>
-                <div class="card-body text-white">
+                <div class="card-body">
                     <p class="card-text">
                         <b>
-                            Are you sure you want to delete your connect account, there is no way to get back your data
-                            related to this connected account.
+                            To update you are only allowed to update basic information whereas to delete your connect account,
+                            there is no way to get back your data related to this account.
                         </b>
                     </p>
-                    <a href="{% url 'payment-stripe:connect-delete' %}" class="btn btn-light text-danger">Delete
-                        Account</a>
+                    <a href="{% url 'payment-stripe:connect-update' %}" class="btn btn-primary">Update
+                        Account
+                    </a>
+                    <a href="{% url 'payment-stripe:connect-delete' %}" class="btn btn-danger">Delete
+                        Account
+                    </a>
                 </div>
             </div>
 

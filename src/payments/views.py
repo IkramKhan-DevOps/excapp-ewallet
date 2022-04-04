@@ -161,7 +161,7 @@ class ConnectUpdateView(View):
         form = ConnectUpdateForm(instance=Connect.objects.get(user=request.user), data=request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Connect account updated successfully - please verify")
+            messages.success(request, "Connect account updated successfully")
             return redirect('payment-stripe:connect')
         self.context['form'] = form
         return render(request, self.template_name, self.context)
