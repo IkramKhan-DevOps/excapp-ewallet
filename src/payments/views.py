@@ -295,7 +295,7 @@ class ExternalAccountCreateView(View):
                 form.instance.connect = connect_account
                 e_account = form.save()
                 messages.success(request, "External account added successfully")
-                return redirect('payment-stripe:connect-external-account')
+                return redirect('payment-stripe:connect')
             else:
                 messages.error(request, "Please create your connect account first")
                 return redirect('payment-stripe:connect')
@@ -326,7 +326,7 @@ class ExternalAccountUpdateView(View):
         if form.is_valid():
             form.save()
             messages.success(request, "External Account updated successfully")
-            return redirect('payment-stripe:connect-external-account')
+            return redirect('payment-stripe:connect')
         self.context['form'] = form
         return render(request, self.template_name, self.context)
 
@@ -350,22 +350,24 @@ class ExternalAccountDeleteView(View):
         # 1: ACCOUNTS EXISTENCE
         b_account = get_object_or_404(ExternalAccount.objects.all(), pk=self.kwargs['pk'])
         c_account = b_account.connect
+        print(b_account.external_account_id)
 
         # 2: IN STRIPE
         if b_account.is_verified:
-            response = stripe_external_account_delete(c_account.connect_id, b_account.external_account_id)
+
+            # response = stripe_external_account_delete(c_account.connect_id, b_account.external_account_id)
 
             # 3: DELETED SUCCESSFULLY
-            if response['deleted']:
-                b_account.delete()
-                messages.success(request, "")
-            messages.error(request, "Linked external account deleted successfully")
+            # if response['deleted']:
+            #     b_account.delete()
+            #     messages.success(request, "External account deleted successfully")
+            messages.error(request, "Not allowed to delete external account")
 
         else:
             b_account.delete()
             messages.success(request, "Linked external account deleted successfully")
 
-        return redirect('payment-stripe:connect-external-account')
+        return redirect('payment-stripe:connect')
 
 
 class ExternalAccountVerifyView(View):
@@ -381,7 +383,7 @@ class ExternalAccountVerifyView(View):
         b_account = get_object_or_404(ExternalAccount.objects.all(), pk=self.kwargs['pk'])
 
         if b_account.is_verified:
-            pass
+            messages.warning(request, "Account already verified")
         else:
             if c_account.is_verified:
                 response = stripe_external_account_add(

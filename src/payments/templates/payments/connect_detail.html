@@ -8,7 +8,7 @@
         {% if object.connect_id %}
             {{ object.connect_id }}
         {% else %}
-
+            <a href="{% url 'payment-stripe:connect-verify' %}">Verify your account</a>
         {% endif %}
 
     </b>
@@ -86,75 +86,79 @@
                     <p class="mb-0 card-title">Payment Methods</p>
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-borderless table-hover">
-                            <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Currency</th>
-                                <th>Routing Number</th>
-                                <th>Account Number</th>
-                                <th>Status</th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            {% for acc in object.get_external_accounts %}
+                    {% if object.get_external_accounts %}
+                        <div class="table-responsive">
+                            <table class="table table-striped table-borderless table-hover">
+                                <thead>
                                 <tr>
-                                    <th>{{ acc.external_account_id }}</th>
-                                    <th><b class="mb-0">{{ acc.currency.name }}</b></th>
-                                    <th><b class="mb-0">{{ acc.routing_number }}</b></th>
-                                    <th><b class="mb-0">{{ acc.account_number }}</b></th>
-                                    <th>
-                                        {% if acc.is_verified %}
-                                            <b class="mb-0"><a href="#" class="text-success">
-                                                <i class="fa fa-check-circle"></i> verified</a>
-                                            </b>
-                                        {% else %}
-                                            <b class="mb-0"><a href="#" class="text-danger">
-                                                <i class="fa fa-times-circle"></i> not verified</a>
-                                            </b>
-                                        {% endif %}
-                                    </th>
-                                    <th><b class="mb-0"><a
-                                            href="{% url 'payment-stripe:connect-external-account-change' acc.pk %}"
-                                            class="text-primary"><i class="fa fa-edit"></i></a></b>
-                                    </th>
+                                    <th>ID</th>
+                                    <th>Currency</th>
+                                    <th>Routing Number</th>
+                                    <th>Account Number</th>
+                                    <th>Status</th>
+                                    <th></th>
                                 </tr>
-                            {% endfor %}
+                                </thead>
+                                <tbody>
 
-                            </tbody>
-                        </table>
-                    </div>
+                                {% for acc in object.get_external_accounts %}
+                                    <tr>
+                                        <th>
+                                            {% if acc.is_verified %}
+                                                {{ acc.external_account_id }}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+
+                                        </th>
+                                        <th><b class="mb-0">{{ acc.currency.short_code }}</b></th>
+                                        <th><b class="mb-0">{{ acc.routing_number }}</b></th>
+                                        <th><b class="mb-0">{{ acc.account_number }}</b></th>
+                                        <th>
+                                            {% if acc.is_verified %}
+                                                <b class="mb-0"><a href="#" class="text-success">
+                                                    <i class="fa fa-check-circle"></i> verified</a>
+                                                </b>
+                                            {% else %}
+                                                <b class="mb-0"><a href="{% url 'payment-stripe:connect-external-account-verify' acc.pk %}" class="text-primary">
+                                                    <i class="fa fa-times-circle"></i> Verify Here</a>
+                                                </b>
+                                            {% endif %}
+                                        </th>
+                                        <th>
+                                            <b class="mb-0">
+                                                <a href="{% url 'payment-stripe:connect-external-account-change' acc.pk %}"
+                                                   class="text-primary">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                            </b>
+                                            <b class="mb-0">
+                                                <a href="{% url 'payment-stripe:connect-external-account-delete' acc.pk %}"
+                                                   class="text-danger">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </b>
+                                        </th>
+                                    </tr>
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-danger"><b>No external bank/card account attached yet.</b></p>
+                    {% endif %}
+
+                    <p class="text-danger mb-0">
+                        <a href="{% url 'payment-stripe:connect-external-account-create' %}">
+                            <b>Attach new bank/card here.</b>
+                        </a>
+                    </p>
                 </div>
             </div>
 
         </div>
         <div class="col-sm-4">
-
-            {# VERIFY #}
-            <div class="card">
-                <div class="card-body border-bottom">
-                    <p class="mb-0 card-title">Verification</p>
-                </div>
-                <div class="card-body">
-                    {% if not object.is_verified %}
-                        <p class="mb-0 text-danger card-text">
-                            <b>
-                                Your connect account is not verified fully please check the errors below and fulfill
-                                the requirements.
-                            </b>
-                        </p>
-                    {% else %}
-                        <p class="mb-0 text-success card-text">
-                            <b>Verified account</b>
-                        </p>
-                    {% endif %}
-
-{#                    <p class="mb-0 mt-3"><b><a href="#">View Verifications</a></b></p>#}
-                </div>
-            </div>
 
             {# DELETE #}
             <div class="card bg-danger">
