@@ -337,6 +337,8 @@ class WithdrawalCreateView(View):
         if not check_sanction_for_web(request.user.get_user_sanctions(), 'withdrawal'):
             messages.error(request, "You don't have permission to perform any withdrawal.")
             return redirect('customer-portal:withdrawal-list')
+
+        c_account = request.user.get_stripe_account()
         return super(WithdrawalCreateView, self).dispatch(request)
 
     def post(self, request, *args, **kwargs):
