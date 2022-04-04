@@ -338,7 +338,15 @@ def stripe_account_transfer(account_id='acct_1KjLsJGgTB55MMlS'):
 
 def stripe_account_delete(account_id):
     response = stripe.Account.delete(account_id)
-    print(response['deleted'])
+    return response
+
+
+def stripe_external_account_delete(account_id, bank_account):
+    response = stripe.Account.delete_external_account(
+        "acct_1KNUx8GWh1G1v77h",
+        "ba_1Kkl7TGWh1G1v77hnd8XpDV6",
+    )
+    return response
 
 # v = {
 #     "business_profile": {

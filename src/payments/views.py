@@ -13,7 +13,7 @@ from notifications.signals import notify
 
 from cocognite import settings
 from src.accounts.models import Wallet
-from src.payments.bll import stripe_connect_account_create, stripe_external_account_add
+from src.payments.bll import stripe_connect_account_create, stripe_external_account_add, stripe_external_account_delete
 from src.payments.forms import ConnectCreateForm, ConnectUpdateForm, ExternalAccountCreateForm, \
     ExternalAccountUpdateForm
 from src.payments.models import Connect, ExternalAccount
@@ -181,10 +181,9 @@ class ConnectDetailView(DetailView):
         return get_object_or_404(Connect.objects.filter(), user=self.request.user)
 
 
-class ConnectDeleteView(DeleteView):
+class ConnectDeleteView(View):
     template_name = 'payments/connect_delete_confirm.html'
     model = Connect
-    success_url = reverse_lazy("payment-stripe:connect-create")
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_stripe_account_exists():
@@ -192,8 +191,36 @@ class ConnectDeleteView(DeleteView):
             return redirect('payment-stripe:connect-create')
         return super(ConnectDeleteView, self).dispatch(request)
 
-    def get_object(self, queryset=None):
-        return get_object_or_404(Connect.objects.filter(), user=self.request.user)
+    def get(self, request):
+        context = {
+            'object': request.user.get_stripe_account()
+        }
+        return render(request, template_name=self.template_name, context=context)
+
+    def post(self, request):
+
+        # 1: ACCOUNTS EXISTENCE
+        c_account = request.user.get_stripe_account()
+
+        # 2: IN STRIPE
+        if c_account.is_verified:
+            response = stripe.Account.delete(c_account.connect_id)
+            print(response)
+
+            # 3: DELETED SUCCESSFULLY
+            if response['deleted']:
+                c_account.delete()
+                messages.success(request, "Connect account deleted successfully")
+                return redirect('payment-stripe:connect')
+
+            messages.error(request, "Failed to delete connect - api")
+
+        else:
+            c_account.delete()
+            messages.success(request, "Linked external account deleted successfully")
+            return redirect('payment-stripe:connect-create')
+
+        return redirect('payment-stripe:connect')
 
 
 class ConnectVerifyView(View):
@@ -304,8 +331,41 @@ class ExternalAccountUpdateView(View):
         return render(request, self.template_name, self.context)
 
 
-class ExternalAccountDeleteView(DeleteView):
-    pass
+class ExternalAccountDeleteView(View):
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_stripe_account_exists():
+            messages.error(request, "Please create connect account first")
+            return redirect('payment-stripe:connect-create')
+        return super(ExternalAccountDeleteView, self).dispatch(request)
+
+    def get(self, request):
+        context = {
+            'object': request.user.get_stripe_account()
+        }
+        return render(request, template_name='payments/externalaccount_confirm_delete.html', context=context)
+
+    def post(self, request):
+
+        # 1: ACCOUNTS EXISTENCE
+        b_account = get_object_or_404(ExternalAccount.objects.all(), pk=self.kwargs['pk'])
+        c_account = b_account.connect
+
+        # 2: IN STRIPE
+        if b_account.is_verified:
+            response = stripe_external_account_delete(c_account.connect_id, b_account.external_account_id)
+
+            # 3: DELETED SUCCESSFULLY
+            if response['deleted']:
+                b_account.delete()
+                messages.success(request, "")
+            messages.error(request, "Linked external account deleted successfully")
+
+        else:
+            b_account.delete()
+            messages.success(request, "Linked external account deleted successfully")
+
+        return redirect('payment-stripe:connect-external-account')
 
 
 class ExternalAccountVerifyView(View):
