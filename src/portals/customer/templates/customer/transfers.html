@@ -1,0 +1,76 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block base_title %} Transfer Funds {% endblock %}
+
+{% block content %}
+
+    <div class="row mb-4">
+        <div class="col-sm-12 text-center">
+            <p class="h1">
+                <b>
+                    Select Transfer Path
+                </b>
+            </p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-sm-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <iframe src="https://embed.lottiefiles.com/animation/7455" class="border-0"></iframe>
+                </div>
+                <div class="card-body border-top">
+                    <h4 class="mb-0"><b>Wallet to Connect</b></h4>
+                    <p class="mb-0 text-secondary font-italic">
+                        transfer funds to connect
+                    </p>
+                </div>
+                <div class="border-top card-body">
+                    <form method="post" action="{% url 'customer-portal:transfer' %}?to=connect">
+                        {% csrf_token %}
+                        <div class="input-group  rounded bg-light">
+
+                            <input class="form-control bg-transparent border-0 form-control"
+                                   type="text" id="amount" name="amount" placeholder="Amount to Transfer">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bx bxs-send"></i>
+                            </button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <iframe src="https://embed.lottiefiles.com/animation/8507" class="border-0"></iframe>
+                </div>
+                <div class="card-body border-top">
+                    <h4 class="mb-0"><b>Connect to Wallet</b></h4>
+                    <p class="mb-0 text-secondary font-italic">
+                        reverse funds to wallet
+                    </p>
+                </div>
+                <div class="border-top card-body">
+                    <form method="post" action="{% url 'customer-portal:transfer' %}?to=wallet">
+                        {% csrf_token %}
+                        <div class="input-group  rounded bg-light">
+
+                            <input class="form-control bg-transparent border-0 form-control"
+                                   type="text" id="amount" name="amount" placeholder="Amount to Transfer">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bx bxs-send"></i>
+                            </button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

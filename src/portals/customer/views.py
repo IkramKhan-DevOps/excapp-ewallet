@@ -360,7 +360,8 @@ class WithdrawalCreateView(View):
         # 1:: VALIDATIONS
         if amount and external_account_number:
             message_error = None
-            amount = float(amount)
+            amount = amount
+            amount = int(amount)
 
             # 2:: EMPTY CHECK
             if amount > 5:
@@ -370,6 +371,7 @@ class WithdrawalCreateView(View):
                     ExternalAccount.objects.filter(connect__user=request.user),
                     pk=external_account_number
                 )
+                connect_account = request.user.get_stripe_account()
                 wallet = request.user.get_user_wallet()
 
                 if wallet.connect_amount > amount:
@@ -380,13 +382,19 @@ class WithdrawalCreateView(View):
                     wallet.save()
 
                     withdrawal = Withdrawal(
-                        amount=amount, connected_account=account, status='com', received=amount, tax=0
+                        total=amount, connected_account=account, status='com', received=amount, tax=0,
+                        wallet=request.user.get_user_wallet()
                     )
                     withdrawal.save()
+                    response = stripe_payout(
+                        account_id=connect_account.connect_id, bank_id=account.external_account_id,
+                        amount=int(str(amount)+"00"),
+                    )
+                    print(response)
                     messages.success(request, f"Amount {amount} successfully withdrawed to {account.account_number}")
                     return redirect("customer-portal:withdrawal-detail", withdrawal.pk)
                 else:
-                    message_error = "You don't have sufficient amount to withdraw"
+                    message_error = "You don't have sufficient amount in connect amount to withdraw"
 
             else:
                 message_error = "You don't have sufficient amount to withdraw"
@@ -451,5 +459,64 @@ class TicketDetailView(DetailView):
 
 
 """ -------------------------------------------------------------------------------------------------"""
+
+
+class TransferFunds(View):
+
+    def get(self, request):
+        return render(request, template_name='customer/transfers.html')
+
+    def post(self, request):
+
+        amount = request.POST.get('amount')
+        transfer_to = request.GET.get('to')
+        message_error = None
+
+        # 1: amount and transfer req check
+        if amount and transfer_to:
+
+            wallet = request.user.get_user_wallet()
+            amount = float(amount)
+            amount = int(amount)
+
+            # 2: amount check
+            if amount > 0:
+
+                if transfer_to == 'wallet':
+                    message_error = "Not implemented yet - will be available soon"
+
+                elif transfer_to == 'connect':
+                    account = request.user.get_stripe_account()
+
+                    if account.is_verified:
+                        if amount < wallet.amount:
+                            response = stripe_account_transfer(
+                                account_id=account.connect_id, amount=int(str(amount)+"00")
+                            )
+                            if response['id']:
+                                messages.success(
+                                    request, f"An amount of {amount} transferred from wallet to connect account"
+                                )
+                                wallet.amount -= amount
+                                wallet.connect_amount += amount
+                                wallet.save()
+                                return redirect('payment-stripe:connect')
+                        else:
+                            message_error = "You dont't have much account to transfer - please check your wallet"
+                    else:
+                        message_error = "Please verify your connect account first"
+
+                else:
+                    message_error = "Wrong destination - use wallet or connect"
+
+            else:
+                message_error = "Amount must be greater than 0"
+
+        else:
+            message_error = "Please provide all information"
+
+        messages.error(request, message_error)
+        return render(request, template_name='customer/transfers.html')
+
 
 """ -------------------------------------------------------------------------------------------------"""

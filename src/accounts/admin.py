@@ -212,7 +212,7 @@ class UserCustomAdmin(admin.ModelAdmin):
 
 
 class WalletAdmin(admin.ModelAdmin):
-    list_display = ['pk', 'user', 'amount', 'is_active']
+    list_display = ['pk', 'user', 'amount', 'connect_amount', 'is_active']
     list_filter = ['is_active']
 
 

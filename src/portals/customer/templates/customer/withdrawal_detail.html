@@ -65,9 +65,8 @@
                         <p class="h1 mb-0">
                             <img alt="bank-pic" src="{% static 'core/portals/images/icons8-mastercard-100.png' %}">
                         </p>
-                        <p class="h3 mb-0">{{ object.bank_name }}</p>
-                        <p class="mb-0"><a href="#"><b>{{ object.account_number }}</b></a></p>
-                        <p class="mb-0">{{ object.account_holder_name }}</p>
+                        <p class="h3 mb-0">{{ object.connected_account.account_number }}</p>
+                        <p class="mb-0">{{ object.connected_account.external_account_id }}</p>
                     </div>
 
                 </div>

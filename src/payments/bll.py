@@ -319,21 +319,21 @@ def stripe_external_account_add(account_id, country, currency, name, routing_num
     return response
 
 
-def stripe_payout(account_id="acct_1KjLsJGgTB55MMlS", bank_id="ba_1KjLyzGgTB55MMlS8f2714Az"):
+def stripe_payout(account_id, bank_id, amount):
     response = stripe.Payout.create(
-        amount=1000, currency="GBP", destination=bank_id, stripe_account=account_id
+        amount=amount, currency="GBP", destination=bank_id, stripe_account=account_id
     )
     print(response)
 
 
-def stripe_account_transfer(account_id='acct_1KjLsJGgTB55MMlS'):
+def stripe_account_transfer(account_id, amount):
     response = stripe.Transfer.create(
-        amount=10000,
+        amount=amount,
         currency="usd",
         destination=account_id,
         source_type="card",
     )
-    print(response)
+    return response
 
 
 def stripe_account_delete(account_id):
