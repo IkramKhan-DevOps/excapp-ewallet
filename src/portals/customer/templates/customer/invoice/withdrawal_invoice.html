@@ -44,9 +44,9 @@
                                 <strong class="h5"><b>Bank Details</b></strong><br>
                                 <div class="mt-2">
                                     <b>Bank Transfer</b><br>
-                                    {{ object.bank_name }}<br>
-                                    {{ object.account_number }}<br>
-                                    {{ object.account_holder_name }}
+                                    {{ object.connected_account.routing_number }}<br>
+                                    {{ object.connected_account.account_number }}<br>
+                                    {{ object.connected_account.account_holder_name }}
                                 </div>
                             </address>
                         </div>
@@ -66,7 +66,7 @@
                             <tbody>
                             <tr>
                                 <td>
-                                    Bank Transfer to ({{ object.bank_name }} - {{ object.account_holder_name }})
+                                    Bank Transfer to ({{ object.connected_account.account_number }} - {{ object.connected_account.account_holder_name }})
                                 </td>
                                 <td></td>
                                 <td class="text-right">${{ object.total }}</td>

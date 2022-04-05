@@ -63,7 +63,7 @@ class Connect(models.Model):
     connect_id = models.CharField(max_length=1000, null=True, blank=True, editable=False)
     user = models.OneToOneField('accounts.User', on_delete=models.CASCADE, blank=True)
     first_name = models.CharField(max_length=255, help_text="First Name for user")
-    last_name = models.CharField(max_length=255, help_text="First Name for user")
+    last_name = models.CharField(max_length=255, help_text="Last Name for user")
     email = models.EmailField(help_text="Your professional email that will be linked with connect account")
     phone = models.CharField(max_length=15, help_text="Phone number that will be linked with connect account")
 
