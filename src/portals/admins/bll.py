@@ -31,3 +31,4 @@ def check_sanction_for_web(sanction, sanction_type):
         is_allowed = True
 
     return is_allowed
+

@@ -70,6 +70,7 @@ class User(AbstractUser):
 class Wallet(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     amount = models.FloatField(default=0)
+    connect_amount = models.FloatField(default=0, editable=False)
     qr_code = models.UUIDField(max_length=1000, default=uuid.uuid4, unique=True, editable=False)
     qr_image = models.ImageField(
         upload_to='accounts/images/wallets/', null=True, blank=True,

@@ -25,7 +25,7 @@ class TransactionAdmin(admin.ModelAdmin):
 class WithdrawalAdmin(admin.ModelAdmin):
     list_display = [
         'id', 'total', 'tax', 'received', 'wallet',
-        'account_number', 'bank_name', 'status', 'is_active',
+        'connected_account', 'status', 'is_active',
         'created_on'
     ]
     search_fields = ['id']

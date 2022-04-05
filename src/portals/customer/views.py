@@ -20,7 +20,7 @@ from src.payments.bll import stripe_account_delete, stripe_account_create, strip
     stripe_payment_method_attach, stripe_setup_pay, stripe_payout_create, stripe_connect_account_create, \
     stripe_external_account_add, stripe_error_filters, stripe_payout, stripe_account_transfer, \
     stripe_get_balance
-from src.payments.models import Connect, City
+from src.payments.models import Connect, City, ExternalAccount
 from src.portals.admins.bll import generate_qr_code, check_sanction_for_web
 from src.portals.admins.models import (
     Withdrawal, Transaction, TopUp, PaymentMethod,
@@ -49,7 +49,7 @@ class DashboardView(TemplateView):
             Q(sender_wallet__user=self.request.user) | Q(receiver_wallet__user=self.request.user)
         )[:10]
         context['top_up_list'] = TopUp.objects.filter(wallet__user=self.request.user)[:10]
-        context['withdrawal_list'] = Withdrawal.objects.filter(wallet__user=self.request.user)[:10]
+        context['withdrawal_list'] = Withdrawal.objects.filter(connected_account__connect__user=self.request.user)
 
         account_id = "acct_1KjM822cdRjpWk9K"
         bank_id = "ba_1KjMAW2cdRjpWk9KRoa2WwV8"
@@ -306,7 +306,7 @@ class WithdrawalListView(ListView):
     paginate_by = 25
 
     def get_queryset(self):
-        return Withdrawal.objects.filter(wallet__user=self.request.user)
+        return Withdrawal.objects.filter(connected_account__connect__user=self.request.user)
 
 
 @method_decorator(customer_required, name='dispatch')
@@ -315,7 +315,10 @@ class WithdrawalDetailView(DetailView):
     template_name = 'customer/withdrawal_detail.html'
 
     def get_object(self, queryset=None):
-        return get_object_or_404(Withdrawal.objects.filter(wallet__user=self.request.user), pk=self.kwargs['pk'])
+        return get_object_or_404(Withdrawal.objects.filter(
+            connected_account__connect__user=self.request.user),
+            pk=self.kwargs['pk']
+        )
 
 
 @method_decorator(customer_required, name='dispatch')
@@ -324,13 +327,14 @@ class WithdrawalInvoiceView(DetailView):
     template_name = 'customer/invoice/withdrawal_invoice.html'
 
     def get_object(self, queryset=None):
-        return get_object_or_404(Withdrawal.objects.filter(wallet__user=self.request.user), pk=self.kwargs['pk'])
+        return get_object_or_404(Withdrawal.objects.filter(
+            connected_account__connect__user=self.request.user ), pk=self.kwargs['pk']
+        )
 
 
 @method_decorator(customer_required, name='dispatch')
 class WithdrawalCreateView(View):
     template_name = 'customer/withdrawal_create.html'
-    form_class = WithdrawalForm
     context = {}
 
     def dispatch(self, request, *args, **kwargs):
@@ -338,44 +342,65 @@ class WithdrawalCreateView(View):
             messages.error(request, "You don't have permission to perform any withdrawal.")
             return redirect('customer-portal:withdrawal-list')
 
-        c_account = request.user.get_stripe_account()
+        if not request.user.get_stripe_account():
+            messages.error(
+                request, "You don't have connect account to perform withdrawals - "
+                         "please add connect account first"
+            )
+            return redirect('payment-stripe:connect-create')
+
         return super(WithdrawalCreateView, self).dispatch(request)
 
     def post(self, request, *args, **kwargs):
+        self.context['external_accounts'] = request.user.get_stripe_account().get_external_accounts()
+        self.context['total_available'] = request.user.get_user_wallet().connect_amount
+        amount = request.POST.get('amount')
+        external_account_number = request.POST.get('external_account')
 
-        form = self.form_class(request.POST)
-        if form.is_valid():
+        # 1:: VALIDATIONS
+        if amount and external_account_number:
             message_error = None
-            amount = float(form.cleaned_data['total'])
-            account_number = form.cleaned_data['account_number']
-            wallet = self.request.user.get_user_wallet()
+            amount = float(amount)
 
-            # TODO: logic here
-            if wallet.amount > amount:
+            # 2:: EMPTY CHECK
+            if amount > 5:
 
-                wallet.amount -= amount
-                wallet.total_withdrawal_amount += amount
-                wallet.total_withdrawal += 1
-                wallet.save()
+                # 3:: EXTERNAL_ACCOUNT_VALIDATIONS
+                account = get_object_or_404(
+                    ExternalAccount.objects.filter(connect__user=request.user),
+                    pk=external_account_number
+                )
+                wallet = request.user.get_user_wallet()
 
-                form.instance.status = 'com'
-                form.instance.wallet = wallet
-                form.instance.tax = 0
-                form.instance.received = amount
-                withdrawal = form.save()
-                messages.success(request, f"Amount {amount} successfully withdrawed to {account_number}")
-                return redirect("customer-portal:withdrawal-detail", withdrawal.pk)
+                if wallet.connect_amount > amount:
+
+                    wallet.connect_amount -= amount
+                    wallet.total_withdrawal_amount += amount
+                    wallet.total_withdrawal += 1
+                    wallet.save()
+
+                    withdrawal = Withdrawal(
+                        amount=amount, connected_account=account, status='com', received=amount, tax=0
+                    )
+                    withdrawal.save()
+                    messages.success(request, f"Amount {amount} successfully withdrawed to {account.account_number}")
+                    return redirect("customer-portal:withdrawal-detail", withdrawal.pk)
+                else:
+                    message_error = "You don't have sufficient amount to withdraw"
+
             else:
                 message_error = "You don't have sufficient amount to withdraw"
-            messages.error(request, message_error)
+        else:
+            message_error = "Please select payment method and set correct amount"
+        messages.error(request, message_error)
 
-        self.context['form'] = form
         return render(request, self.template_name, self.context)
 
     def get(self, request, *args, **kwargs):
 
-        self.context['form'] = self.form_class
         self.context['countries'] = Country.objects.all()
+        self.context['external_accounts'] = request.user.get_stripe_account().get_external_accounts()
+        self.context['total_available'] = request.user.get_user_wallet().connect_amount
         return render(request, self.template_name, self.context)
 
 
@@ -426,67 +451,5 @@ class TicketDetailView(DetailView):
 
 
 """ -------------------------------------------------------------------------------------------------"""
-
-
-# @method_decorator(customer_required, name='dispatch')
-# class ConnectAccountView(DetailView):
-#     model = Connect
-#     template_name = 'customer/connect_account.html'
-#
-#     def dispatch(self, request, *args, **kwargs):
-#         stripe_customer = Connect.objects.filter(user=self.request.user)
-#         if not stripe_customer:
-#             messages.error(request, "Please create your connect account first")
-#             return redirect("customer-portal:stripe-customer-account-create")
-#         return super(ConnectAccountView, self).dispatch(request)
-#
-#     def get_object(self, queryset=None):
-#         return get_object_or_404(Connect.objects.filter(user=self.request.user))
-#
-#
-# @method_decorator(customer_required, name='dispatch')
-# class ConnectAccountCreateView(CreateView):
-#     model = Connect
-#     template_name = 'customer/connect_account_create_form.html'
-#     fields = ['name', 'email', 'phone', 'country']
-#     success_url = reverse_lazy('customer-portal:stripe-customer-account')
-#
-#     def dispatch(self, request, *args, **kwargs):
-#         if request.user.is_stripe_account_exists():
-#             messages.warning(request, "Connect Account is already created")
-#             return redirect('customer-portal:stripe-customer-account')
-#         return super(ConnectAccountCreateView, self).dispatch(request)
-#
-#     def form_valid(self, form):
-#         form.instance.user = self.request.user
-#         return super(ConnectAccountCreateView, self).form_valid(form)
-#
-#
-# @method_decorator(customer_required, name='dispatch')
-# class ConnectAccountUpdateView(UpdateView):
-#     model = Connect
-#     template_name = 'customer/connect_account_update_form.html'
-#     fields = ['name', 'email', 'phone', 'country']
-#     success_url = reverse_lazy('customer-portal:stripe-customer-account')
-#
-#     def dispatch(self, request, *args, **kwargs):
-#         stripe_customer = Connect.objects.filter(user=self.request.user)
-#         if not stripe_customer:
-#             messages.error(request, "Please create your connect account first")
-#             return redirect("customer-portal:stripe-customer-account-create")
-#         return super(ConnectAccountUpdateView, self).dispatch(request)
-#
-#     def get_object(self, queryset=None):
-#         return get_object_or_404(Connect.objects.filter(user=self.request.user, pk=self.kwargs['pk']))
-#
-#
-# @method_decorator(customer_required, name='dispatch')
-# class ConnectAccountDeleteView(DeleteView):
-#
-#     template_name = 'customer/connect_account_delete.html'
-#     success_url = reverse_lazy('customer-portal:stripe-customer-account')
-#
-#     def get_object(self, queryset=None):
-#         return get_object_or_404(Connect.objects.filter(user=self.request.user, pk=self.kwargs['pk']))
 
 """ -------------------------------------------------------------------------------------------------"""

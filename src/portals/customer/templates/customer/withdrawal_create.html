@@ -4,100 +4,61 @@
 
 {% block base_title %} Load Balance {% endblock %}
 
-{% block page_heading %}Load Balance{% endblock %}
+{% block page_heading %}
+    <p>Available balance to withdraw - <b>{{ total_available }}</b></p>
+{% endblock %}
 
 {% block content %}
 
-    <div class="checkout-tabs">
-        <form method="post">
-            <div class="row">
-
-                {# LEFT #}
-                <div class="col-xl-2 col-sm-3">
-                    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                        <a class="nav-link active" id="v-pills-payment-tab" data-toggle="pill" href="#v-pills-payment"
-                           role="tab" aria-controls="v-pills-payment" aria-selected="true">
-                            <i class="bx bx-money d-block check-nav-icon mt-4 mb-2"></i>
-                            <p class="font-weight-bold mb-4">Payment Info</p>
-                        </a>
-                        <a class="nav-link" id="v-pills-confir-tab" data-toggle="pill" href="#v-pills-confir" role="tab"
-                           aria-controls="v-pills-confir" aria-selected="false">
-                            <i class="bx bx-badge-check d-block check-nav-icon mt-4 mb-2"></i>
-                            <p class="font-weight-bold mb-4">Confirmation</p>
-                        </a>
-                    </div>
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-body">
+                    <p class="mb-0 card-title">Withdraw</p>
                 </div>
+                <div class="card-body border-top">
 
-                {# RIGHT #}
-                <div class="col-xl-10 col-sm-9">
-                    <div class="card">
-
-                        <div class="card-body border-bottom">
-                            <h4 class="card-title mb-0">Payment information</h4>
+                    <form method="post">
+                        {% csrf_token %}
+                        <p id="mb-0"><b>Select your external account</b></p>
+                        <table class="table table-hover table-borderless">
+                            <tr>
+                                <td style="width: 45px;">
+                                    <div class="avatar-sm"><span
+                                            class="avatar-title rounded-circle bg-primary bg-soft text-light font-size-24"><i
+                                            class="bx bxs-bank"></i></span></div>
+                                </td>
+                                <td>
+                                    <h5 class="font-size-14 mb-0">
+                                        <a href="#" class="text-dark">PKUL23682763827 </a>
+                                    </h5>
+                                    <p class="mb-0"><b>36748</b></p>
+                                    <p class="mb-0"><small>Registered bank account - allowed payments and
+                                        withdrawals</small></p>
+                                </td>
+                                <td>
+                                    <div class="text-center">
+                                        <input type="radio" value="1" id="external_account" name="external_account">
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div>
+                            <p id="mb-0"><b>Amount to Withdraw</b></p>
+                            <input id="amount" name="amount" type="number" class="border-0 bg-light p-3" width="200"
+                                   placeholder="5">
                         </div>
 
-                        <div class="card-body">
-                            <div class="tab-content" id="v-pills-tabContent">
-                                <div class="tab-pane fade active show" id="v-pills-payment" role="tabpanel"
-                                     aria-labelledby="v-pills-payment-tab">
-                                    <div>
-                                        <div id="div_id_country" class="form-group">
-                                            <label for="id_country" class=" requiredField">Country
-                                                <span class="asteriskField">*</span>
-                                            </label>
-                                            <div class="">
-                                                <select class="form-control" id="country">
-                                                    <option value="0">Select your country</option>
-                                                    {% for country in countries %}
-                                                        <option value="{{ country.pk }}">{{ country.name }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="" id="pay-div">
-
-                                            <p class="card-title mb-0">Payment Methods</p>
-                                            <p class="card-text">Payments methods available in your country</p>
-
-                                            <div class="row" id="pay-methods">
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="v-pills-confir" role="tabpanel"
-                                     aria-labelledby="v-pills-confir-tab">
-                                    <div class="card shadow-none mb-0">
-                                        <div class="card-body">
-                                            <h4 class="card-title mb-4">Agreement</h4>
-                                            <p>By selecting payment method and amount you will be redirected to
-                                                checkout,
-                                                make sure to follow the proper procedure complete payments.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-primary" id="submit" name="submit">Submit</button>
                         </div>
-                    </div>
-                    <div class="row my-4">
-                        <div class="col-sm-6">
-                            <a href="{% url 'customer-portal:withdrawal-list' %}"
-                               class="btn text-muted d-none d-sm-inline-block btn-link">
-                                <i class="mdi mdi-arrow-left mr-1"></i> Back to Withdrawals </a>
-                        </div> <!-- end col -->
-                        <div class="col-sm-6">
-                            <div class="text-sm-right">
-                                <button type="submit" class="btn btn-success">
-                                    <i class="mdi mdi-check mr-1"></i> Checkout
-                                </button>
-                            </div>
-                        </div> <!-- end col -->
-                    </div> <!-- end row -->
+                    </form>
                 </div>
-
             </div>
-        </form>
+        </div>
+        <div class="col-sm-4">
+
+        </div>
     </div>
 
 {% endblock %}
@@ -117,7 +78,7 @@
                     pay_div.show();
                     pay_methods.html('');
                     get_payment_methods_api(value);
-                }else{
+                } else {
                     pay_div.hide();
                 }
             });
