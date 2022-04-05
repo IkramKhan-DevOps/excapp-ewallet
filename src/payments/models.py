@@ -94,6 +94,9 @@ class Connect(models.Model):
     def get_external_accounts(self):
         return self.externalaccount_set.all()
 
+    def get_external_accounts_verified(self):
+        return self.externalaccount_set.filter(is_verified=True)
+
 
 class ExternalAccount(models.Model):
     BUSINESS_TYPE_CHOICE = (

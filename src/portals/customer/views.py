@@ -352,7 +352,7 @@ class WithdrawalCreateView(View):
         return super(WithdrawalCreateView, self).dispatch(request)
 
     def post(self, request, *args, **kwargs):
-        self.context['external_accounts'] = request.user.get_stripe_account().get_external_accounts()
+        self.context['external_accounts'] = request.user.get_stripe_account().get_external_accounts_verified()
         self.context['total_available'] = request.user.get_user_wallet().connect_amount
         amount = request.POST.get('amount')
         external_account_number = request.POST.get('external_account')
@@ -399,7 +399,7 @@ class WithdrawalCreateView(View):
     def get(self, request, *args, **kwargs):
 
         self.context['countries'] = Country.objects.all()
-        self.context['external_accounts'] = request.user.get_stripe_account().get_external_accounts()
+        self.context['external_accounts'] = request.user.get_stripe_account().get_external_accounts_verified()
         self.context['total_available'] = request.user.get_user_wallet().connect_amount
         return render(request, self.template_name, self.context)
 

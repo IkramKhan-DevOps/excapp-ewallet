@@ -8,6 +8,7 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 """ START --------------------------------------------------------------------------------------------------------- """
 
+
 def stripe_error_filters():
     try:
         response = stripe.Account.create(
