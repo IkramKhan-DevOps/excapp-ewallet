@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'ckeditor',
     'qrcode',
+    'phonenumber_field',
 
     # TEMP
     'django_seed',

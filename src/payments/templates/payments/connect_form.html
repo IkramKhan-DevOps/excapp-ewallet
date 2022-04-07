@@ -58,12 +58,12 @@
                         </ol>
 
                         <ol class="list-unstyled">
-                        <li>
-                            Connect account is working under testing modes, please make sure to use testing
-                            provided
-                            data to avoid errors and inappropriate results.
-                        </li>
-                    </ol>
+                            <li>
+                                Connect account is working under testing modes, please make sure to use testing
+                                provided
+                                data to avoid errors and inappropriate results.
+                            </li>
+                        </ol>
 
                     </div>
                 </div>
@@ -72,4 +72,24 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block base_external_scripts %}
+    <script>
+        $(document).ready(function () {
+            let div_id_first_name = $('#div_id_first_name');
+            let div_id_last_name = $('#div_id_last_name');
+            div_id_first_name.hide();
+            div_id_last_name.hide();
+
+            {% if not request.user.first_name %}
+                div_id_first_name.show();
+            {% endif %}
+
+            {% if not request.user.last_name %}
+                div_id_last_name.show();
+            {% endif %}
+
+        });
+    </script>
 {% endblock %}

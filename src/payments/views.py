@@ -16,7 +16,7 @@ from src.accounts.models import Wallet
 from src.payments.bll import stripe_connect_account_create, stripe_external_account_add, stripe_external_account_delete
 from src.payments.forms import ConnectCreateForm, ConnectUpdateForm, ExternalAccountCreateForm, \
     ExternalAccountUpdateForm
-from src.payments.models import Connect, ExternalAccount
+from src.payments.models import Connect, ExternalAccount, StripeAcceptedCountry, City
 from src.portals.admins.models import TopUp
 import urllib
 
@@ -138,11 +138,39 @@ class ConnectCreateView(View):
         return render(request, self.template_name, self.context)
 
     def post(self, request):
+
         form = ConnectCreateForm(data=request.POST)
+
+        # 1: forms validation
         if form.is_valid():
+
+            # from user model
+            _email = request.user.email
+            _last_name = request.user.last_name
+            _first_name = request.user.first_name
+
+            # from form
+            _phone = form.data['phone']
+            _address = form.data['address']
+            _postal_code = form.data['postal_code']
+            _city = get_object_or_404(City, pk=form.data['city'])
+            _country = get_object_or_404(StripeAcceptedCountry, pk=form.data['country'])
+
+            # missing handling
+            if form.data['first_name'] == '':
+                _first_name = form.cleaned_data['first_name']
+
+            if form.data['last_name'] == '':
+                _last_name = form.cleaned_data['last_name']
+
+            # filling form
             form.instance.user = request.user
-            form.save()
-            messages.success(request, "Connect account added successfully - please verify")
+            form.instance.first_name = _first_name
+            form.instance.last_name = _last_name
+            form.instance.email = _email
+            # form.save()
+
+            messages.success(request, "Connect account added successfully")
             return redirect('payment-stripe:connect')
         self.context['form'] = form
         return render(request, self.template_name, self.context)
@@ -316,12 +344,14 @@ class ExternalAccountUpdateView(View):
         return super(ExternalAccountUpdateView, self).dispatch(request)
 
     def get(self, request, *args, **kwargs):
-        e_account = get_object_or_404(ExternalAccount.objects.filter(connect__user=self.request.user), pk=self.kwargs['pk'])
+        e_account = get_object_or_404(ExternalAccount.objects.filter(connect__user=self.request.user),
+                                      pk=self.kwargs['pk'])
         self.context['form'] = ExternalAccountUpdateForm(instance=e_account)
         return render(request, self.template_name, self.context)
 
     def post(self, request, *args, **kwargs):
-        e_account = get_object_or_404(ExternalAccount.objects.filter(connect__user=self.request.user), pk=self.kwargs['pk'])
+        e_account = get_object_or_404(ExternalAccount.objects.filter(connect__user=self.request.user),
+                                      pk=self.kwargs['pk'])
         form = ExternalAccountUpdateForm(instance=e_account, data=request.POST)
         if form.is_valid():
             form.save()

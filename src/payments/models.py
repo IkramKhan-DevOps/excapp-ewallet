@@ -56,16 +56,19 @@ class Currency(models.Model):
         return self.name
 
 
+from phonenumber_field.modelfields import PhoneNumberField
+
+
 class Connect(models.Model):
     BUSINESS_TYPE_CHOICE = (
         ('individual', 'individual'),
     )
     connect_id = models.CharField(max_length=1000, null=True, blank=True, editable=False)
     user = models.OneToOneField('accounts.User', on_delete=models.CASCADE, blank=True)
-    first_name = models.CharField(max_length=255, help_text="First Name for user")
-    last_name = models.CharField(max_length=255, help_text="Last Name for user")
-    email = models.EmailField(help_text="Your professional email that will be linked with connect account")
-    phone = models.CharField(max_length=15, help_text="Phone number that will be linked with connect account")
+    first_name = models.CharField(max_length=255, help_text="First Name for user", blank=True)
+    last_name = models.CharField(max_length=255, help_text="Last Name for user", blank=True)
+    email = models.EmailField(help_text="Your professional email that will be linked with connect account", blank=True)
+    phone = PhoneNumberField(help_text="Phone number that will be linked with connect account")
 
     country = models.ForeignKey(
         StripeAcceptedCountry, on_delete=models.SET_NULL, null=True, blank=False,
@@ -77,7 +80,7 @@ class Connect(models.Model):
     postal_code = models.CharField(
         max_length=255, null=True, blank=True, help_text="Postal code according to your country and city"
     )
-    address = models.TextField(null=True, blank=True, help_text="Your home or office address.")
+    address = models.CharField(max_length=1000, null=True, blank=True, help_text="Your home or office address.")
     description = models.CharField(max_length=5000, null=True, blank=True)
     business_type = models.CharField(max_length=255, choices=BUSINESS_TYPE_CHOICE, default='individual')
 

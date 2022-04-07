@@ -6,7 +6,7 @@ class ConnectCreateForm(ModelForm):
     class Meta:
         model = Connect
         fields = [
-            'first_name', 'last_name', 'email', 'phone', 'country', 'city', 'postal_code', 'address'
+            'first_name', 'last_name', 'phone', 'country', 'city', 'postal_code', 'address'
         ]
 
 

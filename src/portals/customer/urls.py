@@ -35,5 +35,4 @@ urlpatterns = [
     path('ticket/<int:pk>/', TicketDetailView.as_view(), name='ticket-detail'),
 
     path('transfers/', TransferFunds.as_view(), name='transfer')
-
 ]

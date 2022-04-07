@@ -20,3 +20,4 @@ django-notifications-hq
 # django-model-utils
 six
 django-preventconcurrentlogins
+django-phonenumber-field[phonenumberslite]
