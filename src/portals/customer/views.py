@@ -14,12 +14,7 @@ from django.views.generic import TemplateView, ListView, CreateView, DetailView,
 from notifications.signals import notify
 
 from src.accounts.decorators import customer_required
-from src.payments.bll import stripe_account_delete, stripe_account_create, stripe_account_get, stripe_account_update, \
-    stripe_countries_list, stripe_country_get, create_customer, stripe_customer_get, stripe_customer_update, \
-    stripe_customer_delete, stripe_connect_bank_accounts_list, stripe_payment_method_create, \
-    stripe_payment_method_attach, stripe_setup_pay, stripe_payout_create, stripe_connect_account_create, \
-    stripe_external_account_add, stripe_error_filters, stripe_payout, stripe_account_transfer, \
-    stripe_get_balance
+from src.payments.bll import stripe_payout, stripe_account_transfer
 from src.payments.models import Connect, City, ExternalAccount
 from src.portals.admins.bll import generate_qr_code, check_sanction_for_web
 from src.portals.admins.models import (

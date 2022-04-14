@@ -13,7 +13,7 @@ from notifications.signals import notify
 
 from cocognite import settings
 from src.accounts.models import Wallet
-from src.payments.bll import stripe_connect_account_create, stripe_external_account_add, stripe_external_account_delete
+from src.payments.bll import stripe_external_account_add, stripe_external_account_delete, stripe_account_create_custom
 from src.payments.forms import ConnectCreateForm, ConnectUpdateForm, ExternalAccountCreateForm, \
     ExternalAccountUpdateForm
 from src.payments.models import Connect, ExternalAccount, StripeAcceptedCountry, City
@@ -158,10 +158,9 @@ class ConnectCreateView(View):
 
             # missing handling
             if form.data['first_name'] == '':
-                _first_name = form.cleaned_data['first_name']
-
+                _first_name = request.user.first_name
             if form.data['last_name'] == '':
-                _last_name = form.cleaned_data['last_name']
+                _last_name = request.user.last_name
 
             # filling form
             form.instance.user = request.user
@@ -170,8 +169,23 @@ class ConnectCreateView(View):
             form.instance.email = _email
             # form.save()
 
-            messages.success(request, "Connect account added successfully")
-            return redirect('payment-stripe:connect')
+            # -------------------------------- API CALL TO HANDLE
+            is_error, response = stripe_account_create_custom(
+                email=_email, first_name=_first_name, last_name=_last_name, phone=_phone, gender='male', day=30, month=12,
+                year=2001, country=_country.country.short_code, city=_city.name, state=_city.name,
+                address_line_1=_address, postal_code=_postal_code
+            )
+            # ---------------------------------------------------
+            if not is_error:
+                form.instance.connect_id = response['id']
+                form.instance.is_verified = True
+                form.save()
+
+                messages.success(request, "Connect account added successfully")
+                return redirect('payment-stripe:connect')
+            else:
+                messages.error(request, response)
+
         self.context['form'] = form
         return render(request, self.template_name, self.context)
 

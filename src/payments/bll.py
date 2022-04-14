@@ -9,43 +9,70 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 """ START --------------------------------------------------------------------------------------------------------- """
 
 
-def stripe_error_filters():
+def stripe_account_create_custom(
+        email, first_name, last_name, phone, gender, day, month, year,
+        country, city, state, address_line_1, postal_code, address_line_2=None
+):
+    _is_error = True
+    response = "Something wrong with this request"
+
     try:
+
         response = stripe.Account.create(
-            type="express",
-            country="US",
-            email="ikram.khan07622@gmail.com",
-            business_type="individual",
+            type="custom",  # Custom
+            country=country,  # GB
+            email=email,
             capabilities={
-                "card_payments": {"requested": True},
+                # "card_payments": {"requested": True},
                 "transfers": {"requested": True},
             },
+            business_type="individual",
             individual={
-                "email": "ikram.khan07622@gmail.com",
-                "first_name": "Ikram",
-                "gender": "male",
-                "last_name": "Khans",
+                "address": {
+                    "city": city,  # London
+                    "country": country,  # GB
+                    "line1": address_line_1,  # A4, London WC2N 5DU, UK
+                    "postal_code": postal_code,  # WC2N 5DU
+                    "state": state,  # London
+                },
+                "dob": {
+                    "day": day,  # 30
+                    "month": month,  # 12
+                    "year": year,  # 2001
+                },
+                "email": email,
+                "first_name": first_name,
+                "gender": gender,
+                "last_name": last_name,
+                "phone": phone,  # 3419387283
+            },
+            tos_acceptance={
+                "date": 1648375904,  # TODO: please provide code for this
+                "ip": "192.168.100.11",
+                "service_agreement": "recipient",
+                "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36"
             }
         )
-        print(response)
+        _is_error = False
 
     except stripe.error.CardError as e:
-        print('Status is: %s' % e.http_status)
-        print('Code is: %s' % e.code)
-        print('Param is: %s' % e.param)
-        print('Message is: %s' % e.user_message)
+        response = e.user_message
     except stripe.error.RateLimitError as e:
-        print(e)
+        response = e.user_message
     except stripe.error.InvalidRequestError as e:
-        print(e)
+        response = e.user_message
     except stripe.error.AuthenticationError as e:
-        print(e)
+        response = e.user_message
     except stripe.error.APIConnectionError as e:
-        print(e)
+        response = e.user_message
     except stripe.error.StripeError as e:
-        print(e)
+        response = e.user_message
     except Exception as e:
-        print(e)
+        response = e
+
+    return _is_error, response
+
+
 
 
 """ ---------------------------------------------------------------------------------------------------------------- """
@@ -259,48 +286,6 @@ def stripe_setup_pay():
 def stripe_get_balance():
     response = stripe.Balance.retrieve()
     print(response)
-
-
-def stripe_connect_account_create(
-        email, first_name, last_name, phone, gender, day, month, year,
-        country, city, state, address_line_1, postal_code, address_line_2=None
-):
-    response = stripe.Account.create(
-        type="custom",  # Custom
-        country=country,  # GB
-        email=email,
-        capabilities={
-            # "card_payments": {"requested": True},
-            "transfers": {"requested": True},
-        },
-        business_type="individual",
-        individual={
-            "address": {
-                "city": city,  # London
-                "country": country,  # GB
-                "line1": address_line_1,  # A4, London WC2N 5DU, UK
-                "postal_code": postal_code,  # WC2N 5DU
-                "state": state,  # London
-            },
-            "dob": {
-                "day": day,  # 30
-                "month": month,  # 12
-                "year": year,  # 2001
-            },
-            "email": email,
-            "first_name": first_name,
-            "gender": gender,
-            "last_name": last_name,
-            "phone": phone,  # 3419387283
-        },
-        tos_acceptance={
-            "date": 1648375904,
-            "ip": "192.168.100.11",
-            "service_agreement": "recipient",
-            "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36"
-        }
-    )
-    return response
 
 
 def stripe_external_account_add(account_id, country, currency, name, routing_number, account_number):
