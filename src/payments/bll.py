@@ -111,6 +111,10 @@ def stripe_external_bank_account_add(account_id, country, currency, name, routin
     return _is_error, response
 
 
+def stripe_account_get(stripe_user_id):
+    return stripe.Account.retrieve(stripe_user_id)
+
+
 """ ---------------------------------------------------------------------------------------------------------------- """
 
 

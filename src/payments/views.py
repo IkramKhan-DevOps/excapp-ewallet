@@ -14,7 +14,7 @@ from notifications.signals import notify
 from cocognite import settings
 from src.accounts.models import Wallet
 from src.payments.bll import stripe_external_bank_account_add, stripe_external_account_delete, \
-    stripe_account_create_custom
+    stripe_account_create_custom, stripe_account_get
 from src.payments.forms import ConnectCreateForm, ConnectUpdateForm, ExternalAccountCreateForm, \
     ExternalAccountUpdateForm
 from src.payments.models import Connect, ExternalAccount, StripeAcceptedCountry, City, Currency
@@ -217,6 +217,7 @@ class ConnectDetailView(DetailView):
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_stripe_account_exists():
+
             messages.error(request, "Please create connect account first")
             return redirect('payment-stripe:connect-create')
         return super(ConnectDetailView, self).dispatch(request)

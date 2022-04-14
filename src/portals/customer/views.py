@@ -489,6 +489,7 @@ class TransferFunds(View):
                                 account_id=account.connect_id, amount=int(str(amount)+"00")
                             )
                             if response['id']:
+                                print(response)
                                 messages.success(
                                     request, f"An amount of {amount} transferred from wallet to connect account"
                                 )

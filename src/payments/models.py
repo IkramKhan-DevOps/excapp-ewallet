@@ -47,6 +47,7 @@ class City(models.Model):
 class Currency(models.Model):
     name = models.CharField(max_length=255, unique=True)
     short_code = models.CharField(max_length=3, unique=True)
+    symbol = models.CharField(default='dollar', max_length=100)
 
     class Meta:
         ordering = ['-id']
@@ -76,6 +77,7 @@ class Connect(models.Model):
                   "and bank accounts will be visible"
     )
     city = models.ForeignKey(City, on_delete=models.SET_NULL, help_text="Select your city", null=True, blank=True)
+    currency = models.ForeignKey(Currency, null=True, blank=False, on_delete=models.SET_NULL)
 
     postal_code = models.CharField(
         max_length=255, null=True, blank=True, help_text="Postal code according to your country and city"

@@ -60,7 +60,7 @@
                         <div class="col-sm-6">
                             <div>
                                 <p class="text-muted mb-2">Available Balance</p>
-                                <h5>$ {{ request.user.get_user_wallet.connect_amount }}</h5>
+                                <h5>&{{ object.currency.symbol }}; {{ request.user.get_user_wallet.connect_amount }}</h5>
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -137,6 +137,7 @@
                                                    class="text-danger">
                                                     <i class="fa fa-trash"></i>
                                                 </a>
+
                                             </b>
                                         </th>
                                     </tr>
