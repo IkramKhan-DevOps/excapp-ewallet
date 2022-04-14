@@ -128,8 +128,11 @@ class ExternalAccount(models.Model):
     account_type = models.CharField(
         max_length=255, choices=ACCOUNT_TYPE_CHOICE, default='bank',
     )
-    routing_number = models.CharField(max_length=255, blank=False)
-    account_number = models.CharField(max_length=255, blank=False)
+    routing_number = models.CharField(
+        verbose_name='RoutingNumber/SortCode', max_length=255, blank=False,
+        help_text="Use '108800' for testing purpose -- SortCode for UK and Routing Number for US customers"
+    )
+    account_number = models.CharField(max_length=255, blank=False, help_text="Use '00012345' for testing purpose")
 
     created_on = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)

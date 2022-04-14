@@ -120,8 +120,8 @@
                                                     <i class="fa fa-check-circle"></i> verified</a>
                                                 </b>
                                             {% else %}
-                                                <b class="mb-0"><a href="{% url 'payment-stripe:connect-external-account-verify' acc.pk %}" class="text-primary">
-                                                    <i class="fa fa-times-circle"></i> Verify Here</a>
+                                                <b class="mb-0">
+                                                    <i class="fa fa-times-circle"></i> Not verified
                                                 </b>
                                             {% endif %}
                                         </th>

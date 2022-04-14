@@ -73,6 +73,42 @@ def stripe_account_create_custom(
     return _is_error, response
 
 
+def stripe_external_bank_account_add(account_id, country, currency, name, routing_number, account_number):
+    _is_error = True
+    response = "Something wrong with this request"
+
+    try:
+
+        response = stripe.Account.create_external_account(
+            account_id,
+            external_account={
+                "object": "bank_account",
+                "country": country,  # GB
+                "currency": currency,  # gbp
+                "account_holder_name": name,
+                "account_holder_type": "individual",
+                "routing_number": routing_number,  # 108800
+                "account_number": account_number,  # 00012345
+            }
+        )
+        _is_error = False
+
+    except stripe.error.CardError as e:
+        response = e.user_message
+    except stripe.error.RateLimitError as e:
+        response = e.user_message
+    except stripe.error.InvalidRequestError as e:
+        response = e.user_message
+    except stripe.error.AuthenticationError as e:
+        response = e.user_message
+    except stripe.error.APIConnectionError as e:
+        response = e.user_message
+    except stripe.error.StripeError as e:
+        response = e.user_message
+    except Exception as e:
+        response = e
+
+    return _is_error, response
 
 
 """ ---------------------------------------------------------------------------------------------------------------- """
@@ -286,22 +322,6 @@ def stripe_setup_pay():
 def stripe_get_balance():
     response = stripe.Balance.retrieve()
     print(response)
-
-
-def stripe_external_account_add(account_id, country, currency, name, routing_number, account_number):
-    response = stripe.Account.create_external_account(
-        account_id,
-        external_account={
-            "object": "bank_account",
-            "country": country,  # GB
-            "currency": currency,  # gbp
-            "account_holder_name": name,
-            "account_holder_type": "individual",
-            "routing_number": '108800',  # 108800
-            "account_number": '00012345',  # 00012345
-        }
-    )
-    return response
 
 
 def stripe_payout(account_id, bank_id, amount):

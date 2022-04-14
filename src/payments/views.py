@@ -13,10 +13,11 @@ from notifications.signals import notify
 
 from cocognite import settings
 from src.accounts.models import Wallet
-from src.payments.bll import stripe_external_account_add, stripe_external_account_delete, stripe_account_create_custom
+from src.payments.bll import stripe_external_bank_account_add, stripe_external_account_delete, \
+    stripe_account_create_custom
 from src.payments.forms import ConnectCreateForm, ConnectUpdateForm, ExternalAccountCreateForm, \
     ExternalAccountUpdateForm
-from src.payments.models import Connect, ExternalAccount, StripeAcceptedCountry, City
+from src.payments.models import Connect, ExternalAccount, StripeAcceptedCountry, City, Currency
 from src.portals.admins.models import TopUp
 import urllib
 
@@ -171,7 +172,8 @@ class ConnectCreateView(View):
 
             # -------------------------------- API CALL TO HANDLE
             is_error, response = stripe_account_create_custom(
-                email=_email, first_name=_first_name, last_name=_last_name, phone=_phone, gender='male', day=30, month=12,
+                email=_email, first_name=_first_name, last_name=_last_name, phone=_phone, gender='male', day=30,
+                month=12,
                 year=2001, country=_country.country.short_code, city=_city.name, state=_city.name,
                 address_line_1=_address, postal_code=_postal_code
             )
@@ -265,36 +267,6 @@ class ConnectDeleteView(View):
         return redirect('payment-stripe:connect')
 
 
-class ConnectVerifyView(View):
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_stripe_account_exists():
-            messages.error(request, "Please create connect account first")
-            return redirect('payment-stripe:connect-create')
-        return super(ConnectVerifyView, self).dispatch(request)
-
-    def get(self, request):
-        c_account = request.user.get_stripe_account()
-        if c_account.is_verified and c_account.connect_id:
-            pass
-        else:
-            response = stripe_connect_account_create(
-                email=c_account.email, first_name=c_account.first_name, last_name=c_account.last_name,
-                phone=c_account.phone, gender='male', day=30, month=12, year=2001,
-                address_line_1='A4, London WC2N 5DU, UK', city=c_account.city.name,
-                country=c_account.country.country.short_code, postal_code='WC2N 5DU', state=c_account.city.name
-            )
-            print(response)
-            connect_id = response['id']
-            # connect_card_payments = response['capabilities']['card_payments']
-            # connect_transfers = response['capabilities']['transfers']
-            c_account.connect_id = connect_id
-            c_account.is_verified = True
-            c_account.save()
-            messages.success(request, "Verified")
-        return redirect('payment-stripe:connect')
-
-
 """ EXTERNAL ACCOUNTS """
 
 
@@ -327,20 +299,35 @@ class ExternalAccountCreateView(View):
 
     def post(self, request):
         form = ExternalAccountCreateForm(data=request.POST)
+        _error_message = None
 
         # 0:: OVERALL VALIDATIONS
         if form.is_valid():
             connect_account = request.user.get_stripe_account()
+            form.instance.connect = connect_account
 
-            # 1:: IF CONNECT ACCOUNT EXISTS
-            if connect_account:
-                form.instance.connect = connect_account
-                e_account = form.save()
+            country = get_object_or_404(StripeAcceptedCountry, pk=request.POST['country'])
+            currency = get_object_or_404(Currency, pk=request.POST['currency'])
+            country_short = country.country.short_code
+            currency_short = currency.short_code
+            account_number = request.POST['account_number']
+            routing_number = request.POST['routing_number']
+            account_holder_name = request.POST['account_holder_name']
+
+            # -------------------------------------------------
+            error, response = stripe_external_bank_account_add(
+                account_id=connect_account.connect_id, country=country_short, currency=currency_short,
+                name=account_holder_name, routing_number=routing_number, account_number=account_number
+            )
+            if not error:
+                form.instance.external_account_id = response['id']
+                form.instance.is_verified = True
+                _account = form.save()
                 messages.success(request, "External account added successfully")
                 return redirect('payment-stripe:connect')
             else:
-                messages.error(request, "Please create your connect account first")
-                return redirect('payment-stripe:connect')
+                messages.error(request, response)
+            # ------------------------------------------------
 
         self.context['form'] = form
         return render(request, self.template_name, self.context)
@@ -411,35 +398,4 @@ class ExternalAccountDeleteView(View):
             b_account.delete()
             messages.success(request, "Linked external account deleted successfully")
 
-        return redirect('payment-stripe:connect')
-
-
-class ExternalAccountVerifyView(View):
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_stripe_account_exists():
-            messages.error(request, "Please create connect account first")
-            return redirect('payment-stripe:connect-create')
-        return super(ExternalAccountVerifyView, self).dispatch(request)
-
-    def get(self, request):
-        c_account = request.user.get_stripe_account()
-        b_account = get_object_or_404(ExternalAccount.objects.all(), pk=self.kwargs['pk'])
-
-        if b_account.is_verified:
-            messages.warning(request, "Account already verified")
-        else:
-            if c_account.is_verified:
-                response = stripe_external_account_add(
-                    c_account.connect_id, country=b_account.country.country.short_code,
-                    currency=b_account.currency.short_code,
-                    name=b_account.account_holder_name, routing_number=b_account.routing_number,
-                    account_number=b_account.account_number
-                )
-                b_account.external_account_id = response['id']
-                b_account.is_verified = True
-                b_account.save()
-                messages.success(request, "Bank Account added successfully")
-            else:
-                messages.error(request, "Please verify your connect account first")
         return redirect('payment-stripe:connect')
