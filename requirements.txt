@@ -21,4 +21,6 @@ django-notifications-hq
 six
 django-preventconcurrentlogins
 django-phonenumber-field[phonenumberslite]
+django-browser-reload
+
 

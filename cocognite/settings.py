@@ -1,38 +1,35 @@
 import os
 from pathlib import Path
+import environ
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE_DIR_NEW = Path(__file__).resolve().parent.parent
+""" __ BASE CONFIGURATIONS __"""
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+MAINTENANCE = False
+BASE_DIR = Path(__file__).resolve().parent.parent
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 """ CONFIGURATIONS -----------------------------------------------------------------------------------------------"""
+
+BASE_URL = env('BASE_URL')
+DEBUG = bool(env('DEBUG'))
+SECRET_KEY = env('SECRET_KEY')
+ENVIRONMENT = env('ENVIRONMENT')
+SITE_ID = int(env('SITE_ID'))
+DOMAIN_URL = BASE_URL
+ALLOWED_HOSTS = [env('ALLOWED_HOST')]
 
 AUTH_USER_MODEL = 'accounts.User'
 ROOT_URLCONF = 'cocognite.urls'
 WSGI_APPLICATION = 'cocognite.wsgi.application'
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
-SECRET_KEY = 's(l5vi&5nq3619gdskadhgjaksd981234hlaskhjdlasd'
 
-DEBUG = True
-SERVER = False
-ALLOWED_HOSTS = ['*']
-
-if SERVER:
-    STRIPE_PUBLISHABLE_KEY = 'pk_test_51KNUx8GWh1G1v77h4cAKDbEvH3wEbK4yVZfSGKT5f5wgShK8cipV0ctpNrZ2tqt63fsVmJp4sAk6cs8mogGlzHlL00CTKGtGvE'
-    STRIPE_SECRET_KEY = 'sk_test_51KNUx8GWh1G1v77hDR40VBVDDZTK2pgUZMk0yxDyN4evl4lBg2LyxFyOQCDoLQWhgy1t9bAzcC63c681rUe5mxtv00vHfKyh2r'
-    STRIPE_ENDPOINT_SECRET = 'https://skisip.pythonanywhere.com/webhook/'
-    STRIPE_CONNECT_CLIENT_ID = 'ca_LJXOn5lzLW8IVP0ikolZhksjmSCP4HZa'
-    GOOGLE_CALLBACK_ADDRESS = "https://skisip.pythonanywhere.com/accounts/google/login/callback/"
-    SITE_ID = 2
-    DOMAIN_URL = 'https://skisip.pythonanywhere.com/'
-else:
-    STRIPE_PUBLISHABLE_KEY = 'pk_test_51KNUx8GWh1G1v77h4cAKDbEvH3wEbK4yVZfSGKT5f5wgShK8cipV0ctpNrZ2tqt63fsVmJp4sAk6cs8mogGlzHlL00CTKGtGvE'
-    STRIPE_SECRET_KEY = 'sk_test_51KNUx8GWh1G1v77hDR40VBVDDZTK2pgUZMk0yxDyN4evl4lBg2LyxFyOQCDoLQWhgy1t9bAzcC63c681rUe5mxtv00vHfKyh2r'
-    GOOGLE_CALLBACK_ADDRESS = "http://127.0.0.1:8000/accounts/google/login/callback/"
-    STRIPE_ENDPOINT_SECRET = 'whsec_1d8d3fe0a2aa5e4636cd1343c86fdc72d962593725e8d3a4ab8ad122b8522893'
-    STRIPE_CONNECT_CLIENT_ID = 'ca_LJXOn5lzLW8IVP0ikolZhksjmSCP4HZa'
-    SITE_ID = 1
-    DOMAIN_URL = 'http://127.0.0.1:8000/'
-
+STRIPE_PUBLISHABLE_KEY = env('STRIPE_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
+STRIPE_ENDPOINT_SECRET = env('STRIPE_ENDPOINT_SECRET')
+STRIPE_CONNECT_CLIENT_ID = env('STRIPE_CONNECT_CLIENT_ID')
+GOOGLE_CALLBACK_ADDRESS = env('GOOGLE_CALLBACK_ADDRESS')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = '/accounts/cross-auth/'
@@ -158,7 +155,7 @@ DATABASES = {
 """ INTERNATIONALIZATION ----------------------------------------------------------------------------------------- """
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'Asia/Calcutta'
+TIME_ZONE = env('TIME_ZONE')
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -178,9 +175,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'donald.duck0762@gmail.com'
-EMAIL_HOST_PASSWORD = 'jivcvsjgjgkadtnk'
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = 'SkiSipWallet <support@skisipwallet.com>'
 
@@ -212,6 +209,16 @@ DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS = {
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True
 
 
+""" DEBUGGING TOOLS """
+
+if ENVIRONMENT != 'server':
+    INSTALLED_APPS += [
+        'django_browser_reload'
+    ]
+    MIDDLEWARE += [
+        'django_browser_reload.middleware.BrowserReloadMiddleware'
+    ]
+
 """
 SECRET_KEY=s(l5vi&5nq3619gdskadhgjaksd981234hlaskhjdlasd
 EMAIL_HOST=smtp.gmail.com
@@ -232,3 +239,4 @@ BASE_URL=http://127.0.0.1:8000/
 DOMAIN=127.0.0.1:8000
 
 """
+

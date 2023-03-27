@@ -8,6 +8,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, include, re_path
+
+from cocognite.settings import ENVIRONMENT
 from src.accounts.views import GoogleLoginView, CustomRegisterAccountView
 from django.views.static import serve
 
@@ -41,3 +43,8 @@ urlpatterns += [
     url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     url(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
 ]
+
+if ENVIRONMENT != 'server':
+    urlpatterns += [
+        path("__reload__/", include("django_browser_reload.urls"))
+    ]
