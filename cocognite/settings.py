@@ -31,7 +31,8 @@ STRIPE_ENDPOINT_SECRET = env('STRIPE_ENDPOINT_SECRET')
 STRIPE_CONNECT_CLIENT_ID = env('STRIPE_CONNECT_CLIENT_ID')
 GOOGLE_CALLBACK_ADDRESS = env('GOOGLE_CALLBACK_ADDRESS')
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 LOGIN_REDIRECT_URL = '/accounts/cross-auth/'
 
 """ INSTALLATIONS ------------------------------------------------------------------------------------------------"""
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
 
     # REQUIRED_APPLICATIONS
     'crispy_forms',
+    'crispy_bootstrap5',
     'ckeditor',
     'qrcode',
     'phonenumber_field',
@@ -208,7 +210,6 @@ DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS = {
 }
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True
 
-
 """ DEBUGGING TOOLS """
 
 if ENVIRONMENT != 'server':
@@ -243,4 +244,3 @@ DOMAIN=127.0.0.1:8000
 """
 python manage.py makemigrations accounts admins website payments customer
 """
-
