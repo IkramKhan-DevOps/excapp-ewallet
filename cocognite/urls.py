@@ -1,5 +1,4 @@
 import notifications.urls
-from django.conf.urls import url
 from django.views.generic import TemplateView
 
 from cocognite import settings
@@ -28,7 +27,7 @@ urlpatterns += [
     path('a/', include('src.portals.admins.urls', namespace='admin-portal')),
     path('c/', include('src.portals.customer.urls', namespace='moderator-portal')),
     path('api/', include('src.api.urls', namespace='api')),
-    url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
+    re_path('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
 ]
 
 urlpatterns += [
@@ -40,8 +39,8 @@ urlpatterns += [
 ]
 
 urlpatterns += [
-    url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
-    url(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
 ]
 
 if ENVIRONMENT != 'server':
