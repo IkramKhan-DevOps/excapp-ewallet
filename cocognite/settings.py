@@ -19,11 +19,11 @@ ALLOWED_HOSTS = ['*']
 if SERVER:
     STRIPE_PUBLISHABLE_KEY = 'pk_test_51KNUx8GWh1G1v77h4cAKDbEvH3wEbK4yVZfSGKT5f5wgShK8cipV0ctpNrZ2tqt63fsVmJp4sAk6cs8mogGlzHlL00CTKGtGvE'
     STRIPE_SECRET_KEY = 'sk_test_51KNUx8GWh1G1v77hDR40VBVDDZTK2pgUZMk0yxDyN4evl4lBg2LyxFyOQCDoLQWhgy1t9bAzcC63c681rUe5mxtv00vHfKyh2r'
-    STRIPE_ENDPOINT_SECRET = 'https://exarthdev4.pythonanywhere.com/webhook/'
+    STRIPE_ENDPOINT_SECRET = 'https://skisip.pythonanywhere.com/webhook/'
     STRIPE_CONNECT_CLIENT_ID = 'ca_LJXOn5lzLW8IVP0ikolZhksjmSCP4HZa'
-    GOOGLE_CALLBACK_ADDRESS = "https://exarthdev4.pythonanywhere.com/accounts/google/login/callback/"
+    GOOGLE_CALLBACK_ADDRESS = "https://skisip.pythonanywhere.com/accounts/google/login/callback/"
     SITE_ID = 2
-    DOMAIN_URL = 'https://exarthdev4.pythonanywhere.com/'
+    DOMAIN_URL = 'https://skisip.pythonanywhere.com/'
 else:
     STRIPE_PUBLISHABLE_KEY = 'pk_test_51KNUx8GWh1G1v77h4cAKDbEvH3wEbK4yVZfSGKT5f5wgShK8cipV0ctpNrZ2tqt63fsVmJp4sAk6cs8mogGlzHlL00CTKGtGvE'
     STRIPE_SECRET_KEY = 'sk_test_51KNUx8GWh1G1v77hDR40VBVDDZTK2pgUZMk0yxDyN4evl4lBg2LyxFyOQCDoLQWhgy1t9bAzcC63c681rUe5mxtv00vHfKyh2r'
