@@ -131,4 +131,3 @@ db.sqlite3/
 media/
 migrations/
 assets/
-static/
