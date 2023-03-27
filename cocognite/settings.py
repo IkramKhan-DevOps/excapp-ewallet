@@ -240,3 +240,7 @@ DOMAIN=127.0.0.1:8000
 
 """
 
+"""
+python manage.py makemigrations accounts admins website payments customer
+"""
+
